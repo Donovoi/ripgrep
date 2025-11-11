@@ -140,16 +140,19 @@ benchmark_file() {
         return
     fi
     
-    local size=$(stat -f%z "$test_file" 2>/dev/null || stat -c%s "$test_file" 2>/dev/null)
+    local size
+    size=$(stat -f%z "$test_file" 2>/dev/null || stat -c%s "$test_file" 2>/dev/null)
     
     # Run benchmark 3 times and take average
     local total_time=0
     local runs=3
     
-    for run in $(seq 1 $runs); do
-        local start=$(date +%s%N)
+    for _ in $(seq 1 $runs); do
+        local start
+        start=$(date +%s%N)
         rg "$pattern" "$test_file" > /dev/null 2>&1 || true
-        local end=$(date +%s%N)
+        local end
+        end=$(date +%s%N)
         local elapsed=$(( (end - start) / 1000000 )) # Convert to milliseconds
         total_time=$((total_time + elapsed))
     done
@@ -171,22 +174,24 @@ run_benchmarks() {
     
     # Benchmark each file in different formats
     for file in "$BENCHMARK_DIR"/*.txt; do
-        local basename=$(basename "$file")
+        local basename
+        basename=$(basename "$file")
         echo -e "  Testing ${basename}..."
         
         # Uncompressed
-        local result=$(benchmark_file "$file" "$pattern" "uncompressed")
+        local result
+        result=$(benchmark_file "$file" "$pattern" "uncompressed")
         echo "${basename},uncompressed,$result" >> "$RESULTS_FILE"
         
         # Gzip
         if [[ -f "${file}.gz" ]]; then
-            local result=$(benchmark_file "$file" "$pattern" "gzip")
+            result=$(benchmark_file "$file" "$pattern" "gzip")
             echo "${basename},gzip,$result" >> "$RESULTS_FILE"
         fi
         
         # GDeflate (if available)
         if [[ -f "${file}.gdz" ]]; then
-            local result=$(benchmark_file "$file" "$pattern" "gdeflate")
+            result=$(benchmark_file "$file" "$pattern" "gdeflate")
             echo "${basename},gdeflate,$result" >> "$RESULTS_FILE"
         fi
     done
@@ -296,12 +301,14 @@ Each test was run 3 times and averaged to reduce noise.
 EOF
     
     # Append CSV results
-    echo "### Raw Data" >> "$report_file"
-    echo "" >> "$report_file"
-    echo '```' >> "$report_file"
-    cat "$RESULTS_FILE" >> "$report_file"
-    echo '```' >> "$report_file"
-    echo "" >> "$report_file"
+    {
+        echo "### Raw Data"
+        echo ""
+        echo '```'
+        cat "$RESULTS_FILE"
+        echo '```'
+        echo ""
+    } >> "$report_file"
     
     # Append analysis
     echo "### Analysis" >> "$report_file"
