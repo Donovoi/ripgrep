@@ -656,6 +656,10 @@ fn default_decompression_commands() -> Vec<DecompressionCommand> {
     const ARGS_BROTLI: &[&str] = &["brotli", "-d", "-c"];
     const ARGS_ZSTD: &[&str] = &["zstd", "-q", "-d", "-c"];
     const ARGS_UNCOMPRESS: &[&str] = &["uncompress", "-c"];
+    // GDeflate uses magic number detection, but we add .gdz for convenience
+    // The decompression will use native GDeflate if the feature is enabled
+    // and the file has the correct magic number, regardless of extension.
+    const ARGS_GDEFLATE: &[&str] = &["gzip", "-d", "-c"];
 
     fn add(glob: &str, args: &[&str], cmds: &mut Vec<DecompressionCommand>) {
         let bin = match resolve_binary(Path::new(args[0])) {
@@ -688,5 +692,7 @@ fn default_decompression_commands() -> Vec<DecompressionCommand> {
     add("*.zst", ARGS_ZSTD, &mut cmds);
     add("*.zstd", ARGS_ZSTD, &mut cmds);
     add("*.Z", ARGS_UNCOMPRESS, &mut cmds);
+    // Add .gdz extension (will be intercepted by magic number detection)
+    add("*.gdz", ARGS_GDEFLATE, &mut cmds);
     cmds
 }
