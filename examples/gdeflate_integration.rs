@@ -5,30 +5,9 @@ use std::fs::File;
 use std::io::{self, BufReader, Read};
 use std::path::Path;
 
-// This would come from the gdeflate crate when the feature is enabled
-// The GDeflate library provides parallel decompression of DEFLATE-compressed data
+// Use the real gdeflate crate when the feature is enabled
 #[cfg(feature = "gdeflate")]
-mod gdeflate_stub {
-    /// Stub for GDeflate parallel decompression
-    /// 
-    /// In the actual implementation, this would call the GDeflate library's
-    /// decompression function which uses multiple worker threads to decompress
-    /// data in parallel, providing 3-8x speedup compared to single-threaded gzip.
-    /// 
-    /// # Arguments
-    /// * `_input` - Compressed data to decompress
-    /// * `output_size` - Expected size of decompressed data (from file header)
-    /// * `_num_workers` - Number of worker threads (0 = auto-detect optimal count)
-    pub fn decompress(
-        _input: &[u8],
-        output_size: usize,
-        _num_workers: u32,
-    ) -> Result<Vec<u8>, String> {
-        // In real implementation, this calls the GDeflate library
-        // For now, just a stub that returns zeros
-        Ok(vec![0u8; output_size])
-    }
-}
+use gdeflate;
 
 /// GDeflate file format magic number
 #[allow(dead_code)]
@@ -148,8 +127,8 @@ impl GDeflateReader {
         // Decompress using GDeflate library
         // num_workers = 0 means auto-detect optimal thread count
         let decompressed =
-            gdeflate_stub::decompress(&compressed, output_size, 0)
-                .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
+            gdeflate::decompress(&compressed, output_size, 0)
+                .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e.to_string()))?;
 
         Ok(Self { decompressed, position: 0 })
     }
