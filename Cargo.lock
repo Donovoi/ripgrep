@@ -183,6 +183,7 @@ name = "grep-cli"
 version = "0.1.12"
 dependencies = [
  "bstr",
+ "gdeflate",
  "globset",
  "libc",
  "log",
