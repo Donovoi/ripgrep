@@ -8,6 +8,7 @@ This directory contains a comprehensive analysis of using Microsoft's DirectStor
 
 | Document | Size | Purpose | Audience |
 |----------|------|---------|----------|
+| **[INTEGRATION_STATUS.md](./INTEGRATION_STATUS.md)** | 6KB | Current implementation status and next steps | Developers/Contributors |
 | **[QUICKSTART.md](./QUICKSTART.md)** | 7KB | 5-minute to 2-hour evaluation guide | Everyone |
 | **[ANALYSIS_SUMMARY.md](./ANALYSIS_SUMMARY.md)** | 9KB | Executive summary and recommendations | Decision makers |
 | **[DIRECTSTORAGE_INTEGRATION.md](./DIRECTSTORAGE_INTEGRATION.md)** | 16KB | Deep technical analysis and implementation plan | Developers |
