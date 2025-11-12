@@ -4,9 +4,10 @@ use std::path::PathBuf;
 fn main() {
     let gdeflate_src = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap())
         .join("GDeflate");
-    let libdeflate_src = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap())
-        .join("3rdparty")
-        .join("libdeflate");
+    let libdeflate_src =
+        PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap())
+            .join("3rdparty")
+            .join("libdeflate");
 
     // Check if libdeflate submodule is initialized
     if !libdeflate_src.join("lib").exists() {
@@ -32,14 +33,12 @@ fn main() {
         "lib/zlib_decompress.c",
         "lib/x86/cpu_features.c",
     ];
-    
+
     let mut libdeflate_build = cc::Build::new();
     for file in &libdeflate_files {
         libdeflate_build.file(libdeflate_src.join(file));
     }
-    libdeflate_build
-        .include(&libdeflate_src)
-        .warnings(false);
+    libdeflate_build.include(&libdeflate_src).warnings(false);
 
     // Platform-specific flags
     if cfg!(target_os = "windows") {
@@ -49,12 +48,9 @@ fn main() {
     libdeflate_build.compile("deflate");
 
     // Build GDeflate
-    let gdeflate_files = [
-        "GDeflateCompress.cpp",
-        "GDeflateDecompress.cpp",
-        "GDeflate_c.cpp",
-    ];
-    
+    let gdeflate_files =
+        ["GDeflateCompress.cpp", "GDeflateDecompress.cpp", "GDeflate_c.cpp"];
+
     let mut gdeflate_build = cc::Build::new();
     for file in &gdeflate_files {
         gdeflate_build.file(gdeflate_src.join(file));
@@ -68,8 +64,7 @@ fn main() {
 
     // Platform-specific settings
     if cfg!(target_os = "windows") {
-        gdeflate_build
-            .define("_CRT_SECURE_NO_WARNINGS", None);
+        gdeflate_build.define("_CRT_SECURE_NO_WARNINGS", None);
     }
 
     gdeflate_build.compile("gdeflate");

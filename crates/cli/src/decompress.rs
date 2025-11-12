@@ -226,14 +226,17 @@ impl DecompressionReaderBuilder {
         path: P,
     ) -> Result<DecompressionReader, CommandError> {
         let path = path.as_ref();
-        
+
         // Check for GDeflate format first (native in-process decompression)
         #[cfg(feature = "gdeflate")]
         if is_gdeflate_file(path) {
-            log::debug!("{}: detected GDeflate format, using native decompression", path.display());
+            log::debug!(
+                "{}: detected GDeflate format, using native decompression",
+                path.display()
+            );
             return DecompressionReader::new_gdeflate(path);
         }
-        
+
         let Some(mut cmd) = self.matcher.command(path) else {
             return DecompressionReader::new_passthru(path);
         };
@@ -400,13 +403,13 @@ impl GDeflateReader {
         }
 
         // Parse uncompressed size (little-endian u64)
-        let output_size = u64::from_le_bytes(
-            header[4..12]
-                .try_into()
-                .map_err(|_| {
-                    io::Error::new(io::ErrorKind::InvalidData, "Invalid size field")
-                })?,
-        ) as usize;
+        let output_size =
+            u64::from_le_bytes(header[4..12].try_into().map_err(|_| {
+                io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    "Invalid size field",
+                )
+            })?) as usize;
 
         // Security check: reject unreasonably large files
         if output_size > MAX_UNCOMPRESSED_SIZE {
@@ -436,7 +439,9 @@ impl GDeflateReader {
 
         // Decompress using GDeflate library (0 = auto thread count)
         let decompressed = gdeflate::decompress(&compressed, output_size, 0)
-            .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e.to_string()))?;
+            .map_err(|e| {
+            io::Error::new(io::ErrorKind::InvalidData, e.to_string())
+        })?;
 
         Ok(Self { decompressed, position: 0 })
     }

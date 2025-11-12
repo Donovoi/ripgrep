@@ -26,7 +26,7 @@ enum DecompressionStrategy {
 }
 
 /// Unified decompression reader that can handle multiple formats
-/// 
+///
 /// This enum demonstrates how ripgrep would dispatch decompression to the
 /// appropriate implementation based on file format detection:
 /// - Direct reading for uncompressed files (no overhead)
@@ -58,13 +58,13 @@ impl Read for UnifiedDecompressionReader {
 }
 
 /// GDeflate reader that implements the Read trait
-/// 
+///
 /// This reader handles the complete lifecycle of GDeflate decompression:
 /// 1. Validates the file header and magic number
 /// 2. Reads the expected uncompressed size
 /// 3. Performs parallel decompression (in real implementation)
 /// 4. Provides a standard Read interface to the decompressed data
-/// 
+///
 /// Security features:
 /// - Size validation (rejects files > 1GB uncompressed)
 /// - Decompression bomb detection (rejects suspicious compression ratios)
@@ -126,9 +126,10 @@ impl GDeflateReader {
 
         // Decompress using GDeflate library
         // num_workers = 0 means auto-detect optimal thread count
-        let decompressed =
-            gdeflate::decompress(&compressed, output_size, 0)
-                .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e.to_string()))?;
+        let decompressed = gdeflate::decompress(&compressed, output_size, 0)
+            .map_err(|e| {
+            io::Error::new(io::ErrorKind::InvalidData, e.to_string())
+        })?;
 
         Ok(Self { decompressed, position: 0 })
     }
