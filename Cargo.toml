@@ -70,6 +70,10 @@ walkdir = "2"
 
 [features]
 pcre2 = ["grep/pcre2"]
+# GDeflate support for faster compressed file searching (optional, requires DirectStorage)
+# When enabled, provides 3-8x speedup on .gdz compressed files
+# Note: Requires separate installation of DirectStorage/GDeflate library
+gdeflate = []
 
 [profile.release]
 debug = 1
