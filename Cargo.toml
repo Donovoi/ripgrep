@@ -72,7 +72,7 @@ walkdir = "2"
 
 [features]
 pcre2 = ["grep/pcre2"]
-gdeflate = ["dep:gdeflate"]
+gdeflate = ["dep:gdeflate", "grep/gdeflate"]
 
 [profile.release]
 debug = 1
