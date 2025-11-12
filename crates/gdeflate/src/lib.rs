@@ -10,7 +10,7 @@
 //! use gdeflate::{compress, decompress, compress_bound};
 //!
 //! let input = b"Hello, world! This is a test of GDeflate compression.";
-//! 
+//!
 //! // Compress the data
 //! let compressed = compress(input, 6, 0).expect("compression failed");
 //! println!("Compressed {} bytes to {} bytes", input.len(), compressed.len());
@@ -20,7 +20,7 @@
 //! assert_eq!(input, decompressed.as_slice());
 //! ```
 
-use std::os::raw::{c_uint, c_int};
+use std::os::raw::{c_int, c_uint};
 
 /// Minimum compression level
 pub const MIN_COMPRESSION_LEVEL: u32 = 1;
@@ -90,7 +90,7 @@ impl From<GDeflateResult> for Result<()> {
 
 extern "C" {
     fn gdeflate_compress_bound(size: usize) -> usize;
-    
+
     fn gdeflate_compress(
         output: *mut u8,
         output_size: *mut usize,
@@ -99,7 +99,7 @@ extern "C" {
         level: c_uint,
         flags: c_uint,
     ) -> c_int;
-    
+
     fn gdeflate_decompress(
         output: *mut u8,
         output_size: usize,
@@ -107,7 +107,7 @@ extern "C" {
         input_size: usize,
         num_workers: c_uint,
     ) -> c_int;
-    
+
     fn gdeflate_version() -> *const std::os::raw::c_char;
 }
 
@@ -152,11 +152,11 @@ pub fn compress(input: &[u8], level: u32, flags: u32) -> Result<Vec<u8>> {
     if level < MIN_COMPRESSION_LEVEL || level > MAX_COMPRESSION_LEVEL {
         return Err(Error::InvalidParam);
     }
-    
+
     let max_size = compress_bound(input.len());
     let mut output = vec![0u8; max_size];
     let mut output_size = max_size;
-    
+
     let result = unsafe {
         gdeflate_compress(
             output.as_mut_ptr(),
@@ -167,9 +167,9 @@ pub fn compress(input: &[u8], level: u32, flags: u32) -> Result<Vec<u8>> {
             flags,
         )
     };
-    
+
     GDeflateResult::from(result).into_result()?;
-    
+
     output.truncate(output_size);
     Ok(output)
 }
@@ -200,9 +200,13 @@ pub fn compress(input: &[u8], level: u32, flags: u32) -> Result<Vec<u8>> {
 /// let decompressed = decompress(&compressed, input.len(), 0).expect("decompression failed");
 /// assert_eq!(input, decompressed.as_slice());
 /// ```
-pub fn decompress(input: &[u8], output_size: usize, num_workers: u32) -> Result<Vec<u8>> {
+pub fn decompress(
+    input: &[u8],
+    output_size: usize,
+    num_workers: u32,
+) -> Result<Vec<u8>> {
     let mut output = vec![0u8; output_size];
-    
+
     let result = unsafe {
         gdeflate_decompress(
             output.as_mut_ptr(),
@@ -212,9 +216,9 @@ pub fn decompress(input: &[u8], output_size: usize, num_workers: u32) -> Result<
             num_workers,
         )
     };
-    
+
     GDeflateResult::from(result).into_result()?;
-    
+
     Ok(output)
 }
 
@@ -258,24 +262,29 @@ mod tests {
     fn test_compress_decompress() {
         let input = b"Hello, world! This is a test of GDeflate compression. \
                       It should compress this text and then decompress it back.";
-        
+
         // Compress
         let compressed = compress(input, 6, 0).expect("compression failed");
         assert!(compressed.len() > 0);
-        println!("Compressed {} bytes to {} bytes", input.len(), compressed.len());
-        
+        println!(
+            "Compressed {} bytes to {} bytes",
+            input.len(),
+            compressed.len()
+        );
+
         // Decompress
-        let decompressed = decompress(&compressed, input.len(), 0).expect("decompression failed");
+        let decompressed = decompress(&compressed, input.len(), 0)
+            .expect("decompression failed");
         assert_eq!(input, decompressed.as_slice());
     }
 
     #[test]
     fn test_invalid_compression_level() {
         let input = b"test";
-        
+
         // Test level too low
         assert!(compress(input, 0, 0).is_err());
-        
+
         // Test level too high
         assert!(compress(input, 13, 0).is_err());
     }
@@ -287,7 +296,7 @@ mod tests {
         for _ in 0..10 {
             input_bytes.extend_from_slice(input_text.as_bytes());
         }
-        
+
         for level in MIN_COMPRESSION_LEVEL..=MAX_COMPRESSION_LEVEL {
             let compressed = compress(&input_bytes, level, 0)
                 .expect(&format!("compression failed at level {}", level));
