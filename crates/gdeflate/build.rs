@@ -1,6 +1,51 @@
 use std::env;
 use std::path::PathBuf;
 
+/// Check if nvCOMP library is available
+fn check_nvcomp_available(cuda_path: &str) -> bool {
+    // Check environment variable first
+    if let Ok(nvcomp_root) = env::var("NVCOMP_ROOT") {
+        let nvcomp_include = PathBuf::from(&nvcomp_root).join("include");
+        let nvcomp_header = nvcomp_include.join("nvcomp.h");
+        if nvcomp_header.exists() {
+            println!("cargo:warning=Found nvCOMP at NVCOMP_ROOT: {}", nvcomp_root);
+            println!("cargo:rustc-link-search=native={}/lib", nvcomp_root);
+            println!("cargo:rustc-link-search=native={}/lib64", nvcomp_root);
+            return true;
+        }
+    }
+    
+    // Check CUDA installation
+    let cuda_nvcomp_include = PathBuf::from(cuda_path).join("include").join("nvcomp.h");
+    if cuda_nvcomp_include.exists() {
+        println!("cargo:warning=Found nvCOMP in CUDA installation");
+        return true;
+    }
+    
+    // Check common system paths
+    let system_paths = vec![
+        "/usr/local/nvcomp/include/nvcomp.h",
+        "/usr/include/nvcomp.h",
+        "/opt/nvcomp/include/nvcomp.h",
+    ];
+    
+    for path_str in system_paths {
+        let path = PathBuf::from(path_str);
+        if path.exists() {
+            println!("cargo:warning=Found nvCOMP at system path: {}", path_str);
+            if let Some(parent) = path.parent() {
+                if let Some(grandparent) = parent.parent() {
+                    println!("cargo:rustc-link-search=native={}/lib", grandparent.display());
+                    println!("cargo:rustc-link-search=native={}/lib64", grandparent.display());
+                }
+            }
+            return true;
+        }
+    }
+    
+    false
+}
+
 fn main() {
     let gdeflate_src = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap())
         .join("GDeflate");
@@ -87,6 +132,9 @@ fn main() {
         if cuda_available {
             println!("cargo:warning=CUDA toolkit found at {}", cuda_path);
             
+            // Check for nvCOMP library
+            let nvcomp_available = check_nvcomp_available(&cuda_path);
+            
             // Build GPU support module with CUDA
             let mut gpu_build = cc::Build::new();
             gpu_build
@@ -97,6 +145,22 @@ fn main() {
                 .include(&cuda_include)
                 .define("CUDA_GPU_SUPPORT", None)
                 .warnings(false);
+            
+            if nvcomp_available {
+                println!("cargo:warning=nvCOMP library found, enabling GPU decompression");
+                gpu_build.define("NVCOMP_AVAILABLE", None);
+                
+                // Add nvCOMP source file
+                gpu_build.file(gdeflate_src.join("GDeflate_nvcomp.cpp"));
+                
+                // Add nvCOMP include path
+                let nvcomp_include = PathBuf::from(&cuda_path).join("include");
+                gpu_build.include(&nvcomp_include);
+            } else {
+                println!("cargo:warning=nvCOMP library not found, using stub GPU module");
+                println!("cargo:warning=GPU will fallback to CPU at runtime");
+                println!("cargo:warning=To enable GPU decompression, install nvCOMP library");
+            }
             
             // Platform-specific settings
             if cfg!(target_os = "windows") {
@@ -109,8 +173,11 @@ fn main() {
             println!("cargo:rustc-link-search=native={}", cuda_lib.display());
             println!("cargo:rustc-link-lib=cudart");
             
-            // Link nvCOMP if available (optional, will be added when nvCOMP is integrated)
-            // println!("cargo:rustc-link-lib=nvcomp");
+            // Link nvCOMP if available
+            if nvcomp_available {
+                println!("cargo:rustc-link-lib=nvcomp");
+                println!("cargo:rustc-link-lib=nvcomp_gdeflate");
+            }
         } else {
             println!("cargo:warning=CUDA toolkit not found, building stub GPU module");
             println!("cargo:warning=GPU acceleration will not be available at runtime");
@@ -134,9 +201,11 @@ fn main() {
         }
         
         println!("cargo:rerun-if-changed=GDeflate/GDeflate_gpu.cpp");
+        println!("cargo:rerun-if-changed=GDeflate/GDeflate_nvcomp.cpp");
         println!("cargo:rerun-if-changed=GDeflate/GDeflate_gpu.h");
         println!("cargo:rerun-if-env-changed=CUDA_PATH");
         println!("cargo:rerun-if-env-changed=CUDA_HOME");
+        println!("cargo:rerun-if-env-changed=NVCOMP_ROOT");
     }
 
     // Link pthread on Unix

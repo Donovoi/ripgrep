@@ -119,6 +119,12 @@ int gpu_get_device_info(GpuDeviceInfo* devices, int max_devices) {
     return num_devices;
 }
 
+// Forward declaration of nvCOMP function (defined in GDeflate_nvcomp.cpp)
+#ifdef NVCOMP_AVAILABLE
+extern "C" int gpu_decompress_nvcomp(const uint8_t* input, size_t input_size,
+                                     uint8_t* output, size_t output_size);
+#endif
+
 /**
  * Decompress data using GPU acceleration
  * 
@@ -144,58 +150,15 @@ int gpu_decompress(const uint8_t* input, size_t input_size,
         return -1; // GPU not available
     }
     
-    cudaError_t cuda_status;
-    
-    // Allocate device memory for input
-    uint8_t* d_input = nullptr;
-    cuda_status = cudaMalloc(&d_input, input_size);
-    if (cuda_status != cudaSuccess) {
-        return -1; // Memory allocation failed
-    }
-    
-    // Allocate device memory for output
-    uint8_t* d_output = nullptr;
-    cuda_status = cudaMalloc(&d_output, output_size);
-    if (cuda_status != cudaSuccess) {
-        cudaFree(d_input);
-        return -1; // Memory allocation failed
-    }
-    
-    // Copy input to device
-    cuda_status = cudaMemcpy(d_input, input, input_size, cudaMemcpyHostToDevice);
-    if (cuda_status != cudaSuccess) {
-        cudaFree(d_input);
-        cudaFree(d_output);
-        return -1; // Memory copy failed
-    }
-    
-    // TODO: Call nvCOMP decompression API
-    // For now, this is a placeholder that would call:
-    // nvcompStatus_t status = nvcompDeflateDecompress(
-    //     d_input, input_size,
-    //     d_output, output_size,
-    //     stream
-    // );
-    
-    // Placeholder: For actual implementation, integrate nvCOMP here
-    // For now, return error to trigger CPU fallback
-    int decompress_result = -1; // Would be 0 on success with nvCOMP
-    
-    if (decompress_result == 0) {
-        // Copy output from device to host
-        cuda_status = cudaMemcpy(output, d_output, output_size, cudaMemcpyDeviceToHost);
-        if (cuda_status != cudaSuccess) {
-            cudaFree(d_input);
-            cudaFree(d_output);
-            return -1; // Memory copy failed
-        }
-    }
-    
-    // Clean up device memory
-    cudaFree(d_input);
-    cudaFree(d_output);
-    
-    return decompress_result;
+#ifdef NVCOMP_AVAILABLE
+    // Use nvCOMP for actual GPU decompression
+    return gpu_decompress_nvcomp(input, input_size, output, output_size);
+#else
+    // Stub implementation when nvCOMP is not available
+    // Return error to trigger CPU fallback
+    // This ensures graceful degradation
+    return -1; // Triggers CPU fallback
+#endif
 }
 
 /**
