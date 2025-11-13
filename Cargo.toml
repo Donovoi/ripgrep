@@ -47,6 +47,7 @@ members = [
   "crates/regex",
   "crates/searcher",
   "crates/ignore",
+  "crates/gdeflate",
 ]
 
 [dependencies]
@@ -59,6 +60,7 @@ log = "0.4.5"
 serde_json = "1.0.23"
 termcolor = "1.1.0"
 textwrap = { version = "0.16.0", default-features = false }
+gdeflate = { version = "1.0.0", path = "crates/gdeflate", optional = true }
 
 [target.'cfg(all(target_env = "musl", target_pointer_width = "64"))'.dependencies.tikv-jemallocator]
 version = "0.6.0"
@@ -70,10 +72,7 @@ walkdir = "2"
 
 [features]
 pcre2 = ["grep/pcre2"]
-# GDeflate support for faster compressed file searching (optional, requires DirectStorage)
-# When enabled, provides 3-8x speedup on .gdz compressed files
-# Note: Requires separate installation of DirectStorage/GDeflate library
-gdeflate = []
+gdeflate = ["dep:gdeflate", "grep/gdeflate"]
 
 [profile.release]
 debug = 1
