@@ -1,0 +1,2 @@
+/usr/bin/ar qc libGDeflate.a CMakeFiles/GDeflate.dir/GDeflateCompress.o CMakeFiles/GDeflate.dir/GDeflateDecompress.o CMakeFiles/GDeflate.dir/GDeflate_c.o
+/usr/bin/ranlib libGDeflate.a
