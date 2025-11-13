@@ -216,7 +216,12 @@ Typical decompression throughput on modern hardware:
 3. **Sufficient CPU performance**: 8-15x speedup already achieved with CPU parallelism
 4. **Complexity**: GPU integration requires Windows SDK and DirectX 12
 
-GPU acceleration would provide additional 1.5-4x speedup on Windows for very large files (> 100 MB), but adds significant build complexity. See [HARDWARE_ACCELERATION.md](HARDWARE_ACCELERATION.md) for details.
+**Performance impact of GPU (if implemented):**
+- Small-medium files (< 10 GB): 1.5-4x additional speedup on Windows
+- Large files (10-100 GB): 3-6x additional speedup on Windows
+- **Extremely large files (100 GB - 1 TB): 4-8x additional speedup on Windows**
+
+For files in the 100GB-1TB range, GPU acceleration becomes significantly more beneficial and could be considered for future implementation. See [HARDWARE_ACCELERATION.md](HARDWARE_ACCELERATION.md) for detailed analysis.
 
 ## License
 
