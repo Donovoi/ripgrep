@@ -4,15 +4,21 @@ version = "1.0.0"
 edition = "2021"
 authors = ["DirectStorage Contributors"]
 license = "Apache-2.0"
-description = "Rust bindings for GDeflate - hardware-accelerated DEFLATE compression with CPU SIMD and multi-threading"
+description = "Rust bindings for GDeflate - hardware-accelerated DEFLATE compression with CPU SIMD, multi-threading, and optional NVIDIA GPU support"
 repository = "https://github.com/Donovoi/DirectStorage"
-keywords = ["compression", "decompression", "deflate", "gdeflate"]
+keywords = ["compression", "decompression", "deflate", "gdeflate", "gpu"]
 categories = ["compression", "api-bindings"]
 readme = "README.md"
 
 [lib]
 name = "gdeflate"
 crate-type = ["lib", "staticlib", "cdylib"]
+
+[features]
+default = []
+# NVIDIA CUDA GPU acceleration for large files (50GB+)
+# Requires: CUDA Toolkit 11.0+, NVIDIA GPU with Compute Capability 7.0+
+cuda-gpu = []
 
 [dependencies]
 
