@@ -170,7 +170,7 @@ pub fn compress_bound(size: usize) -> usize {
 ///
 /// # Returns
 ///
-/// Compressed data as a Vec<u8>
+/// Compressed data as a `Vec<u8>`
 ///
 /// # Errors
 ///
@@ -223,7 +223,7 @@ pub fn compress(input: &[u8], level: u32, flags: u32) -> Result<Vec<u8>> {
 ///
 /// # Returns
 ///
-/// Decompressed data as a Vec<u8>
+/// Decompressed data as a `Vec<u8>`
 ///
 /// # Errors
 ///
@@ -364,7 +364,7 @@ pub fn recommended_workers(output_size: usize) -> u32 {
 ///
 /// # Returns
 ///
-/// Decompressed data as a Vec<u8>
+/// Decompressed data as a `Vec<u8>`
 ///
 /// # Errors
 ///
