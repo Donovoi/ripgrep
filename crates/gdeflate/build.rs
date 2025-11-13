@@ -69,6 +69,76 @@ fn main() {
 
     gdeflate_build.compile("gdeflate");
 
+    // Build GPU support if cuda-gpu feature is enabled
+    if cfg!(feature = "cuda-gpu") {
+        println!("cargo:warning=Building with NVIDIA GPU support");
+        
+        // Check for CUDA toolkit
+        let cuda_path = env::var("CUDA_PATH")
+            .or_else(|_| env::var("CUDA_HOME"))
+            .unwrap_or_else(|_| "/usr/local/cuda".to_string());
+        
+        let cuda_include = PathBuf::from(&cuda_path).join("include");
+        let cuda_lib = PathBuf::from(&cuda_path).join("lib64");
+        
+        // Check if CUDA is actually available
+        let cuda_available = cuda_include.join("cuda_runtime.h").exists();
+        
+        if cuda_available {
+            println!("cargo:warning=CUDA toolkit found at {}", cuda_path);
+            
+            // Build GPU support module with CUDA
+            let mut gpu_build = cc::Build::new();
+            gpu_build
+                .file(gdeflate_src.join("GDeflate_gpu.cpp"))
+                .cpp(true)
+                .std("c++17")
+                .include(&gdeflate_src)
+                .include(&cuda_include)
+                .define("CUDA_GPU_SUPPORT", None)
+                .warnings(false);
+            
+            // Platform-specific settings
+            if cfg!(target_os = "windows") {
+                gpu_build.define("_CRT_SECURE_NO_WARNINGS", None);
+            }
+            
+            gpu_build.compile("gdeflate_gpu");
+            
+            // Link CUDA runtime
+            println!("cargo:rustc-link-search=native={}", cuda_lib.display());
+            println!("cargo:rustc-link-lib=cudart");
+            
+            // Link nvCOMP if available (optional, will be added when nvCOMP is integrated)
+            // println!("cargo:rustc-link-lib=nvcomp");
+        } else {
+            println!("cargo:warning=CUDA toolkit not found, building stub GPU module");
+            println!("cargo:warning=GPU acceleration will not be available at runtime");
+            println!("cargo:warning=To enable GPU support, install CUDA Toolkit 11.0+ and set CUDA_PATH or CUDA_HOME");
+            
+            // Build stub GPU support module without CUDA
+            let mut gpu_build = cc::Build::new();
+            gpu_build
+                .file(gdeflate_src.join("GDeflate_gpu.cpp"))
+                .cpp(true)
+                .std("c++17")
+                .include(&gdeflate_src)
+                .warnings(false);
+            
+            // Platform-specific settings
+            if cfg!(target_os = "windows") {
+                gpu_build.define("_CRT_SECURE_NO_WARNINGS", None);
+            }
+            
+            gpu_build.compile("gdeflate_gpu");
+        }
+        
+        println!("cargo:rerun-if-changed=GDeflate/GDeflate_gpu.cpp");
+        println!("cargo:rerun-if-changed=GDeflate/GDeflate_gpu.h");
+        println!("cargo:rerun-if-env-changed=CUDA_PATH");
+        println!("cargo:rerun-if-env-changed=CUDA_HOME");
+    }
+
     // Link pthread on Unix
     if !cfg!(target_os = "windows") {
         println!("cargo:rustc-link-lib=pthread");
