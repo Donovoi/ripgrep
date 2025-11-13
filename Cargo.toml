@@ -73,6 +73,7 @@ walkdir = "2"
 [features]
 pcre2 = ["grep/pcre2"]
 gdeflate = ["dep:gdeflate", "grep/gdeflate"]
+cuda-gpu = ["gdeflate", "gdeflate/cuda-gpu"]
 
 [profile.release]
 debug = 1
