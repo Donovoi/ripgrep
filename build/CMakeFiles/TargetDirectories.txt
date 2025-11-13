@@ -1,0 +1,9 @@
+/home/toor/ripgrep/build/CMakeFiles/libdeflate_static.dir
+/home/toor/ripgrep/build/CMakeFiles/GDeflate.dir
+/home/toor/ripgrep/build/CMakeFiles/GDeflate_shared.dir
+/home/toor/ripgrep/build/CMakeFiles/edit_cache.dir
+/home/toor/ripgrep/build/CMakeFiles/rebuild_cache.dir
+/home/toor/ripgrep/build/CMakeFiles/list_install_components.dir
+/home/toor/ripgrep/build/CMakeFiles/install.dir
+/home/toor/ripgrep/build/CMakeFiles/install/local.dir
+/home/toor/ripgrep/build/CMakeFiles/install/strip.dir

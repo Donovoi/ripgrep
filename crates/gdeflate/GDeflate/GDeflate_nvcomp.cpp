@@ -39,6 +39,8 @@
 
 extern "C" {
 
+int gpu_select_device();
+
 /**
  * Decompress data using nvCOMP GPU acceleration
  * 
@@ -67,91 +69,227 @@ int gpu_decompress_nvcomp(const uint8_t* input, size_t input_size,
     if (device < 0) {
         return -1; // No suitable GPU found
     }
-    cudaSetDevice(device);
-    
-    // Allocate device memory for input
+    cuda_status = cudaSetDevice(device);
+    if (cuda_status != cudaSuccess) {
+        return -1;
+    }
+
     uint8_t* d_input = nullptr;
-    cuda_status = cudaMalloc(&d_input, input_size);
-    if (cuda_status != cudaSuccess) {
-        return -1; // Memory allocation failed
-    }
-    
-    // Allocate device memory for output
     uint8_t* d_output = nullptr;
-    cuda_status = cudaMalloc(&d_output, output_size);
-    if (cuda_status != cudaSuccess) {
-        cudaFree(d_input);
-        return -1; // Memory allocation failed
-    }
-    
-    // Copy input to device
-    cuda_status = cudaMemcpy(d_input, input, input_size, cudaMemcpyHostToDevice);
-    if (cuda_status != cudaSuccess) {
-        cudaFree(d_input);
-        cudaFree(d_output);
-        return -1; // Memory copy failed
-    }
-    
-    // Get temporary workspace size
-    size_t temp_bytes = 0;
-    nvcompBatchedGdeflateDecompressGetTempSize(
-        1,              // number of chunks
-        output_size,    // max uncompressed chunk size
-        &temp_bytes
-    );
-    
-    // Allocate temporary workspace
     void* d_temp = nullptr;
+    void** d_input_ptrs = nullptr;
+    void** d_output_ptrs = nullptr;
+    size_t* d_input_sizes = nullptr;
+    size_t* d_output_sizes = nullptr;
+    nvcompStatus_t* d_statuses = nullptr;
+
+    auto cleanup = [&]() {
+        if (d_input) {
+            cudaFree(d_input);
+        }
+        if (d_output) {
+            cudaFree(d_output);
+        }
+        if (d_temp) {
+            cudaFree(d_temp);
+        }
+        if (d_input_ptrs) {
+            cudaFree(d_input_ptrs);
+        }
+        if (d_output_ptrs) {
+            cudaFree(d_output_ptrs);
+        }
+        if (d_input_sizes) {
+            cudaFree(d_input_sizes);
+        }
+        if (d_output_sizes) {
+            cudaFree(d_output_sizes);
+        }
+        if (d_statuses) {
+            cudaFree(d_statuses);
+        }
+    };
+
+    cuda_status = cudaMalloc(reinterpret_cast<void**>(&d_input), input_size);
+    if (cuda_status != cudaSuccess) {
+        cleanup();
+        return -1;
+    }
+
+    cuda_status = cudaMalloc(reinterpret_cast<void**>(&d_output), output_size);
+    if (cuda_status != cudaSuccess) {
+        cleanup();
+        return -1;
+    }
+
+    cuda_status = cudaMemcpy(
+        d_input,
+        input,
+        input_size,
+        cudaMemcpyHostToDevice
+    );
+    if (cuda_status != cudaSuccess) {
+        cleanup();
+        return -1;
+    }
+
+    cuda_status = cudaMalloc(reinterpret_cast<void**>(&d_input_ptrs), sizeof(void*));
+    if (cuda_status != cudaSuccess) {
+        cleanup();
+        return -1;
+    }
+
+    cuda_status = cudaMalloc(reinterpret_cast<void**>(&d_output_ptrs), sizeof(void*));
+    if (cuda_status != cudaSuccess) {
+        cleanup();
+        return -1;
+    }
+
+    cuda_status = cudaMalloc(reinterpret_cast<void**>(&d_input_sizes), sizeof(size_t));
+    if (cuda_status != cudaSuccess) {
+        cleanup();
+        return -1;
+    }
+
+    cuda_status = cudaMalloc(reinterpret_cast<void**>(&d_output_sizes), sizeof(size_t));
+    if (cuda_status != cudaSuccess) {
+        cleanup();
+        return -1;
+    }
+
+    cuda_status = cudaMalloc(reinterpret_cast<void**>(&d_statuses), sizeof(nvcompStatus_t));
+    if (cuda_status != cudaSuccess) {
+        cleanup();
+        return -1;
+    }
+
+    const void* host_input_ptrs[1] = {d_input};
+    void* host_output_ptrs[1] = {d_output};
+    size_t host_input_sizes[1] = {input_size};
+    size_t host_output_sizes[1] = {output_size};
+
+    cuda_status = cudaMemcpy(
+        d_input_ptrs,
+        host_input_ptrs,
+        sizeof(void*),
+        cudaMemcpyHostToDevice
+    );
+    if (cuda_status != cudaSuccess) {
+        cleanup();
+        return -1;
+    }
+
+    cuda_status = cudaMemcpy(
+        d_output_ptrs,
+        host_output_ptrs,
+        sizeof(void*),
+        cudaMemcpyHostToDevice
+    );
+    if (cuda_status != cudaSuccess) {
+        cleanup();
+        return -1;
+    }
+
+    cuda_status = cudaMemcpy(
+        d_input_sizes,
+        host_input_sizes,
+        sizeof(size_t),
+        cudaMemcpyHostToDevice
+    );
+    if (cuda_status != cudaSuccess) {
+        cleanup();
+        return -1;
+    }
+
+    cuda_status = cudaMemcpy(
+        d_output_sizes,
+        host_output_sizes,
+        sizeof(size_t),
+        cudaMemcpyHostToDevice
+    );
+    if (cuda_status != cudaSuccess) {
+        cleanup();
+        return -1;
+    }
+
+    nvcompBatchedGdeflateDecompressOpts_t decompress_opts =
+        nvcompBatchedGdeflateDecompressDefaultOpts;
+
+    size_t temp_bytes = 0;
+
+    nvcomp_status = nvcompBatchedGdeflateDecompressGetTempSizeSync(
+        reinterpret_cast<const void* const*>(d_input_ptrs),
+        d_input_sizes,
+        1,
+        output_size,
+        &temp_bytes,
+        output_size,
+        decompress_opts,
+        d_statuses,
+        0
+    );
+    if (nvcomp_status != nvcompSuccess) {
+        cleanup();
+        return -1;
+    }
+
     if (temp_bytes > 0) {
         cuda_status = cudaMalloc(&d_temp, temp_bytes);
         if (cuda_status != cudaSuccess) {
-            cudaFree(d_input);
-            cudaFree(d_output);
-            return -1; // Temp memory allocation failed
+            cleanup();
+            return -1;
         }
     }
-    
-    // Prepare batch parameters
-    const uint8_t* d_input_ptrs[1] = { d_input };
-    size_t input_sizes[1] = { input_size };
-    size_t output_sizes[1] = { output_size };
-    uint8_t* d_output_ptrs[1] = { d_output };
-    nvcompStatus_t statuses[1];
-    
-    // Decompress using nvCOMP
+
     nvcomp_status = nvcompBatchedGdeflateDecompressAsync(
-        d_input_ptrs,       // compressed data pointers
-        input_sizes,        // compressed data sizes
-        output_sizes,       // uncompressed sizes
-        nullptr,            // actual uncompressed sizes (output)
-        1,                  // batch size
-        d_temp,             // temporary workspace
-        temp_bytes,         // workspace size
-        d_output_ptrs,      // output pointers
-        statuses,           // per-chunk status
-        nullptr             // CUDA stream (use default)
+        reinterpret_cast<const void* const*>(d_input_ptrs),
+        d_input_sizes,
+        d_output_sizes,
+        nullptr,
+        1,
+        d_temp,
+        temp_bytes,
+        reinterpret_cast<void* const*>(d_output_ptrs),
+        decompress_opts,
+        d_statuses,
+        0
     );
-    
-    // Wait for GPU to finish
-    cudaStreamSynchronize(nullptr);
-    
-    int result = -1;
-    if (nvcomp_status == nvcompSuccess && statuses[0] == nvcompSuccess) {
-        // Copy result back to host
-        cuda_status = cudaMemcpy(output, d_output, output_size, cudaMemcpyDeviceToHost);
-        if (cuda_status == cudaSuccess) {
-            result = 0; // Success
-        }
+    if (nvcomp_status != nvcompSuccess) {
+        cleanup();
+        return -1;
     }
-    
-    // Cleanup device memory
-    cudaFree(d_input);
-    cudaFree(d_output);
-    if (d_temp) {
-        cudaFree(d_temp);
+
+    cuda_status = cudaStreamSynchronize(0);
+    if (cuda_status != cudaSuccess) {
+        cleanup();
+        return -1;
     }
-    
-    return result;
+
+    nvcompStatus_t status_host = nvcompSuccess;
+    cuda_status = cudaMemcpy(
+        &status_host,
+        d_statuses,
+        sizeof(nvcompStatus_t),
+        cudaMemcpyDeviceToHost
+    );
+    if (cuda_status != cudaSuccess || status_host != nvcompSuccess) {
+        cleanup();
+        return -1;
+    }
+
+    cuda_status = cudaMemcpy(
+        output,
+        d_output,
+        output_size,
+        cudaMemcpyDeviceToHost
+    );
+    if (cuda_status != cudaSuccess) {
+        cleanup();
+        return -1;
+    }
+
+    cleanup();
+    return 0;
 }
 
 /**

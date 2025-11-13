@@ -15,8 +15,9 @@ fn main() {
 
     // Test different compression levels
     for level in [1, 6, 12] {
-        let compressed = compress(input, level, 0)
-            .unwrap_or_else(|_| panic!("compression failed at level {}", level));
+        let compressed = compress(input, level, 0).unwrap_or_else(|_| {
+            panic!("compression failed at level {}", level)
+        });
 
         let ratio = (compressed.len() as f64 / input.len() as f64) * 100.0;
         println!(
@@ -28,7 +29,9 @@ fn main() {
 
         // Verify decompression
         let decompressed = decompress(&compressed, input.len(), 0)
-            .unwrap_or_else(|_| panic!("decompression failed at level {}", level));
+            .unwrap_or_else(|_| {
+                panic!("decompression failed at level {}", level)
+            });
 
         assert_eq!(
             input,

@@ -1,0 +1,10 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: GDeflate
+Description: GDeflate compression library - GPU-optimized DEFLATE compression format
+Version: 
+Libs: -L${libdir} -lGDeflate -lpthread
+Cflags: -I${includedir}/gdeflate

@@ -75,13 +75,8 @@ pub mod gpu;
 // Re-export GPU module for convenience when feature is enabled
 #[cfg(feature = "cuda-gpu")]
 pub use gpu::{
-    decompress_auto as decompress_gpu_auto,
-    decompress_with_gpu,
-    get_gpu_devices,
-    is_gpu_available,
-    should_use_gpu,
-    GpuInfo,
-    GPU_MAX_SIZE,
+    decompress_auto as decompress_gpu_auto, decompress_with_gpu,
+    get_gpu_devices, is_gpu_available, should_use_gpu, GpuInfo, GPU_MAX_SIZE,
     GPU_SIZE_THRESHOLD,
 };
 
@@ -356,12 +351,12 @@ pub fn recommended_workers(output_size: usize) -> u32 {
     let cpu_count = std::thread::available_parallelism()
         .map(|n| n.get() as u32)
         .unwrap_or(8); // Default to 8 if detection fails
-    
+
     // Size-based heuristics (in bytes)
     const SIZE_1MB: usize = 1024 * 1024;
     const SIZE_10MB: usize = 10 * SIZE_1MB;
     const SIZE_100MB: usize = 100 * SIZE_1MB;
-    
+
     let recommended = if output_size < SIZE_1MB {
         // Small files: single-threaded to avoid overhead
         1
@@ -375,7 +370,7 @@ pub fn recommended_workers(output_size: usize) -> u32 {
         // Large files: maximum parallelism
         std::cmp::min(32, cpu_count)
     };
-    
+
     std::cmp::max(1, recommended)
 }
 
@@ -476,10 +471,14 @@ mod tests {
         }
 
         for level in MIN_COMPRESSION_LEVEL..=MAX_COMPRESSION_LEVEL {
-            let compressed = compress(&input_bytes, level, 0)
-                .unwrap_or_else(|_| panic!("compression failed at level {}", level));
+            let compressed =
+                compress(&input_bytes, level, 0).unwrap_or_else(|_| {
+                    panic!("compression failed at level {}", level)
+                });
             let decompressed = decompress(&compressed, input_bytes.len(), 0)
-                .unwrap_or_else(|_| panic!("decompression failed at level {}", level));
+                .unwrap_or_else(|_| {
+                    panic!("decompression failed at level {}", level)
+                });
             assert_eq!(input_bytes, decompressed);
         }
     }
@@ -488,20 +487,20 @@ mod tests {
     fn test_recommended_workers() {
         // Small file - should recommend 1 thread
         assert_eq!(recommended_workers(500_000), 1); // 500 KB
-        
+
         // Medium-small file - should recommend limited parallelism
         let workers = recommended_workers(5_000_000); // 5 MB
         assert!((1..=4).contains(&workers));
-        
+
         // Medium-large file - should recommend moderate parallelism
         let workers = recommended_workers(50_000_000); // 50 MB
         assert!((1..=8).contains(&workers));
-        
+
         // Large file - should recommend maximum available parallelism
         // (capped by system CPU count)
         let workers = recommended_workers(500_000_000); // 500 MB
         assert!((1..=32).contains(&workers));
-        
+
         // Verify it scales with available CPUs
         let cpu_count = std::thread::available_parallelism()
             .map(|n| n.get() as u32)
@@ -516,8 +515,9 @@ mod tests {
         for _ in 0..100 {
             input_bytes.extend_from_slice(input_text.as_bytes());
         }
-        
-        let compressed = compress(&input_bytes, 6, 0).expect("compression failed");
+
+        let compressed =
+            compress(&input_bytes, 6, 0).expect("compression failed");
         let decompressed = decompress_auto(&compressed, input_bytes.len())
             .expect("auto decompression failed");
         assert_eq!(input_bytes, decompressed);
@@ -526,21 +526,30 @@ mod tests {
     #[test]
     fn test_multi_threaded_decompression() {
         // Create larger test data
-        let input_text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ";
+        let input_text =
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ";
         let mut input_bytes = Vec::new();
         for _ in 0..1000 {
             input_bytes.extend_from_slice(input_text.as_bytes());
         }
-        
-        let compressed = compress(&input_bytes, 6, 0).expect("compression failed");
-        
+
+        let compressed =
+            compress(&input_bytes, 6, 0).expect("compression failed");
+
         // Test with different thread counts
         for num_workers in [1, 2, 4, 8] {
-            let decompressed = decompress(&compressed, input_bytes.len(), num_workers)
-                .unwrap_or_else(|_| panic!("decompression failed with {} workers", num_workers));
+            let decompressed =
+                decompress(&compressed, input_bytes.len(), num_workers)
+                    .unwrap_or_else(|_| {
+                        panic!(
+                            "decompression failed with {} workers",
+                            num_workers
+                        )
+                    });
             assert_eq!(
                 input_bytes, decompressed,
-                "Data mismatch with {} workers", num_workers
+                "Data mismatch with {} workers",
+                num_workers
             );
         }
     }
@@ -552,17 +561,18 @@ mod tests {
         for (i, byte) in input_bytes.iter_mut().enumerate() {
             *byte = (i % 256) as u8;
         }
-        
-        let compressed = compress(&input_bytes, 6, 0).expect("compression failed");
-        
+
+        let compressed =
+            compress(&input_bytes, 6, 0).expect("compression failed");
+
         // Single-threaded
         let single = decompress(&compressed, input_bytes.len(), 1)
             .expect("single-threaded decompression failed");
-        
+
         // Multi-threaded
         let multi = decompress(&compressed, input_bytes.len(), 4)
             .expect("multi-threaded decompression failed");
-        
+
         // Results should be identical
         assert_eq!(single, multi);
         assert_eq!(input_bytes, single);

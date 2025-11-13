@@ -1,0 +1,110 @@
+[
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-gcc  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -g -fPIC -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.c",
+  "file": "/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.c",
+  "output": "CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-gcc  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -g -fPIC -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.c",
+  "file": "/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.c",
+  "output": "CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-gcc  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -g -fPIC -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.c",
+  "file": "/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.c",
+  "output": "CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-gcc  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -g -fPIC -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.c",
+  "file": "/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.c",
+  "output": "CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-gcc  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -g -fPIC -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.c",
+  "file": "/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.c",
+  "output": "CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-gcc  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -g -fPIC -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.c",
+  "file": "/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.c",
+  "output": "CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-gcc  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -g -fPIC -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.c",
+  "file": "/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.c",
+  "output": "CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-gcc  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -g -fPIC -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.c",
+  "file": "/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.c",
+  "output": "CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-gcc  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -g -fPIC -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.c",
+  "file": "/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.c",
+  "output": "CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-gcc  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -g -fPIC -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.c",
+  "file": "/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.c",
+  "output": "CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-gcc  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -g -fPIC -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.c",
+  "file": "/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.c",
+  "output": "CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-gcc  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -g -fPIC -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.c",
+  "file": "/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.c",
+  "output": "CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-g++  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -I/home/toor/ripgrep/crates/gdeflate/GDeflate -g -o CMakeFiles/GDeflate.dir/GDeflateCompress.o -c /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateCompress.cpp",
+  "file": "/home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateCompress.cpp",
+  "output": "CMakeFiles/GDeflate.dir/GDeflateCompress.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-g++  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -I/home/toor/ripgrep/crates/gdeflate/GDeflate -g -o CMakeFiles/GDeflate.dir/GDeflateDecompress.o -c /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateDecompress.cpp",
+  "file": "/home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateDecompress.cpp",
+  "output": "CMakeFiles/GDeflate.dir/GDeflateDecompress.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-g++  -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -I/home/toor/ripgrep/crates/gdeflate/GDeflate -g -o CMakeFiles/GDeflate.dir/GDeflate_c.o -c /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflate_c.cpp",
+  "file": "/home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflate_c.cpp",
+  "output": "CMakeFiles/GDeflate.dir/GDeflate_c.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-g++ -DGDeflate_shared_EXPORTS -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -I/home/toor/ripgrep/crates/gdeflate/GDeflate -g -fPIC -o CMakeFiles/GDeflate_shared.dir/GDeflateCompress.o -c /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateCompress.cpp",
+  "file": "/home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateCompress.cpp",
+  "output": "CMakeFiles/GDeflate_shared.dir/GDeflateCompress.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-g++ -DGDeflate_shared_EXPORTS -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -I/home/toor/ripgrep/crates/gdeflate/GDeflate -g -fPIC -o CMakeFiles/GDeflate_shared.dir/GDeflateDecompress.o -c /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateDecompress.cpp",
+  "file": "/home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateDecompress.cpp",
+  "output": "CMakeFiles/GDeflate_shared.dir/GDeflateDecompress.o"
+},
+{
+  "directory": "/home/toor/ripgrep/build",
+  "command": "/usr/bin/cuda-g++ -DGDeflate_shared_EXPORTS -I/home/toor/ripgrep/crates/gdeflate/GDeflate/../3rdparty/libdeflate -I/home/toor/ripgrep/crates/gdeflate/GDeflate -g -fPIC -o CMakeFiles/GDeflate_shared.dir/GDeflate_c.o -c /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflate_c.cpp",
+  "file": "/home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflate_c.cpp",
+  "output": "CMakeFiles/GDeflate_shared.dir/GDeflate_c.o"
+}
+]

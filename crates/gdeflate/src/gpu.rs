@@ -169,7 +169,10 @@ pub fn should_use_gpu(size: usize) -> bool {
 ///     Err(e) => println!("GPU decompression failed: {}, falling back to CPU", e),
 /// }
 /// ```
-pub fn decompress_with_gpu(input: &[u8], output_size: usize) -> Result<Vec<u8>> {
+pub fn decompress_with_gpu(
+    input: &[u8],
+    output_size: usize,
+) -> Result<Vec<u8>> {
     #[cfg(feature = "cuda-gpu")]
     {
         if !is_gpu_available() {
@@ -253,7 +256,10 @@ struct GpuDeviceInfo {
 #[cfg(feature = "cuda-gpu")]
 extern "C" {
     fn gpu_is_available() -> bool;
-    fn gpu_get_device_info(devices: *mut GpuDeviceInfo, max_devices: i32) -> i32;
+    fn gpu_get_device_info(
+        devices: *mut GpuDeviceInfo,
+        max_devices: i32,
+    ) -> i32;
     fn gpu_decompress(
         input: *const u8,
         input_size: usize,
@@ -290,7 +296,10 @@ unsafe fn gpu_get_devices() -> Vec<GpuInfo> {
                 name,
                 total_memory: d.total_memory,
                 free_memory: d.free_memory,
-                compute_capability: (d.compute_major as u32, d.compute_minor as u32),
+                compute_capability: (
+                    d.compute_major as u32,
+                    d.compute_minor as u32,
+                ),
                 multiprocessor_count: d.multiprocessor_count as u32,
             }
         })
@@ -298,9 +307,12 @@ unsafe fn gpu_get_devices() -> Vec<GpuInfo> {
 }
 
 #[cfg(feature = "cuda-gpu")]
-unsafe fn gpu_decompress_internal(input: &[u8], output_size: usize) -> Result<Vec<u8>> {
+unsafe fn gpu_decompress_internal(
+    input: &[u8],
+    output_size: usize,
+) -> Result<Vec<u8>> {
     let mut output = vec![0u8; output_size];
-    
+
     let result = gpu_decompress(
         input.as_ptr(),
         input.len(),
@@ -357,7 +369,7 @@ mod tests {
         // Test that decompress_auto works even without GPU
         let input = crate::compress(b"Hello, GPU world!", 6, 0).unwrap();
         let result = decompress_auto(&input, 17);
-        
+
         // Should succeed using CPU fallback
         assert!(result.is_ok());
         assert_eq!(result.unwrap(), b"Hello, GPU world!");

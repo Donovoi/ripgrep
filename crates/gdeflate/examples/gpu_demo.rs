@@ -59,10 +59,7 @@ fn demo_with_gpu() {
                 "  Compute Capability: {}.{}",
                 device.compute_capability.0, device.compute_capability.1
             );
-            println!(
-                "  Multiprocessors: {}",
-                device.multiprocessor_count
-            );
+            println!("  Multiprocessors: {}", device.multiprocessor_count);
         }
     } else {
         println!("✗ No NVIDIA GPU detected");
@@ -74,7 +71,10 @@ fn demo_with_gpu() {
     }
 
     println!("\n--- GPU Usage Heuristics ---");
-    println!("GPU Threshold: {} GB", GPU_SIZE_THRESHOLD / (1024 * 1024 * 1024));
+    println!(
+        "GPU Threshold: {} GB",
+        GPU_SIZE_THRESHOLD / (1024 * 1024 * 1024)
+    );
 
     let test_sizes = vec![
         ("1 GB", 1 * 1024 * 1024 * 1024),
@@ -125,8 +125,8 @@ fn demo_compression_decompression_with_gpu() {
 
     // Decompress with auto (will use GPU if file >= 50GB)
     let start = Instant::now();
-    let decompressed_auto =
-        decompress_auto(&compressed, test_data.len()).expect("Auto decompression failed");
+    let decompressed_auto = decompress_auto(&compressed, test_data.len())
+        .expect("Auto decompression failed");
     let auto_time = start.elapsed();
     println!(
         "Auto decompression: {:.2?} (used CPU for small file)",
@@ -134,20 +134,16 @@ fn demo_compression_decompression_with_gpu() {
     );
 
     // Verify results
-    assert_eq!(
-        test_data, decompressed_cpu,
-        "CPU decompression mismatch!"
-    );
-    assert_eq!(
-        test_data, decompressed_auto,
-        "Auto decompression mismatch!"
-    );
+    assert_eq!(test_data, decompressed_cpu, "CPU decompression mismatch!");
+    assert_eq!(test_data, decompressed_auto, "Auto decompression mismatch!");
     println!("✓ All decompression results verified correctly");
 
     println!("\n--- Performance Notes ---");
     println!("• This 10 MB file uses CPU decompression (< 50 GB threshold)");
     println!("• For files >= 50 GB, GPU would provide 4-15x speedup");
-    println!("• GPU decompression automatically falls back to CPU if unavailable");
+    println!(
+        "• GPU decompression automatically falls back to CPU if unavailable"
+    );
 }
 
 #[cfg(not(feature = "cuda-gpu"))]
@@ -185,8 +181,12 @@ fn demo_without_gpu() {
     println!("✓ Decompression verified correctly");
 
     println!("\n--- Performance Notes ---");
-    println!("• CPU-only build provides excellent performance for most use cases");
-    println!("• For extremely large files (>= 50 GB), consider GPU acceleration");
+    println!(
+        "• CPU-only build provides excellent performance for most use cases"
+    );
+    println!(
+        "• For extremely large files (>= 50 GB), consider GPU acceleration"
+    );
     println!("• GPU provides 4-15x speedup for 50GB-500GB files");
 }
 

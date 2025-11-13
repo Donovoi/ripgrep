@@ -1,0 +1,75 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-bd4e77f9b300663491fa.json",
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Project",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "GDeflate::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-GDeflate-Debug-e32eec7392d7a67dd83b.json",
+					"name" : "GDeflate",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "GDeflate_shared::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-GDeflate_shared-Debug-aec55d5584a3160d49eb.json",
+					"name" : "GDeflate_shared",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "libdeflate_static::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-libdeflate_static-Debug-ca5b0827ada4b3747d4d.json",
+					"name" : "libdeflate_static",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/toor/ripgrep/build",
+		"source" : "/home/toor/ripgrep/crates/gdeflate/GDeflate"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}
