@@ -1,0 +1,20 @@
+[package]
+name = "gdeflate"
+version = "1.0.0"
+edition = "2021"
+authors = ["DirectStorage Contributors"]
+license = "Apache-2.0"
+description = "Rust bindings for GDeflate - GPU-optimized DEFLATE compression format"
+repository = "https://github.com/Donovoi/DirectStorage"
+keywords = ["compression", "decompression", "deflate", "gdeflate"]
+categories = ["compression", "api-bindings"]
+readme = "README.md"
+
+[lib]
+name = "gdeflate"
+crate-type = ["lib", "staticlib", "cdylib"]
+
+[dependencies]
+
+[build-dependencies]
+cc = "1.0"

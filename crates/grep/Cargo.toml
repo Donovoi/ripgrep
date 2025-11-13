@@ -27,6 +27,7 @@ walkdir = "2.2.7"
 
 [features]
 pcre2 = ["grep-pcre2"]
+gdeflate = ["grep-cli/gdeflate"]
 
 # These features are DEPRECATED. Runtime dispatch is used for SIMD now.
 simd-accel = []
