@@ -240,6 +240,17 @@ int gpu_select_device() {
     return -1;
 }
 
+int gpu_substring_contains(const uint8_t* haystack,
+                           size_t haystack_len,
+                           const uint8_t* needle,
+                           size_t needle_len) {
+    (void)haystack;
+    (void)haystack_len;
+    (void)needle;
+    (void)needle_len;
+    return -1;
+}
+
 } // extern "C"
 
 #endif // CUDA_GPU_SUPPORT

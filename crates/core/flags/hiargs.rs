@@ -704,8 +704,47 @@ impl HiArgs {
             .search_zip(self.search_zip)
             .binary_detection_explicit(self.binary.explicit.clone())
             .binary_detection_implicit(self.binary.implicit.clone());
+        self.configure_gpu_prefilter(&mut builder);
         Ok(builder.build(matcher, searcher, printer))
     }
+
+    #[cfg(feature = "cuda-gpu")]
+    fn configure_gpu_prefilter(&self, builder: &mut SearchWorkerBuilder) {
+        if !self.fixed_strings {
+            return;
+        }
+        if self.patterns.patterns.len() != 1 {
+            return;
+        }
+        if !matches!(self.case, CaseMode::Sensitive) {
+            return;
+        }
+        if self.invert_match {
+            return;
+        }
+
+        let pattern = self.patterns.patterns[0].as_bytes();
+        if pattern.is_empty() {
+            return;
+        }
+
+        if let Some(config) = gdeflate::estimate_literal_search_config() {
+            builder.gpu_prefilter_literal(
+                pattern.to_vec(),
+                config.min_file_bytes,
+                config.chunk_bytes,
+                self.stats.is_some(),
+            );
+            log::debug!(
+                "GPU literal prefilter enabled: threshold={} bytes chunk={}",
+                config.min_file_bytes,
+                config.chunk_bytes
+            );
+        }
+    }
+
+    #[cfg(not(feature = "cuda-gpu"))]
+    fn configure_gpu_prefilter(&self, _builder: &mut SearchWorkerBuilder) {}
 
     /// Build a searcher from the command line parameters.
     pub(crate) fn searcher(&self) -> anyhow::Result<grep::searcher::Searcher> {

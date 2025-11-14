@@ -1,11 +1,42 @@
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::process::Command;
 
 struct NvcompConfig {
     include_dirs: Vec<PathBuf>,
     lib_dirs: Vec<PathBuf>,
     libs: Vec<&'static str>,
+}
+
+fn add_if_thrust_present(dir: PathBuf, out: &mut Vec<PathBuf>) {
+    if dir.join("thrust").join("device_vector.h").exists()
+        && !out.iter().any(|existing| existing == &dir)
+    {
+        out.push(dir);
+    }
+}
+
+fn detect_thrust_include(cuda_include: &Path) -> Vec<PathBuf> {
+    let mut dirs = Vec::new();
+
+    add_if_thrust_present(cuda_include.to_path_buf(), &mut dirs);
+
+    if let Ok(thrust_root) = env::var("THRUST_ROOT") {
+        let root_path = PathBuf::from(thrust_root);
+        add_if_thrust_present(root_path.clone(), &mut dirs);
+        add_if_thrust_present(root_path.join("include"), &mut dirs);
+    }
+
+    for candidate in [
+        PathBuf::from("/usr/include"),
+        PathBuf::from("/usr/local/include"),
+        PathBuf::from("/opt/nvidia/thrust/include"),
+    ] {
+        add_if_thrust_present(candidate, &mut dirs);
+    }
+
+    dirs
 }
 
 fn library_exists(dir: &Path, lib_name: &str) -> bool {
@@ -75,6 +106,96 @@ fn collect_nvcomp_lib_dirs(candidate: &Path, out: &mut Vec<PathBuf>) {
     {
         out.push(stubs);
     }
+}
+
+#[cfg(not(target_os = "windows"))]
+fn compiler_major_version(compiler: &std::ffi::OsStr) -> Option<u32> {
+    let try_version = |arg: &str| {
+        Command::new(compiler)
+            .arg(arg)
+            .output()
+            .ok()
+            .filter(|output| output.status.success())
+    };
+
+    let output = try_version("-dumpfullversion")
+        .or_else(|| try_version("-dumpversion"))?;
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    stdout.trim().split('.').next().and_then(|major| major.parse::<u32>().ok())
+}
+
+#[cfg(not(target_os = "windows"))]
+fn resolve_executable(candidate: &str) -> Option<PathBuf> {
+    let path = Path::new(candidate);
+    if path.is_absolute() || path.components().count() > 1 {
+        return path.exists().then_some(path.to_path_buf());
+    }
+
+    let path_var = env::var_os("PATH")?;
+    for dir in env::split_paths(&path_var) {
+        let full_path = dir.join(candidate);
+        if full_path.exists() {
+            return Some(full_path);
+        }
+    }
+    None
+}
+
+fn detect_cuda_host_compiler() -> Option<PathBuf> {
+    if let Ok(host) = env::var("CUDAHOSTCXX") {
+        let path = PathBuf::from(&host);
+        if path.is_absolute() || path.components().count() > 1 {
+            return Some(path);
+        }
+        #[cfg(not(target_os = "windows"))]
+        if let Some(resolved) = resolve_executable(&host) {
+            return Some(resolved);
+        }
+        return Some(PathBuf::from(host));
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    {
+        if let Ok(explicit) = env::var("RG_CUDA_HOST_COMPILER") {
+            if let Some(path) = resolve_executable(&explicit) {
+                return Some(path);
+            } else {
+                println!(
+                    "cargo:warning=RG_CUDA_HOST_COMPILER was set to {} but the compiler was not found",
+                    explicit
+                );
+            }
+        }
+
+        if let Some(major) =
+            compiler_major_version(std::ffi::OsStr::new("c++"))
+        {
+            if major <= 12 {
+                return None;
+            }
+        }
+
+        let fallback_candidates = [
+            "c++-12", "g++-12", "c++-11", "g++-11", "c++-10", "g++-10",
+            "c++-9", "g++-9",
+        ];
+
+        for candidate in &fallback_candidates {
+            if let Some(path) = resolve_executable(candidate) {
+                if let Some(major) = compiler_major_version(path.as_os_str())
+                    .or_else(|| {
+                        compiler_major_version(std::ffi::OsStr::new(candidate))
+                    })
+                {
+                    if major <= 12 {
+                        return Some(path);
+                    }
+                }
+            }
+        }
+    }
+
+    None
 }
 
 fn header_parent_if_exists(path: PathBuf) -> Option<PathBuf> {
@@ -281,12 +402,65 @@ fn main() {
             let mut gpu_build = cc::Build::new();
             gpu_build
                 .file(gdeflate_src.join("GDeflate_gpu.cpp"))
+                .file(gdeflate_src.join("GpuSubstringSearch.cu"))
                 .cpp(true)
-                .std("c++17")
+                .cuda(true)
                 .include(&gdeflate_src)
                 .include(&cuda_include)
                 .define("CUDA_GPU_SUPPORT", None)
                 .warnings(false);
+
+            if cfg!(debug_assertions) {
+                // The cc crate injects -G for debug builds when compiling CUDA
+                // sources, which triggers a known NVCC stub generation bug
+                // with heavily templatized Thrust kernels. Disable device
+                // debug info explicitly while keeping host-side debug output.
+                gpu_build.debug(false);
+                gpu_build.opt_level(0);
+                gpu_build.flag("-Xcompiler");
+                gpu_build.flag("-Og");
+                gpu_build.flag("-Xcompiler");
+                gpu_build.flag("-g");
+            }
+
+            if let Some(host_compiler) = detect_cuda_host_compiler() {
+                if let Some(path) = host_compiler.to_str() {
+                    println!(
+                        "cargo:warning=Using {} as CUDA host compiler (set CUDAHOSTCXX or RG_CUDA_HOST_COMPILER to override)",
+                        path
+                    );
+                    gpu_build.flag("-ccbin");
+                    gpu_build.flag(path);
+                }
+            }
+
+            // Newer distributions often ship host compilers that are newer
+            // than what the bundled NVCC officially supports. Rather than
+            // fail with opaque parser errors when that happens, opt into
+            // NVCC's forward-compatibility mode so that we can build with
+            // the system toolchain by default.
+            gpu_build.flag("-allow-unsupported-compiler");
+
+            let float_compat = gdeflate_src.join("FloatCompat.h");
+            if let Some(path) = float_compat.to_str() {
+                gpu_build.flag("-include");
+                gpu_build.flag(path);
+            }
+
+            gpu_build.flag("-std=c++17");
+            gpu_build.flag("-Xcompiler");
+            gpu_build.flag("-std=gnu++17");
+
+            let thrust_includes = detect_thrust_include(&cuda_include);
+            if thrust_includes.is_empty() {
+                println!(
+                    "cargo:warning=Thrust headers not found; install libthrust-dev or set THRUST_ROOT"
+                );
+            } else {
+                for dir in &thrust_includes {
+                    gpu_build.include(dir);
+                }
+            }
 
             if let Some(config) = &nvcomp_config {
                 println!("cargo:warning=nvCOMP library found, enabling GPU decompression");
@@ -351,6 +525,7 @@ fn main() {
 
         println!("cargo:rerun-if-changed=GDeflate/GDeflate_gpu.cpp");
         println!("cargo:rerun-if-changed=GDeflate/GDeflate_nvcomp.cpp");
+        println!("cargo:rerun-if-changed=GDeflate/GpuSubstringSearch.cu");
         println!("cargo:rerun-if-changed=GDeflate/GDeflate_gpu.h");
         println!("cargo:rerun-if-env-changed=CUDA_PATH");
         println!("cargo:rerun-if-env-changed=CUDA_HOME");
