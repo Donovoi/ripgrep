@@ -76,8 +76,9 @@ pub mod gpu;
 #[cfg(feature = "cuda-gpu")]
 pub use gpu::{
     decompress_auto as decompress_gpu_auto, decompress_with_gpu,
-    get_gpu_devices, is_gpu_available, should_use_gpu, GpuInfo, GPU_MAX_SIZE,
-    GPU_SIZE_THRESHOLD,
+    estimate_literal_search_config, get_gpu_devices, is_gpu_available,
+    should_use_gpu, substring_contains, GpuInfo, LiteralSearchConfig,
+    GPU_MAX_SIZE, GPU_SIZE_THRESHOLD,
 };
 
 /// Minimum compression level

@@ -62,6 +62,18 @@ int gpu_decompress(const uint8_t* input, size_t input_size,
  */
 int gpu_select_device(void);
 
+/**
+ * Search for a literal substring using the GPU.
+ *
+ * @param haystack Pointer to the buffer to search.
+ * @param haystack_len Length of the haystack buffer in bytes.
+ * @param needle Pointer to the literal pattern bytes.
+ * @param needle_len Number of bytes in the pattern.
+ * @return 1 when a match is found, 0 if not found, negative on error.
+ */
+int gpu_substring_contains(const uint8_t* haystack, size_t haystack_len,
+                          const uint8_t* needle, size_t needle_len);
+
 #ifdef __cplusplus
 }
 #endif

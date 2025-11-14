@@ -38,6 +38,11 @@
 
 use crate::{Error, Result};
 
+/// Helper constant for megabyte conversion.
+const MB: u64 = 1024 * 1024;
+/// Helper constant for gigabyte conversion.
+const GB: u64 = MB * 1024;
+
 /// Minimum file size in bytes to consider GPU decompression (50 GB)
 pub const GPU_SIZE_THRESHOLD: usize = 50 * 1024 * 1024 * 1024;
 
@@ -59,6 +64,20 @@ pub struct GpuInfo {
     /// Number of streaming multiprocessors
     pub multiprocessor_count: u32,
 }
+
+/// Auto-tuning parameters for GPU literal search offload.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct LiteralSearchConfig {
+    /// Minimum file size (in bytes) before the GPU prefilter is used.
+    pub min_file_bytes: u64,
+    /// Size of each chunk handed to the GPU search kernel.
+    pub chunk_bytes: usize,
+}
+
+const MIN_LITERAL_THRESHOLD: u64 = 512 * MB;
+const MAX_LITERAL_THRESHOLD: u64 = 8 * GB;
+const MIN_LITERAL_CHUNK: usize = 32 * 1024 * 1024; // 32 MiB
+const MAX_LITERAL_CHUNK: usize = 512 * 1024 * 1024; // 512 MiB
 
 /// Check if GPU acceleration is available
 ///
@@ -110,6 +129,40 @@ pub fn get_gpu_devices() -> Vec<GpuInfo> {
     #[cfg(not(feature = "cuda-gpu"))]
     {
         Vec::new()
+    }
+}
+
+/// Estimate automatic thresholds for literal GPU searching.
+///
+/// Returns `None` when GPU searching is unavailable. The returned configuration
+/// provides the minimum file size that warrants GPU prefiltering along with the
+/// chunk size (in bytes) that balances PCIe transfers and GPU occupancy.
+pub fn estimate_literal_search_config() -> Option<LiteralSearchConfig> {
+    #[cfg(feature = "cuda-gpu")]
+    {
+        let devices = get_gpu_devices();
+        let best =
+            devices.into_iter().max_by_key(|device| device.free_memory)?;
+
+        if best.free_memory == 0 {
+            return None;
+        }
+
+        let free = best.free_memory as u64;
+        let min_file = std::cmp::max(free / 6, MIN_LITERAL_THRESHOLD)
+            .min(MAX_LITERAL_THRESHOLD);
+        let chunk = ((free / 8) as usize)
+            .max(MIN_LITERAL_CHUNK)
+            .min(MAX_LITERAL_CHUNK);
+
+        Some(LiteralSearchConfig {
+            min_file_bytes: min_file,
+            chunk_bytes: chunk,
+        })
+    }
+    #[cfg(not(feature = "cuda-gpu"))]
+    {
+        None
     }
 }
 
@@ -238,6 +291,43 @@ pub fn decompress_auto(input: &[u8], output_size: usize) -> Result<Vec<u8>> {
     crate::decompress_auto(input, output_size)
 }
 
+/// Run a GPU-accelerated literal substring search.
+///
+/// Returns `Ok(true)` when the substring is detected, `Ok(false)` when no
+/// occurrence exists, and `Err` to indicate GPU failure (triggering a CPU
+/// fallback in the caller).
+pub fn substring_contains(haystack: &[u8], needle: &[u8]) -> Result<bool> {
+    #[cfg(feature = "cuda-gpu")]
+    {
+        if needle.is_empty() {
+            return Ok(true);
+        }
+        if haystack.len() < needle.len() {
+            return Ok(false);
+        }
+
+        let result = unsafe {
+            gpu_substring_contains(
+                haystack.as_ptr(),
+                haystack.len(),
+                needle.as_ptr(),
+                needle.len(),
+            )
+        };
+
+        match result {
+            1 => Ok(true),
+            0 => Ok(false),
+            _ => Err(Error::Generic),
+        }
+    }
+    #[cfg(not(feature = "cuda-gpu"))]
+    {
+        let _ = (haystack, needle);
+        Err(Error::Generic)
+    }
+}
+
 // FFI declarations for CUDA/nvCOMP bindings
 // These are only compiled when cuda-gpu feature is enabled
 
@@ -265,6 +355,12 @@ extern "C" {
         input_size: usize,
         output: *mut u8,
         output_size: usize,
+    ) -> i32;
+    fn gpu_substring_contains(
+        haystack: *const u8,
+        haystack_len: usize,
+        needle: *const u8,
+        needle_len: usize,
     ) -> i32;
 }
 

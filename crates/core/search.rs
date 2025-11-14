@@ -22,6 +22,17 @@ struct Config {
     search_zip: bool,
     binary_implicit: grep::searcher::BinaryDetection,
     binary_explicit: grep::searcher::BinaryDetection,
+    #[cfg(feature = "cuda-gpu")]
+    gpu_prefilter: Option<GpuPrefilterConfig>,
+}
+
+#[cfg(feature = "cuda-gpu")]
+#[derive(Clone, Debug)]
+struct GpuPrefilterConfig {
+    min_file_bytes: u64,
+    chunk_bytes: usize,
+    pattern: Vec<u8>,
+    stats_enabled: bool,
 }
 
 impl Default for Config {
@@ -32,6 +43,8 @@ impl Default for Config {
             search_zip: false,
             binary_implicit: grep::searcher::BinaryDetection::none(),
             binary_explicit: grep::searcher::BinaryDetection::none(),
+            #[cfg(feature = "cuda-gpu")]
+            gpu_prefilter: None,
         }
     }
 }
@@ -157,6 +170,23 @@ impl SearchWorkerBuilder {
         detection: grep::searcher::BinaryDetection,
     ) -> &mut SearchWorkerBuilder {
         self.config.binary_explicit = detection;
+        self
+    }
+
+    #[cfg(feature = "cuda-gpu")]
+    pub(crate) fn gpu_prefilter_literal(
+        &mut self,
+        pattern: Vec<u8>,
+        min_file_bytes: u64,
+        chunk_bytes: usize,
+        stats_enabled: bool,
+    ) -> &mut SearchWorkerBuilder {
+        self.config.gpu_prefilter = Some(GpuPrefilterConfig {
+            min_file_bytes,
+            chunk_bytes,
+            pattern,
+            stats_enabled,
+        });
         self
     }
 }
@@ -342,6 +372,10 @@ impl<W: WriteColor> SearchWorker<W> {
     fn search_path(&mut self, path: &Path) -> io::Result<SearchResult> {
         use self::PatternMatcher::*;
 
+        if let Some(result) = self.try_gpu_prefilter(path)? {
+            return Ok(result);
+        }
+
         let (searcher, printer) = (&mut self.searcher, &mut self.printer);
         match self.matcher {
             RustRegex(ref m) => search_path(m, searcher, printer, path),
@@ -372,6 +406,128 @@ impl<W: WriteColor> SearchWorker<W> {
             #[cfg(feature = "pcre2")]
             PCRE2(ref m) => search_reader(m, searcher, printer, path, rdr),
         }
+    }
+
+    #[cfg(feature = "cuda-gpu")]
+    fn try_gpu_prefilter(
+        &mut self,
+        path: &Path,
+    ) -> io::Result<Option<SearchResult>> {
+        use std::io::Read;
+
+        let Some(ref config) = self.config.gpu_prefilter else {
+            return Ok(None);
+        };
+
+        if !matches!(&self.printer, Printer::Standard(_)) {
+            return Ok(None);
+        }
+
+        let metadata = match path.metadata() {
+            Ok(meta) => meta,
+            Err(err) => return Err(err),
+        };
+        if !metadata.is_file() {
+            return Ok(None);
+        }
+
+        let file_size = metadata.len();
+        if file_size < config.min_file_bytes {
+            return Ok(None);
+        }
+
+        if config.pattern.is_empty() {
+            return Ok(None);
+        }
+
+        let chunk_size = config.chunk_bytes.max(config.pattern.len());
+        let overlap = config.pattern.len().saturating_sub(1);
+        let mut buffer = vec![0u8; chunk_size + overlap];
+        let mut tail = Vec::with_capacity(overlap);
+        let start = std::time::Instant::now();
+        let mut file = std::fs::File::open(path)?;
+
+        loop {
+            let prefix_len = tail.len();
+            if prefix_len > 0 {
+                buffer[..prefix_len].copy_from_slice(&tail);
+            }
+
+            let mut read_total = 0usize;
+            while read_total < chunk_size {
+                let n = file.read(
+                    &mut buffer
+                        [prefix_len + read_total..prefix_len + chunk_size],
+                )?;
+                if n == 0 {
+                    break;
+                }
+                read_total += n;
+            }
+
+            if read_total == 0 {
+                break;
+            }
+
+            let total = prefix_len + read_total;
+            let haystack = &buffer[..total];
+            match gdeflate::substring_contains(haystack, &config.pattern) {
+                Ok(true) => {
+                    log::trace!(
+                        "{}: GPU prefilter found candidate match, using CPU",
+                        path.display()
+                    );
+                    return Ok(None);
+                }
+                Ok(false) => {}
+                Err(err) => {
+                    log::debug!(
+                        "{}: GPU prefilter failed ({:?}), using CPU",
+                        path.display(),
+                        err
+                    );
+                    return Ok(None);
+                }
+            }
+
+            if overlap > 0 {
+                let keep = overlap.min(total);
+                tail.clear();
+                tail.extend_from_slice(&haystack[total - keep..total]);
+            }
+
+            if read_total < chunk_size {
+                break;
+            }
+        }
+
+        let elapsed = start.elapsed();
+        let stats = if config.stats_enabled {
+            let mut stats = grep::printer::Stats::new();
+            stats.add_elapsed(elapsed);
+            stats.add_searches(1);
+            stats.add_bytes_searched(file_size);
+            Some(stats)
+        } else {
+            None
+        };
+
+        log::trace!(
+            "{}: GPU prefilter confirmed no matches ({} bytes, {:?})",
+            path.display(),
+            file_size,
+            elapsed
+        );
+
+        Ok(Some(SearchResult { has_match: false, stats }))
+    }
+
+    #[cfg(not(feature = "cuda-gpu"))]
+    fn try_gpu_prefilter(
+        &mut self,
+        _path: &Path,
+    ) -> io::Result<Option<SearchResult>> {
+        Ok(None)
     }
 }
 
