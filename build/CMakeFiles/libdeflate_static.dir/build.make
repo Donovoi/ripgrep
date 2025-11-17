@@ -73,169 +73,169 @@ CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libd
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.o: /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.c
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.o: CMakeFiles/libdeflate_static.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.o"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.c
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.c
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.i"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.i
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.i
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.s"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.s
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/adler32.s
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.o: CMakeFiles/libdeflate_static.dir/flags.make
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.o: /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.c
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.o: CMakeFiles/libdeflate_static.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.o"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.c
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.c
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.i"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.i
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.i
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.s"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.s
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/crc32.s
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.o: CMakeFiles/libdeflate_static.dir/flags.make
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.o: /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.c
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.o: CMakeFiles/libdeflate_static.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.o"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.c
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.c
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.i"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.i
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.i
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.s"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.s
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_compress.s
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.o: CMakeFiles/libdeflate_static.dir/flags.make
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.o: /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.c
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.o: CMakeFiles/libdeflate_static.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.o"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.c
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.c
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.i"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.i
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.i
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.s"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.s
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/deflate_decompress.s
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.o: CMakeFiles/libdeflate_static.dir/flags.make
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.o: /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.c
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.o: CMakeFiles/libdeflate_static.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.o"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.c
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.c
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.i"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.i
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.i
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.s"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.s
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_compress.s
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.o: CMakeFiles/libdeflate_static.dir/flags.make
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.o: /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.c
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.o: CMakeFiles/libdeflate_static.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.o"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.c
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.c
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.i"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.i
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.i
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.s"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.s
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gdeflate_decompress.s
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.o: CMakeFiles/libdeflate_static.dir/flags.make
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.o: /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.c
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.o: CMakeFiles/libdeflate_static.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.o"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.c
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.c
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.i"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.i
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.i
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.s"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.s
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_compress.s
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.o: CMakeFiles/libdeflate_static.dir/flags.make
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.o: /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.c
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.o: CMakeFiles/libdeflate_static.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.o"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.c
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.c
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.i"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.i
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.i
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.s"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.s
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/gzip_decompress.s
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.o: CMakeFiles/libdeflate_static.dir/flags.make
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.o: /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.c
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.o: CMakeFiles/libdeflate_static.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.o"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.c
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.c
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.i"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.i
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.i
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.s"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.s
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/utils.s
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.o: CMakeFiles/libdeflate_static.dir/flags.make
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.o: /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.c
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.o: CMakeFiles/libdeflate_static.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.o"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.c
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.c
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.i"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.i
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.i
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.s"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.s
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_compress.s
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.o: CMakeFiles/libdeflate_static.dir/flags.make
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.o: /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.c
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.o: CMakeFiles/libdeflate_static.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.o"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.c
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.c
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.i"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.i
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.i
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.s"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.s
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/zlib_decompress.s
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.o: CMakeFiles/libdeflate_static.dir/flags.make
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.o: /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.c
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.o: CMakeFiles/libdeflate_static.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building C object CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.o"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.c
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.o -MF CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.o.d -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.o -c /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.c
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.i"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.i
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.c > CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.i
 
 CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.s"
-	/usr/bin/cuda-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.s
+	/usr/bin/clang-16 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.c -o CMakeFiles/libdeflate_static.dir/home/toor/ripgrep/crates/gdeflate/3rdparty/libdeflate/lib/x86/cpu_features.s
 
 # Object files for target libdeflate_static
 libdeflate_static_OBJECTS = \
