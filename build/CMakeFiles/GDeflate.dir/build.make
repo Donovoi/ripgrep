@@ -73,43 +73,43 @@ CMakeFiles/GDeflate.dir/GDeflateCompress.o: CMakeFiles/GDeflate.dir/flags.make
 CMakeFiles/GDeflate.dir/GDeflateCompress.o: /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateCompress.cpp
 CMakeFiles/GDeflate.dir/GDeflateCompress.o: CMakeFiles/GDeflate.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/GDeflate.dir/GDeflateCompress.o"
-	/usr/bin/cuda-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GDeflate.dir/GDeflateCompress.o -MF CMakeFiles/GDeflate.dir/GDeflateCompress.o.d -o CMakeFiles/GDeflate.dir/GDeflateCompress.o -c /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateCompress.cpp
+	/usr/bin/clang++-16 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GDeflate.dir/GDeflateCompress.o -MF CMakeFiles/GDeflate.dir/GDeflateCompress.o.d -o CMakeFiles/GDeflate.dir/GDeflateCompress.o -c /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateCompress.cpp
 
 CMakeFiles/GDeflate.dir/GDeflateCompress.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/GDeflate.dir/GDeflateCompress.i"
-	/usr/bin/cuda-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateCompress.cpp > CMakeFiles/GDeflate.dir/GDeflateCompress.i
+	/usr/bin/clang++-16 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateCompress.cpp > CMakeFiles/GDeflate.dir/GDeflateCompress.i
 
 CMakeFiles/GDeflate.dir/GDeflateCompress.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/GDeflate.dir/GDeflateCompress.s"
-	/usr/bin/cuda-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateCompress.cpp -o CMakeFiles/GDeflate.dir/GDeflateCompress.s
+	/usr/bin/clang++-16 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateCompress.cpp -o CMakeFiles/GDeflate.dir/GDeflateCompress.s
 
 CMakeFiles/GDeflate.dir/GDeflateDecompress.o: CMakeFiles/GDeflate.dir/flags.make
 CMakeFiles/GDeflate.dir/GDeflateDecompress.o: /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateDecompress.cpp
 CMakeFiles/GDeflate.dir/GDeflateDecompress.o: CMakeFiles/GDeflate.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/GDeflate.dir/GDeflateDecompress.o"
-	/usr/bin/cuda-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GDeflate.dir/GDeflateDecompress.o -MF CMakeFiles/GDeflate.dir/GDeflateDecompress.o.d -o CMakeFiles/GDeflate.dir/GDeflateDecompress.o -c /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateDecompress.cpp
+	/usr/bin/clang++-16 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GDeflate.dir/GDeflateDecompress.o -MF CMakeFiles/GDeflate.dir/GDeflateDecompress.o.d -o CMakeFiles/GDeflate.dir/GDeflateDecompress.o -c /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateDecompress.cpp
 
 CMakeFiles/GDeflate.dir/GDeflateDecompress.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/GDeflate.dir/GDeflateDecompress.i"
-	/usr/bin/cuda-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateDecompress.cpp > CMakeFiles/GDeflate.dir/GDeflateDecompress.i
+	/usr/bin/clang++-16 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateDecompress.cpp > CMakeFiles/GDeflate.dir/GDeflateDecompress.i
 
 CMakeFiles/GDeflate.dir/GDeflateDecompress.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/GDeflate.dir/GDeflateDecompress.s"
-	/usr/bin/cuda-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateDecompress.cpp -o CMakeFiles/GDeflate.dir/GDeflateDecompress.s
+	/usr/bin/clang++-16 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflateDecompress.cpp -o CMakeFiles/GDeflate.dir/GDeflateDecompress.s
 
 CMakeFiles/GDeflate.dir/GDeflate_c.o: CMakeFiles/GDeflate.dir/flags.make
 CMakeFiles/GDeflate.dir/GDeflate_c.o: /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflate_c.cpp
 CMakeFiles/GDeflate.dir/GDeflate_c.o: CMakeFiles/GDeflate.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/toor/ripgrep/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/GDeflate.dir/GDeflate_c.o"
-	/usr/bin/cuda-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GDeflate.dir/GDeflate_c.o -MF CMakeFiles/GDeflate.dir/GDeflate_c.o.d -o CMakeFiles/GDeflate.dir/GDeflate_c.o -c /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflate_c.cpp
+	/usr/bin/clang++-16 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GDeflate.dir/GDeflate_c.o -MF CMakeFiles/GDeflate.dir/GDeflate_c.o.d -o CMakeFiles/GDeflate.dir/GDeflate_c.o -c /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflate_c.cpp
 
 CMakeFiles/GDeflate.dir/GDeflate_c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/GDeflate.dir/GDeflate_c.i"
-	/usr/bin/cuda-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflate_c.cpp > CMakeFiles/GDeflate.dir/GDeflate_c.i
+	/usr/bin/clang++-16 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflate_c.cpp > CMakeFiles/GDeflate.dir/GDeflate_c.i
 
 CMakeFiles/GDeflate.dir/GDeflate_c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/GDeflate.dir/GDeflate_c.s"
-	/usr/bin/cuda-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflate_c.cpp -o CMakeFiles/GDeflate.dir/GDeflate_c.s
+	/usr/bin/clang++-16 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/toor/ripgrep/crates/gdeflate/GDeflate/GDeflate_c.cpp -o CMakeFiles/GDeflate.dir/GDeflate_c.s
 
 # Object files for target GDeflate
 GDeflate_OBJECTS = \

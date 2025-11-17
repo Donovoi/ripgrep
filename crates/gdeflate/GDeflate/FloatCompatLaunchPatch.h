@@ -2,7 +2,13 @@
 // times to reapply the __cudaLaunch override after CUDA's internal headers
 // redefine the macro.
 
-#if !defined(__CUDA_ARCH__)
+// NVCC's host pass may define __CUDA_ARCH__ while invoking the host compiler
+// (e.g. for the generated *.cudafe1.cpp/*.stub.c files).  In that scenario the
+// original guard ended up suppressing our compatibility shim, which meant the
+// stub compilations still saw CUDA's two-argument __cudaLaunch macro.  Treat any
+// translation unit that isn't compiled by NVCC itself (i.e. __NVCC__ undefined)
+// as "host" so the variadic shim remains active even if __CUDA_ARCH__ is set.
+#if !defined(__CUDA_ARCH__) || !defined(__NVCC__)
 
 #ifndef __RG_NVCC_LAUNCH_HELPERS_DEFINED
 #define __RG_NVCC_LAUNCH_HELPERS_DEFINED 1
