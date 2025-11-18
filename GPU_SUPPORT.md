@@ -107,6 +107,53 @@ RG_GPU_THRESHOLD=10GB rg pattern file.gdz
 CUDA_VISIBLE_DEVICES=1 rg pattern file.gdz
 ```
 
+### Literal Prefilter Flags
+
+Literal substring searches that meet the GPU requirements (single
+case-sensitive literal, non-inverted match, `--fixed-strings`) can now be tuned
+directly via CLI flags:
+
+- `--gpu-prefilter=auto|always|off` picks the heuristic, forces the CUDA
+  prefilter on, or disables it entirely.
+- `--gpu-chunk-size=<bytes>` overrides the chunk size handed to the GPU (e.g.
+  `256M`, `512M`).
+- `--gpu-strings` bundles the common literal-search flags (fixed strings,
+  `--text`, no headings, line numbers, colorless output) and forces the GPU
+  literal prefilter on—handy when replicating a `strings`-style scan of a big
+  binary. It now also implies `--escape-control`, so ASCII control bytes (such
+  as ANSI escape sequences) are rendered as `\xHH` instead of being sent raw to
+  your terminal.
+
+Example:
+
+```bash
+rg --fixed-strings "Session started" \
+   --gpu-prefilter=always \
+   --gpu-chunk-size=256M \
+   /vault/dumps/*.gdz
+
+# Convenience preset for a GPU strings run
+rg --gpu-strings "BEGIN PKCS12" /vault/dumps/docker_data.vhdx
+```
+
+### Escaping control characters
+
+Binary blobs routinely contain bytes like `0x1B` (ESC) that can toggle terminal
+state when printed verbatim. Use `--escape-control` to rewrite every ASCII/C1
+control byte (except tabs/newlines) as `\xHH` before ripgrep writes a match. The
+`--gpu-strings` preset enables this automatically, but you can opt in manually:
+
+```bash
+rg --escape-control --text --fixed-strings "secret" disk.img
+```
+
+Disable it via `--no-escape-control` if you really do need the raw bytes.
+
+Use `auto` for the existing behaviour, `always` when you want the GPU to scan
+every qualifying file regardless of size, and `off` when comparing CPU vs GPU
+paths. The chunk override is helpful for tuning PCIe transfer overlap to match
+your GPU memory and storage stack.
+
 ## How It Works
 
 ### Architecture

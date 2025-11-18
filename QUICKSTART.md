@@ -127,6 +127,36 @@ The benchmark script will generate:
 
 Review these to see actual speedups on your data.
 
+### Toggle the GPU Literal Prefilter
+
+Once ripgrep is built with `--features cuda-gpu`, you can experiment with the
+literal GPU prefilter without touching config files:
+
+```bash
+# Force the prefilter on for a large literal-only search
+rg --fixed-strings "ERROR 42" \
+   --gpu-prefilter=always \
+   --gpu-chunk-size=256M \
+   /data/logs/*.gdz
+
+# Disable it (useful when comparing CPU vs GPU behaviour)
+rg --fixed-strings "ERROR 42" --gpu-prefilter=off /data/logs/*.gdz
+
+# Convenience preset for "GPU strings" style scans (includes --escape-control)
+rg --gpu-strings "PKCS12" /data/vm-snapshots/docker_data.vhdx
+```
+
+`--gpu-prefilter` accepts `auto` (default heuristics), `always`, or `off`, and
+`--gpu-chunk-size` lets you pin the transfer size (human-readable values like
+`128M` or `512M`). The flags only have an effect when the search already
+qualifies for GPU offload (single literal, case-sensitive, non-inverted).
+
+`--gpu-strings` rolls the common literal scan knobs together: it implies
+`--fixed-strings`, `--text`, `--line-number`, `--no-heading`, `--color=never`,
+`--escape-control`, and `--gpu-prefilter=always`. You can override any of those
+later in the command line (for example `--no-escape-control` if you need the
+raw bytes).
+
 ## Decision Framework
 
 ### When to Implement

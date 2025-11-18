@@ -410,15 +410,25 @@ fn main() {
                 .define("CUDA_GPU_SUPPORT", None)
                 .warnings(false);
 
-            if cfg!(debug_assertions) {
-                // The cc crate injects -G for debug builds when compiling CUDA
-                // sources, which triggers a known NVCC stub generation bug
-                // with heavily templatized Thrust kernels. Disable device
-                // debug info explicitly while keeping host-side debug output.
+            let debug_requested = env::var("DEBUG")
+                .map(|value| value != "0" && value.to_lowercase() != "false")
+                .unwrap_or(false);
+
+            if debug_requested {
+                // The cc crate injects -G whenever Cargo asks for debug info,
+                // which triggers a known NVCC stub generation bug with heavily
+                // templatized Thrust kernels. Disable device debug info
+                // explicitly while keeping host-side debug output consistent
+                // with the requested profile.
                 gpu_build.debug(false);
-                gpu_build.opt_level(0);
-                gpu_build.flag("-Xcompiler");
-                gpu_build.flag("-Og");
+
+                let profile = env::var("PROFILE").unwrap_or_default();
+                if profile == "debug" {
+                    gpu_build.opt_level(0);
+                    gpu_build.flag("-Xcompiler");
+                    gpu_build.flag("-Og");
+                }
+
                 gpu_build.flag("-Xcompiler");
                 gpu_build.flag("-g");
             }

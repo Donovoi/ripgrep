@@ -7,6 +7,12 @@ Bug fixes:
 * [BUG #3212](https://github.com/BurntSushi/ripgrep/pull/3212):
   Don't check for the existence of `.jj` when `--no-ignore` is used.
 
+Feature enhancements:
+
+* Add `--escape-control` to render ASCII/C1 control bytes as `\xHH` (and make
+  `--gpu-strings` imply it) so binary scans can't leave the terminal in an odd
+  state.
+
 
 15.1.0
 ======

@@ -74,6 +74,37 @@ pub struct LiteralSearchConfig {
     pub chunk_bytes: usize,
 }
 
+/// High-level description of what is being searched.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LiteralSearchInputKind {
+    /// Unable to determine what is being searched (default).
+    Unknown,
+    /// Exactly one regular file with a known, finite size.
+    SingleFile,
+    /// Multiple targets (directories or several explicit files).
+    MultipleInputs,
+    /// Streaming input such as stdin with unknown bounds.
+    Stream,
+}
+
+impl Default for LiteralSearchInputKind {
+    fn default() -> Self {
+        LiteralSearchInputKind::Unknown
+    }
+}
+
+/// Hint data used to tailor literal search GPU parameters to the current
+/// invocation.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct LiteralSearchInputHint {
+    /// What kind of input is being searched.
+    pub kind: LiteralSearchInputKind,
+    /// Approximate total number of bytes that will be scanned.
+    pub approx_total_bytes: Option<u64>,
+    /// Maximum size of a single entry (e.g. `--max-filesize`).
+    pub per_entry_max_bytes: Option<u64>,
+}
+
 const MIN_LITERAL_THRESHOLD: u64 = 512 * MB;
 const MAX_LITERAL_THRESHOLD: u64 = 8 * GB;
 const MIN_LITERAL_CHUNK: usize = 32 * 1024 * 1024; // 32 MiB
@@ -138,6 +169,15 @@ pub fn get_gpu_devices() -> Vec<GpuInfo> {
 /// provides the minimum file size that warrants GPU prefiltering along with the
 /// chunk size (in bytes) that balances PCIe transfers and GPU occupancy.
 pub fn estimate_literal_search_config() -> Option<LiteralSearchConfig> {
+    estimate_literal_search_config_with_hint(LiteralSearchInputHint::default())
+}
+
+/// Same as [`estimate_literal_search_config`] but accepts additional
+/// information about the input set, allowing for tighter chunk-size
+/// calculations.
+pub fn estimate_literal_search_config_with_hint(
+    hint: LiteralSearchInputHint,
+) -> Option<LiteralSearchConfig> {
     #[cfg(feature = "cuda-gpu")]
     {
         let devices = get_gpu_devices();
@@ -149,11 +189,47 @@ pub fn estimate_literal_search_config() -> Option<LiteralSearchConfig> {
         }
 
         let free = best.free_memory as u64;
-        let min_file = std::cmp::max(free / 6, MIN_LITERAL_THRESHOLD)
+        let mut min_file = std::cmp::max(free / 6, MIN_LITERAL_THRESHOLD)
             .min(MAX_LITERAL_THRESHOLD);
-        let chunk = ((free / 8) as usize)
+        let mut chunk = ((free / 8) as usize)
             .max(MIN_LITERAL_CHUNK)
             .min(MAX_LITERAL_CHUNK);
+
+        match hint.kind {
+            LiteralSearchInputKind::MultipleInputs => {
+                chunk = std::cmp::max(MIN_LITERAL_CHUNK, chunk / 2);
+            }
+            LiteralSearchInputKind::Stream => {
+                chunk = std::cmp::max(MIN_LITERAL_CHUNK, chunk / 3);
+            }
+            _ => {}
+        }
+
+        if let Some(total) = hint.approx_total_bytes {
+            if total > 0 {
+                let divisor = match hint.kind {
+                    LiteralSearchInputKind::SingleFile => 6,
+                    LiteralSearchInputKind::MultipleInputs => 12,
+                    LiteralSearchInputKind::Stream => 16,
+                    LiteralSearchInputKind::Unknown => 8,
+                } as u64;
+                let desired = (total / divisor)
+                    .max(MIN_LITERAL_CHUNK as u64)
+                    .min(MAX_LITERAL_CHUNK as u64)
+                    as usize;
+                chunk = chunk.min(desired.max(MIN_LITERAL_CHUNK));
+                if total < min_file {
+                    min_file = std::cmp::max(MIN_LITERAL_THRESHOLD, total / 2);
+                }
+            }
+        }
+
+        if let Some(cap) = hint.per_entry_max_bytes {
+            if cap > 0 {
+                let cap = cap as usize;
+                chunk = chunk.min(cap.max(MIN_LITERAL_CHUNK));
+            }
+        }
 
         Some(LiteralSearchConfig {
             min_file_bytes: min_file,
@@ -162,6 +238,7 @@ pub fn estimate_literal_search_config() -> Option<LiteralSearchConfig> {
     }
     #[cfg(not(feature = "cuda-gpu"))]
     {
+        let _ = hint;
         None
     }
 }

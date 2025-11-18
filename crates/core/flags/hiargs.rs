@@ -7,6 +7,9 @@ use std::{
     path::{Path, PathBuf},
 };
 
+#[cfg(feature = "cuda-gpu")]
+use std::fs;
+
 use {
     bstr::BString,
     grep::printer::{ColorSpecs, SummaryKind},
@@ -25,6 +28,8 @@ use crate::{
 
 #[cfg(feature = "cuda-gpu")]
 use crate::flags::lowargs::GpuPrefilterMode;
+#[cfg(feature = "cuda-gpu")]
+use gdeflate::gpu::{LiteralSearchInputHint, LiteralSearchInputKind};
 
 /// A high level representation of CLI arguments.
 ///
@@ -107,6 +112,7 @@ pub(crate) struct HiArgs {
     stop_on_nonmatch: bool,
     threads: usize,
     trim: bool,
+    escape_control: bool,
     types: ignore::types::Types,
     vimgrep: bool,
     with_filename: bool,
@@ -326,6 +332,7 @@ impl HiArgs {
             stop_on_nonmatch: low.stop_on_nonmatch,
             threads,
             trim: low.trim,
+            escape_control: low.escape_control,
             types,
             vimgrep: low.vimgrep,
             with_filename,
@@ -644,7 +651,8 @@ impl HiArgs {
             )
             .separator_path(self.path_separator.clone())
             .stats(self.stats.is_some())
-            .trim_ascii(self.trim);
+            .trim_ascii(self.trim)
+            .escape_control(self.escape_control);
         // When doing multi-threaded searching, the buffer writer is
         // responsible for writing separators since it is the only thing that
         // knows whether something has been printed or not. But for the single
@@ -745,7 +753,9 @@ impl HiArgs {
             return;
         }
 
-        let Some(mut config) = gdeflate::estimate_literal_search_config()
+        let hint = self.literal_gpu_input_hint();
+        let Some(mut config) =
+            gdeflate::estimate_literal_search_config_with_hint(hint)
         else {
             log::debug!(
                 "GPU literal prefilter unavailable (no compatible GPU)"
@@ -772,15 +782,90 @@ impl HiArgs {
             self.stats.is_some(),
         );
         log::debug!(
-            "GPU literal prefilter enabled: mode={:?} threshold={} bytes chunk={}",
+            "GPU literal prefilter enabled: mode={:?} threshold={} bytes chunk={} hint={:?}",
             mode,
             config.min_file_bytes,
-            config.chunk_bytes
+            config.chunk_bytes,
+            hint,
         );
     }
 
     #[cfg(not(feature = "cuda-gpu"))]
     fn configure_gpu_prefilter(&self, _builder: &mut SearchWorkerBuilder) {}
+
+    #[cfg(feature = "cuda-gpu")]
+    fn literal_gpu_input_hint(&self) -> LiteralSearchInputHint {
+        use LiteralSearchInputKind::*;
+
+        if self.paths.is_only_stdin() {
+            return LiteralSearchInputHint {
+                kind: Stream,
+                approx_total_bytes: None,
+                per_entry_max_bytes: self.max_filesize,
+            };
+        }
+
+        let mut kind = LiteralSearchInputKind::Unknown;
+        if self.paths.is_one_file {
+            if let Some(path) = self.paths.paths.get(0) {
+                if path == Path::new("-") {
+                    kind = Stream;
+                } else if path.is_dir() {
+                    kind = MultipleInputs;
+                } else {
+                    kind = SingleFile;
+                }
+            }
+        } else {
+            kind = MultipleInputs;
+        }
+
+        let approx_total_bytes = match kind {
+            SingleFile => self.first_path_len(),
+            MultipleInputs => self.sum_explicit_file_lens(),
+            _ => None,
+        };
+
+        LiteralSearchInputHint {
+            kind,
+            approx_total_bytes,
+            per_entry_max_bytes: self.max_filesize,
+        }
+    }
+
+    #[cfg(feature = "cuda-gpu")]
+    fn first_path_len(&self) -> Option<u64> {
+        let path = self.paths.paths.get(0)?;
+        if path == Path::new("-") {
+            return None;
+        }
+        fs::metadata(path)
+            .ok()
+            .filter(|meta| meta.is_file())
+            .map(|meta| meta.len())
+    }
+
+    #[cfg(feature = "cuda-gpu")]
+    fn sum_explicit_file_lens(&self) -> Option<u64> {
+        let mut total = 0u64;
+        let mut counted = false;
+        for path in &self.paths.paths {
+            if path == Path::new("-") {
+                return None;
+            }
+            match fs::metadata(path) {
+                Ok(meta) if meta.is_file() => {
+                    counted = true;
+                    total = total.saturating_add(meta.len());
+                }
+                Ok(meta) if meta.is_dir() => {
+                    return None;
+                }
+                _ => {}
+            }
+        }
+        if counted { Some(total) } else { None }
+    }
 
     /// Build a searcher from the command line parameters.
     pub(crate) fn searcher(&self) -> anyhow::Result<grep::searcher::Searcher> {

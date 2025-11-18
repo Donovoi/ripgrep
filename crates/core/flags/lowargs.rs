@@ -58,6 +58,8 @@ pub(crate) struct LowArgs {
     pub(crate) gpu_prefilter_mode: Option<GpuPrefilterMode>,
     #[cfg(feature = "cuda-gpu")]
     pub(crate) gpu_chunk_size: Option<usize>,
+    #[cfg(feature = "cuda-gpu")]
+    pub(crate) gpu_strings: bool,
     pub(crate) follow: bool,
     pub(crate) glob_case_insensitive: bool,
     pub(crate) globs: Vec<String>,
@@ -107,6 +109,7 @@ pub(crate) struct LowArgs {
     pub(crate) stop_on_nonmatch: bool,
     pub(crate) threads: Option<usize>,
     pub(crate) trim: bool,
+    pub(crate) escape_control: bool,
     pub(crate) type_changes: Vec<TypeChange>,
     pub(crate) unrestricted: usize,
     pub(crate) vimgrep: bool,
