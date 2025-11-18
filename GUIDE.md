@@ -764,6 +764,13 @@ binary files:
    flag. Note that when using this mode on very large binary files, it is
    possible for ripgrep to use a lot of memory.
 
+When you do opt into `--text`, consider pairing it with `--escape-control`.
+That flag rewrites every ASCII or C1 control byte (except tabs/newlines) as
+`\xHH` before ripgrep prints a match, which prevents embedded ANSI escapes or
+device control codes from leaving your terminal in an odd state. GPU-focused
+workflows that use `--gpu-strings` enable this automatically, but it is
+available on every build.
+
 Unfortunately, there is one additional complexity in ripgrep that can make it
 difficult to reason about binary files. That is, the way binary detection works
 depends on the way that ripgrep searches your files. Specifically:

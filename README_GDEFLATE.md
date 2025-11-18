@@ -52,6 +52,35 @@ You'll understand:
 - Expected performance improvements
 - Whether it's worth implementing
 
+### 🔧 GPU Literal Prefilter Controls
+
+When you build ripgrep with `--features cuda-gpu`, you can now steer the
+GPU-backed literal prefilter directly from the CLI:
+
+- `--gpu-prefilter=auto|always|off` – keep the default heuristics, force the
+  prefilter on (ignoring the 50 GB threshold), or disable it entirely.
+- `--gpu-chunk-size=<bytes>` – override the auto-tuned chunk size
+  (accepts human-readable values like `256M`).
+- `--gpu-strings` – convenience preset that enables literal mode, forces
+  `--text`, prints line numbers without headings/colors, escapes control bytes,
+  and sets `--gpu-prefilter=always` for quick "GPU strings" scans.
+
+Example:
+
+```
+rg --fixed-strings needle \
+   --gpu-prefilter=always \
+   --gpu-chunk-size=256M \
+   /mnt/data/huge/*.gdz
+
+# Convenience preset (also enables --escape-control)
+rg --gpu-strings "PKCS12" /mnt/data/huge/docker_data.vhdx
+```
+
+These flags only apply when the existing requirements are met (single
+case-sensitive literal, non-inverted search). Otherwise ripgrep silently falls
+back to the CPU path.
+
 ### For the Thorough (1 hour)
 
 1. Read all documentation in order

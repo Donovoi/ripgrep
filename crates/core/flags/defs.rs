@@ -67,6 +67,7 @@ pub(super) const FLAGS: &[&dyn Flag] = &[
     &DfaSizeLimit,
     &Encoding,
     &Engine,
+    &EscapeControl,
     &FieldContextSeparator,
     &FieldMatchSeparator,
     &Files,
@@ -77,6 +78,8 @@ pub(super) const FLAGS: &[&dyn Flag] = &[
     &GpuPrefilter,
     #[cfg(feature = "cuda-gpu")]
     &GpuChunkSize,
+    #[cfg(feature = "cuda-gpu")]
+    &GpuStrings,
     &Follow,
     &Generate,
     &Glob,
@@ -1785,6 +1788,60 @@ fn test_engine() {
     assert_eq!(EngineChoice::Default, args.engine);
 }
 
+/// --escape-control
+#[derive(Debug)]
+struct EscapeControl;
+
+impl Flag for EscapeControl {
+    fn is_switch(&self) -> bool {
+        true
+    }
+    fn name_long(&self) -> &'static str {
+        "escape-control"
+    }
+    fn name_negated(&self) -> Option<&'static str> {
+        Some("no-escape-control")
+    }
+    fn doc_category(&self) -> Category {
+        Category::Output
+    }
+    fn doc_short(&self) -> &'static str {
+        r"Escape control bytes before printing."
+    }
+    fn doc_long(&self) -> &'static str {
+        r#"
+Escape ASCII control bytes (0x00-0x1F, except tab/newline) and C1 control
+bytes (0x7F-0x9F) before writing search results. Each escaped byte is emitted
+as a \fB\\xHH\fP sequence. This helps prevent terminal state from being
+corrupted when scanning binary blobs that contain ANSI escape sequences or
+other control codes. Use \flagnegate{escape-control} to re-enable raw output.
+"#
+    }
+
+    fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {
+        args.escape_control = v.unwrap_switch();
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+#[test]
+fn test_escape_control() {
+    let args = parse_low_raw(None::<&str>).unwrap();
+    assert!(!args.escape_control);
+
+    let args = parse_low_raw(["--escape-control"]).unwrap();
+    assert!(args.escape_control);
+
+    let args =
+        parse_low_raw(["--escape-control", "--no-escape-control"]).unwrap();
+    assert!(!args.escape_control);
+
+    let args =
+        parse_low_raw(["--no-escape-control", "--escape-control"]).unwrap();
+    assert!(args.escape_control);
+}
+
 /// --field-context-separator
 #[derive(Debug)]
 struct FieldContextSeparator;
@@ -2464,6 +2521,86 @@ fn test_gpu_chunk_size_flag() {
 
     let args = parse_low_raw(["--gpu-chunk-size=512m"]).unwrap();
     assert_eq!(Some(512 * 1024 * 1024usize), args.gpu_chunk_size);
+}
+
+#[cfg(feature = "cuda-gpu")]
+/// --gpu-strings
+#[derive(Debug)]
+struct GpuStrings;
+
+#[cfg(feature = "cuda-gpu")]
+impl Flag for GpuStrings {
+    fn is_switch(&self) -> bool {
+        true
+    }
+    fn name_long(&self) -> &'static str {
+        "gpu-strings"
+    }
+    fn doc_category(&self) -> Category {
+        Category::Search
+    }
+    fn doc_short(&self) -> &'static str {
+        "Bundle CUDA literal search defaults."
+    }
+    fn doc_long(&self) -> &'static str {
+        r#"
+Enable a convenience preset aimed at "GPU strings" style scans. This flag
+is shorthand for:
+.sp
+.RS 4
+.nf
+  --fixed-strings
+  --text
+  --line-number
+  --no-heading
+  --color=never
+  --gpu-prefilter=always
+.fi
+.RE
+.sp
+It ensures literal searching, forces binary data to be treated as text, strips
+headings/colors for easier parsing, and always enables the CUDA literal
+prefilter when a compatible GPU is detected. You can still override any of the
+implied options by passing their respective flags afterwards. This flag is only
+available when ripgrep is compiled with the \fBcuda-gpu\fP feature."#
+    }
+
+    fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {
+        if !v.unwrap_switch() {
+            return Ok(());
+        }
+        args.gpu_strings = true;
+        args.fixed_strings = true;
+        args.binary = BinaryMode::AsText;
+        args.heading = Some(false);
+        args.line_number = Some(true);
+        if matches!(args.color, ColorChoice::Auto) {
+            args.color = ColorChoice::Never;
+        }
+        args.gpu_prefilter_mode = Some(GpuPrefilterMode::Always);
+        args.escape_control = true;
+        Ok(())
+    }
+}
+
+#[cfg(all(test, feature = "cuda-gpu"))]
+#[test]
+fn test_gpu_strings_flag() {
+    let args = parse_low_raw(None::<&str>).unwrap();
+    assert!(!args.gpu_strings);
+
+    let args = parse_low_raw(["--gpu-strings"]).unwrap();
+    assert!(args.gpu_strings);
+    assert!(args.fixed_strings);
+    assert_eq!(BinaryMode::AsText, args.binary);
+    assert_eq!(Some(false), args.heading);
+    assert_eq!(Some(true), args.line_number);
+    assert_eq!(ColorChoice::Never, args.color);
+    assert_eq!(Some(GpuPrefilterMode::Always), args.gpu_prefilter_mode);
+    assert!(args.escape_control);
+
+    let args = parse_low_raw(["--color=always", "--gpu-strings"]).unwrap();
+    assert_eq!(ColorChoice::Always, args.color);
 }
 
 /// -L/--follow

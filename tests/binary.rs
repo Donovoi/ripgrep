@@ -215,6 +215,14 @@ hay: binary file matches (found \"\\0\" byte around offset 77041)
     eqnice!(expected, cmd.stdout());
 });
 
+rgtest!(escape_control_sanitizes_output, |dir: Dir, mut cmd: TestCommand| {
+    dir.create_bytes("blob", b"\x1B[31msecret\x1B[0m\n");
+    cmd.args(&["--text", "--escape-control", "-n", "secret", "blob"]);
+
+    let expected = "1:\\x1B[31msecret\\x1B[0m\n";
+    eqnice!(expected, cmd.stdout());
+});
+
 // Like after_match1_implicit, but enables -a/--text, so no binary
 // detection should be performed.
 rgtest!(after_match1_implicit_text, |dir: Dir, mut cmd: TestCommand| {

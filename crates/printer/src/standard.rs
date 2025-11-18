@@ -48,6 +48,7 @@ struct Config {
     column: bool,
     byte_offset: bool,
     trim_ascii: bool,
+    escape_control: bool,
     separator_search: Arc<Option<Vec<u8>>>,
     separator_context: Arc<Option<Vec<u8>>>,
     separator_field_match: Arc<Vec<u8>>,
@@ -73,6 +74,7 @@ impl Default for Config {
             column: false,
             byte_offset: false,
             trim_ascii: false,
+            escape_control: false,
             separator_search: Arc::new(None),
             separator_context: Arc::new(Some(b"--".to_vec())),
             separator_field_match: Arc::new(b":".to_vec()),
@@ -355,6 +357,12 @@ impl StandardBuilder {
     /// This is disabled by default.
     pub fn trim_ascii(&mut self, yes: bool) -> &mut StandardBuilder {
         self.config.trim_ascii = yes;
+        self
+    }
+
+    /// Escape ASCII control bytes (other than tabs/newlines) before writing.
+    pub fn escape_control(&mut self, yes: bool) -> &mut StandardBuilder {
+        self.config.escape_control = yes;
         self
     }
 
@@ -1517,7 +1525,52 @@ impl<'a, M: Matcher, W: WriteColor> StandardImpl<'a, M, W> {
     }
 
     fn write(&self, buf: &[u8]) -> io::Result<()> {
-        self.wtr().borrow_mut().write_all(buf)
+        if !self.config().escape_control {
+            return self.wtr().borrow_mut().write_all(buf);
+        }
+        let mut wtr = self.wtr().borrow_mut();
+        Self::write_escaped(&mut *wtr, buf)
+    }
+
+    fn write_escaped(
+        wtr: &mut CounterWriter<W>,
+        buf: &[u8],
+    ) -> io::Result<()> {
+        let mut start = 0;
+        for (i, &byte) in buf.iter().enumerate() {
+            if !Self::needs_escape(byte) {
+                continue;
+            }
+            if start < i {
+                wtr.write_all(&buf[start..i])?;
+            }
+            Self::write_escape_sequence(wtr, byte)?;
+            start = i + 1;
+        }
+        if start < buf.len() {
+            wtr.write_all(&buf[start..])?;
+        }
+        Ok(())
+    }
+
+    fn needs_escape(byte: u8) -> bool {
+        matches!(byte,
+            b if (b < 0x20 && b != b'\n' && b != b'\t')
+                || (0x7F..=0x9F).contains(&b))
+    }
+
+    fn write_escape_sequence(
+        wtr: &mut CounterWriter<W>,
+        byte: u8,
+    ) -> io::Result<()> {
+        const HEX: &[u8; 16] = b"0123456789ABCDEF";
+        let buf = [
+            b'\\',
+            b'x',
+            HEX[(byte >> 4) as usize],
+            HEX[(byte & 0x0F) as usize],
+        ];
+        wtr.write_all(&buf)
     }
 
     fn trim_line_terminator(&self, buf: &[u8], line: &mut Match) {
