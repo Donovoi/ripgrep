@@ -23,6 +23,9 @@ use crate::{
     search::{PatternMatcher, Printer, SearchWorker, SearchWorkerBuilder},
 };
 
+#[cfg(feature = "cuda-gpu")]
+use crate::flags::lowargs::GpuPrefilterMode;
+
 /// A high level representation of CLI arguments.
 ///
 /// The distinction between low and high level arguments is somewhat arbitrary
@@ -53,6 +56,10 @@ pub(crate) struct HiArgs {
     field_match_separator: FieldMatchSeparator,
     file_separator: Option<Vec<u8>>,
     fixed_strings: bool,
+    #[cfg(feature = "cuda-gpu")]
+    gpu_prefilter_mode: Option<GpuPrefilterMode>,
+    #[cfg(feature = "cuda-gpu")]
+    gpu_chunk_size: Option<usize>,
     follow: bool,
     globs: ignore::overrides::Override,
     heading: bool,
@@ -271,6 +278,10 @@ impl HiArgs {
             field_match_separator: low.field_match_separator,
             file_separator,
             fixed_strings: low.fixed_strings,
+            #[cfg(feature = "cuda-gpu")]
+            gpu_prefilter_mode: low.gpu_prefilter_mode,
+            #[cfg(feature = "cuda-gpu")]
+            gpu_chunk_size: low.gpu_chunk_size,
             follow: low.follow,
             heading,
             hidden: low.hidden,
@@ -710,6 +721,12 @@ impl HiArgs {
 
     #[cfg(feature = "cuda-gpu")]
     fn configure_gpu_prefilter(&self, builder: &mut SearchWorkerBuilder) {
+        let mode = self.gpu_prefilter_mode.unwrap_or(GpuPrefilterMode::Auto);
+        if matches!(mode, GpuPrefilterMode::Off) {
+            log::debug!("GPU literal prefilter disabled via --gpu-prefilter");
+            return;
+        }
+
         if !self.fixed_strings {
             return;
         }
@@ -728,19 +745,38 @@ impl HiArgs {
             return;
         }
 
-        if let Some(config) = gdeflate::estimate_literal_search_config() {
-            builder.gpu_prefilter_literal(
-                pattern.to_vec(),
-                config.min_file_bytes,
-                config.chunk_bytes,
-                self.stats.is_some(),
-            );
+        let Some(mut config) = gdeflate::estimate_literal_search_config()
+        else {
             log::debug!(
-                "GPU literal prefilter enabled: threshold={} bytes chunk={}",
-                config.min_file_bytes,
-                config.chunk_bytes
+                "GPU literal prefilter unavailable (no compatible GPU)"
+            );
+            return;
+        };
+
+        if let Some(chunk_override) = self.gpu_chunk_size {
+            config.chunk_bytes = chunk_override;
+            log::debug!(
+                "GPU literal prefilter chunk override set to {} bytes",
+                chunk_override
             );
         }
+
+        if matches!(mode, GpuPrefilterMode::Always) {
+            config.min_file_bytes = 0;
+        }
+
+        builder.gpu_prefilter_literal(
+            pattern.to_vec(),
+            config.min_file_bytes,
+            config.chunk_bytes,
+            self.stats.is_some(),
+        );
+        log::debug!(
+            "GPU literal prefilter enabled: mode={:?} threshold={} bytes chunk={}",
+            mode,
+            config.min_file_bytes,
+            config.chunk_bytes
+        );
     }
 
     #[cfg(not(feature = "cuda-gpu"))]

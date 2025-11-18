@@ -31,6 +31,9 @@ use crate::flags::{
     },
 };
 
+#[cfg(feature = "cuda-gpu")]
+use crate::flags::lowargs::GpuPrefilterMode;
+
 #[cfg(test)]
 use crate::flags::parse::parse_low_raw;
 
@@ -70,6 +73,10 @@ pub(super) const FLAGS: &[&dyn Flag] = &[
     &FilesWithMatches,
     &FilesWithoutMatch,
     &FixedStrings,
+    #[cfg(feature = "cuda-gpu")]
+    &GpuPrefilter,
+    #[cfg(feature = "cuda-gpu")]
+    &GpuChunkSize,
     &Follow,
     &Generate,
     &Glob,
@@ -2334,6 +2341,129 @@ fn test_fixed_strings() {
 
     let args = parse_low_raw(["--no-fixed-strings", "-F"]).unwrap();
     assert_eq!(true, args.fixed_strings);
+}
+
+#[cfg(feature = "cuda-gpu")]
+/// --gpu-prefilter
+#[derive(Debug)]
+struct GpuPrefilter;
+
+#[cfg(feature = "cuda-gpu")]
+impl Flag for GpuPrefilter {
+    fn is_switch(&self) -> bool {
+        false
+    }
+    fn name_long(&self) -> &'static str {
+        "gpu-prefilter"
+    }
+    fn doc_variable(&self) -> Option<&'static str> {
+        Some("MODE")
+    }
+    fn doc_category(&self) -> Category {
+        Category::Search
+    }
+    fn doc_short(&self) -> &'static str {
+        "Control CUDA literal prefiltering."
+    }
+    fn doc_long(&self) -> &'static str {
+        r"
+Enable or disable the CUDA literal prefilter used by ripgrep's GPU
+accelerated builds. \fIMODE\fP may be one of:
+.sp
+.IP \fBauto\fP 10n
+Use ripgrep's default heuristics (the current behavior).
+.sp
+.IP \fBalways\fP 10n
+Force the GPU literal prefilter on whenever other prerequisites are met. This
+overrides the automatic file-size threshold.
+.sp
+.IP \fBoff\fP 10n
+Disable the GPU literal prefilter entirely.
+.PP
+This flag is only available when ripgrep is compiled with the \fBcuda-gpu\fP
+feature."
+    }
+    fn doc_choices(&self) -> &'static [&'static str] {
+        &["auto", "always", "off"]
+    }
+
+    fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {
+        let mode = match convert::str(&v.unwrap_value())? {
+            "auto" => GpuPrefilterMode::Auto,
+            "always" => GpuPrefilterMode::Always,
+            "off" => GpuPrefilterMode::Off,
+            unk => anyhow::bail!("choice '{unk}' is unrecognized"),
+        };
+        args.gpu_prefilter_mode = Some(mode);
+        Ok(())
+    }
+}
+
+#[cfg(all(test, feature = "cuda-gpu"))]
+#[test]
+fn test_gpu_prefilter_flag() {
+    let args = parse_low_raw(None::<&str>).unwrap();
+    assert_eq!(None, args.gpu_prefilter_mode);
+
+    let args = parse_low_raw(["--gpu-prefilter", "auto"]).unwrap();
+    assert_eq!(Some(GpuPrefilterMode::Auto), args.gpu_prefilter_mode);
+
+    let args = parse_low_raw(["--gpu-prefilter=always"]).unwrap();
+    assert_eq!(Some(GpuPrefilterMode::Always), args.gpu_prefilter_mode);
+
+    let args = parse_low_raw(["--gpu-prefilter", "off"]).unwrap();
+    assert_eq!(Some(GpuPrefilterMode::Off), args.gpu_prefilter_mode);
+}
+
+#[cfg(feature = "cuda-gpu")]
+/// --gpu-chunk-size
+#[derive(Debug)]
+struct GpuChunkSize;
+
+#[cfg(feature = "cuda-gpu")]
+impl Flag for GpuChunkSize {
+    fn is_switch(&self) -> bool {
+        false
+    }
+    fn name_long(&self) -> &'static str {
+        "gpu-chunk-size"
+    }
+    fn doc_variable(&self) -> Option<&'static str> {
+        Some("BYTES")
+    }
+    fn doc_category(&self) -> Category {
+        Category::Search
+    }
+    fn doc_short(&self) -> &'static str {
+        "Override GPU literal chunk size."
+    }
+    fn doc_long(&self) -> &'static str {
+        r"
+Override the chunk size used when sending data to the CUDA literal prefilter.
+The value accepts the same human-readable sizes as \flag{max-filesize}, e.g.
+\fB256M\fP or \fB1G\fP. This flag is only available when ripgrep is
+compiled with the \fBcuda-gpu\fP feature."
+    }
+
+    fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {
+        let raw = v.unwrap_value();
+        let size = convert::human_readable_usize(&raw)?;
+        args.gpu_chunk_size = Some(size);
+        Ok(())
+    }
+}
+
+#[cfg(all(test, feature = "cuda-gpu"))]
+#[test]
+fn test_gpu_chunk_size_flag() {
+    let args = parse_low_raw(None::<&str>).unwrap();
+    assert_eq!(None, args.gpu_chunk_size);
+
+    let args = parse_low_raw(["--gpu-chunk-size", "64M"]).unwrap();
+    assert_eq!(Some(64 * 1024 * 1024usize), args.gpu_chunk_size);
+
+    let args = parse_low_raw(["--gpu-chunk-size=512m"]).unwrap();
+    assert_eq!(Some(512 * 1024 * 1024usize), args.gpu_chunk_size);
 }
 
 /// -L/--follow

@@ -54,6 +54,10 @@ pub(crate) struct LowArgs {
     pub(crate) field_context_separator: FieldContextSeparator,
     pub(crate) field_match_separator: FieldMatchSeparator,
     pub(crate) fixed_strings: bool,
+    #[cfg(feature = "cuda-gpu")]
+    pub(crate) gpu_prefilter_mode: Option<GpuPrefilterMode>,
+    #[cfg(feature = "cuda-gpu")]
+    pub(crate) gpu_chunk_size: Option<usize>,
     pub(crate) follow: bool,
     pub(crate) glob_case_insensitive: bool,
     pub(crate) globs: Vec<String>,
@@ -755,4 +759,19 @@ pub(crate) enum TypeChange {
     Select { name: String },
     /// Select the given type for filtering but negate it.
     Negate { name: String },
+}
+
+#[cfg(feature = "cuda-gpu")]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub(crate) enum GpuPrefilterMode {
+    Auto,
+    Always,
+    Off,
+}
+
+#[cfg(feature = "cuda-gpu")]
+impl Default for GpuPrefilterMode {
+    fn default() -> Self {
+        GpuPrefilterMode::Auto
+    }
 }
