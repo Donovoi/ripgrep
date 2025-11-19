@@ -142,7 +142,7 @@ rg --fixed-strings "ERROR 42" \
 # Disable it (useful when comparing CPU vs GPU behaviour)
 rg --fixed-strings "ERROR 42" --gpu-prefilter=off /data/logs/*.gdz
 
-# Convenience preset for "GPU strings" style scans (includes --escape-control)
+# Convenience preset for "GPU strings" style scans (keeps regex semantics and includes --escape-control)
 rg --gpu-strings "PKCS12" /data/vm-snapshots/docker_data.vhdx
 ```
 
@@ -152,10 +152,11 @@ rg --gpu-strings "PKCS12" /data/vm-snapshots/docker_data.vhdx
 qualifies for GPU offload (single literal, case-sensitive, non-inverted).
 
 `--gpu-strings` rolls the common literal scan knobs together: it implies
-`--fixed-strings`, `--text`, `--line-number`, `--no-heading`, `--color=never`,
-`--escape-control`, and `--gpu-prefilter=always`. You can override any of those
-later in the command line (for example `--no-escape-control` if you need the
-raw bytes).
+`--text`, `--line-number`, `--no-heading`, `--color=never`, `--escape-control`,
+and `--gpu-prefilter=always`. Patterns remain full regexes—the GPU literal
+prefilter simply activates whenever the regex reduces to a single
+case-sensitive literal. You can override any of those implied options later in
+the command line (for example `--no-escape-control` if you need the raw bytes).
 
 ## Decision Framework
 

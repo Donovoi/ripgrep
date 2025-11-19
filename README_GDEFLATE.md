@@ -61,9 +61,11 @@ GPU-backed literal prefilter directly from the CLI:
   prefilter on (ignoring the 50 GB threshold), or disable it entirely.
 - `--gpu-chunk-size=<bytes>` – override the auto-tuned chunk size
   (accepts human-readable values like `256M`).
-- `--gpu-strings` – convenience preset that enables literal mode, forces
-  `--text`, prints line numbers without headings/colors, escapes control bytes,
-  and sets `--gpu-prefilter=always` for quick "GPU strings" scans.
+- `--gpu-strings` – convenience preset that forces `--text`, prints line
+  numbers without headings/colors, escapes control bytes, sets
+  `--gpu-prefilter=always`, and leaves your patterns in full regex mode (the
+  GPU literal prefilter kicks in automatically whenever the regex reduces to a
+  single literal).
 
 Example:
 
@@ -77,9 +79,10 @@ rg --fixed-strings needle \
 rg --gpu-strings "PKCS12" /mnt/data/huge/docker_data.vhdx
 ```
 
-These flags only apply when the existing requirements are met (single
-case-sensitive literal, non-inverted search). Otherwise ripgrep silently falls
-back to the CPU path.
+The GPU prefilter still requires a single case-sensitive literal. When the
+pattern cannot be reduced to that (for example, complex regexes or case
+insensitive matches), the preset keeps working but just falls back to the CPU
+search path.
 
 ### For the Thorough (1 hour)
 

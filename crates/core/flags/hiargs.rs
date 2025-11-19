@@ -27,7 +27,10 @@ use crate::{
 };
 
 #[cfg(feature = "cuda-gpu")]
-use crate::flags::lowargs::GpuPrefilterMode;
+use crate::{
+    flags::lowargs::GpuPrefilterMode,
+    gpu::{GpuRegexCompileRequest, try_compile_default_engine},
+};
 #[cfg(feature = "cuda-gpu")]
 use gdeflate::gpu::{LiteralSearchInputHint, LiteralSearchInputKind};
 
@@ -724,6 +727,7 @@ impl HiArgs {
             .binary_detection_explicit(self.binary.explicit.clone())
             .binary_detection_implicit(self.binary.implicit.clone());
         self.configure_gpu_prefilter(&mut builder);
+        self.configure_gpu_regex(&mut builder);
         Ok(builder.build(matcher, searcher, printer))
     }
 
@@ -735,12 +739,6 @@ impl HiArgs {
             return;
         }
 
-        if !self.fixed_strings {
-            return;
-        }
-        if self.patterns.patterns.len() != 1 {
-            return;
-        }
         if !matches!(self.case, CaseMode::Sensitive) {
             return;
         }
@@ -748,10 +746,14 @@ impl HiArgs {
             return;
         }
 
-        let pattern = self.patterns.patterns[0].as_bytes();
-        if pattern.is_empty() {
+        let Some(pattern) =
+            self.gpu_literal_candidate().filter(|pat| !pat.is_empty())
+        else {
+            log::debug!(
+                "GPU literal prefilter unavailable (pattern not literal)"
+            );
             return;
-        }
+        };
 
         let hint = self.literal_gpu_input_hint();
         let Some(mut config) =
@@ -776,7 +778,7 @@ impl HiArgs {
         }
 
         builder.gpu_prefilter_literal(
-            pattern.to_vec(),
+            pattern,
             config.min_file_bytes,
             config.chunk_bytes,
             self.stats.is_some(),
@@ -792,6 +794,99 @@ impl HiArgs {
 
     #[cfg(not(feature = "cuda-gpu"))]
     fn configure_gpu_prefilter(&self, _builder: &mut SearchWorkerBuilder) {}
+
+    #[cfg(feature = "cuda-gpu")]
+    fn configure_gpu_regex(&self, builder: &mut SearchWorkerBuilder) {
+        if self.patterns.patterns.len() != 1 {
+            log::trace!(
+                "GPU regex prefilter unavailable ({} patterns)",
+                self.patterns.patterns.len()
+            );
+            return;
+        }
+        if matches!(self.engine, EngineChoice::PCRE2) {
+            log::debug!(
+                "GPU regex prefilter unavailable (PCRE2 engine in use)"
+            );
+            return;
+        }
+        let case_sensitive = match self.case {
+            CaseMode::Sensitive => true,
+            CaseMode::Insensitive => false,
+            CaseMode::Smart => {
+                log::trace!(
+                    "GPU regex prefilter unavailable (smart case mode)"
+                );
+                return;
+            }
+        };
+        let pattern = &self.patterns.patterns[0];
+        let request = GpuRegexCompileRequest {
+            pattern,
+            case_sensitive,
+            dotall: self.multiline && self.multiline_dotall,
+            multiline: self.multiline,
+            unicode: !self.no_unicode,
+        };
+        match try_compile_default_engine(&request, self.stats.is_some()) {
+            Some(exec) => {
+                builder.gpu_regex_executable(exec, self.stats.is_some());
+                log::debug!(
+                    "GPU regex prefilter enabled (pattern='{}')",
+                    pattern
+                );
+            }
+            None => {
+                log::trace!("GPU regex prefilter unavailable (no engine)");
+            }
+        }
+    }
+
+    #[cfg(not(feature = "cuda-gpu"))]
+    fn configure_gpu_regex(&self, _builder: &mut SearchWorkerBuilder) {}
+
+    #[cfg(feature = "cuda-gpu")]
+    fn gpu_literal_candidate(&self) -> Option<Vec<u8>> {
+        if self.patterns.patterns.len() != 1 {
+            return None;
+        }
+        let pattern = &self.patterns.patterns[0];
+        if pattern.is_empty() {
+            return None;
+        }
+        if self.fixed_strings {
+            return Some(pattern.as_bytes().to_vec());
+        }
+        if Self::pattern_is_plain_literal(pattern) {
+            return Some(pattern.as_bytes().to_vec());
+        }
+        None
+    }
+
+    #[cfg(feature = "cuda-gpu")]
+    fn pattern_is_plain_literal(pattern: &str) -> bool {
+        if pattern.is_empty() {
+            return false;
+        }
+        pattern.bytes().all(|b| {
+            !matches!(
+                b,
+                b'.' | b'^'
+                    | b'$'
+                    | b'*'
+                    | b'+'
+                    | b'?'
+                    | b'('
+                    | b')'
+                    | b'['
+                    | b']'
+                    | b'{'
+                    | b'}'
+                    | b'|'
+                    | b'\\'
+            )
+        })
+    }
 
     #[cfg(feature = "cuda-gpu")]
     fn literal_gpu_input_hint(&self) -> LiteralSearchInputHint {

@@ -190,6 +190,13 @@ rgtest!(f45_precedence_internal, |dir: Dir, mut cmd: TestCommand| {
     eqnice!("imp.log:test\n", cmd.stdout());
 });
 
+#[cfg(feature = "cuda-gpu")]
+rgtest!(gpu_strings_accepts_regex, |dir: Dir, mut cmd: TestCommand| {
+    dir.create("hay.txt", "alpha\naaa\n");
+    cmd.args(["--gpu-strings", "a{2}", "hay.txt"]);
+    eqnice!("hay.txt:aaa\n", cmd.stdout());
+});
+
 // See: https://github.com/BurntSushi/ripgrep/issues/68
 rgtest!(f68_no_ignore_vcs, |dir: Dir, mut cmd: TestCommand| {
     dir.create_dir(".git");

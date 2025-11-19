@@ -12,6 +12,7 @@ use crate::flags::{HiArgs, SearchMode};
 mod messages;
 
 mod flags;
+mod gpu;
 mod haystack;
 mod logger;
 mod search;

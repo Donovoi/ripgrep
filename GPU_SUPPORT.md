@@ -1,10 +1,69 @@
-# NVIDIA GPU Support for Large File Decompression
+# NVIDIA GPU Support
 
 ## Overview
 
-This document describes NVIDIA GPU acceleration support for GDeflate decompression in ripgrep, specifically optimized for extremely large files (50GB+).
+This document describes NVIDIA GPU acceleration support in ripgrep. Currently, two distinct GPU features are supported:
 
-## Performance Benefits
+1. **GDeflate Decompression**: Optimized for extremely large compressed files (50GB+).
+2. **GPU Regex Matching**: Offloads regex search to the GPU for large files (10MB+).
+
+---
+
+## GPU Regex Matching
+
+### Regex Overview
+
+Ripgrep can now offload regex searching to the GPU for files larger than **10 MB**. This feature uses a custom CUDA kernel (or `nvtext` if configured) to perform parallel substring searches, freeing up the CPU and potentially accelerating searches on very large files.
+
+### Regex Requirements
+
+- **Hardware**: NVIDIA GPU with Compute Capability 5.0 or higher.
+- **Software**:
+  - CUDA Toolkit (11.0+)
+  - `rg_gpu_regex_bridge` shared library (built from `gpu_bridge/`)
+
+### Setup
+
+1. **Build the Bridge**:
+   The GPU logic is isolated in a shared library to avoid runtime dependencies for non-GPU users.
+
+   ```bash
+   cd gpu_bridge
+   mkdir build && cd build
+   cmake ..
+   make
+   ```
+
+2. **Run ripgrep**:
+   You must tell ripgrep where to find the bridge library using `RG_NVTEXT_BRIDGE_PATH`.
+
+   ```bash
+   export RG_NVTEXT_BRIDGE_PATH=/path/to/ripgrep/gpu_bridge/build/librg_gpu_regex_bridge.so
+   rg --features cuda-gpu "pattern" large_file.txt
+   ```
+
+### Regex Architecture
+
+1. **Dispatch**: Files smaller than 10 MB are processed by the CPU. Files $\ge$ 10 MB are candidates for the GPU.
+2. **Compilation**: The regex pattern is compiled into a GPU-compatible format.
+3. **Execution**: The file content is copied to GPU memory, and a CUDA kernel searches for the pattern in parallel.
+4. **Fallback**: If the GPU search fails (e.g., out of memory, unsupported regex feature), ripgrep falls back to the CPU engine transparently.
+
+### Supported Features
+
+Currently, the GPU engine supports:
+
+- Literal string matching (e.g., `foo`).
+- The `.` (dot) wildcard.
+- Case sensitivity settings.
+
+Complex regex features (lookarounds, backreferences) will trigger a fallback to the CPU.
+
+---
+
+## GDeflate Decompression Support
+
+### Performance Benefits
 
 GPU acceleration provides significant performance improvements for large file decompression:
 
@@ -14,9 +73,10 @@ GPU acceleration provides significant performance improvements for large file de
 | 100 GB    | ~16 seconds     | ~2-3 seconds | **6-10x** |
 | 500 GB    | ~80 seconds     | ~8-10 seconds | **8-15x** |
 
-## Requirements
+## GDeflate Requirements
 
 ### Hardware
+
 - NVIDIA GPU with Compute Capability 7.0 or higher
   - Volta architecture (Tesla V100, Titan V) or newer
   - Turing (RTX 20 series, GTX 16 series)
@@ -27,8 +87,9 @@ GPU acceleration provides significant performance improvements for large file de
 - For 100GB+ files: 16GB+ GPU memory recommended
 
 ### Software
+
 - CUDA Toolkit 11.0 or later
-  - Download from: https://developer.nvidia.com/cuda-downloads
+  - Download from: <https://developer.nvidia.com/cuda-downloads>
   - Includes CUDA runtime and development libraries
 - NVIDIA GPU driver
   - Version 450.80.02 or later (Linux)
@@ -39,6 +100,7 @@ GPU acceleration provides significant performance improvements for large file de
 ### 1. Install CUDA Toolkit
 
 #### Linux (Ubuntu/Debian)
+
 ```bash
 # Add NVIDIA package repository
 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
@@ -50,6 +112,7 @@ sudo apt-get install cuda
 ```
 
 #### Windows
+
 1. Download CUDA Toolkit from NVIDIA website
 2. Run the installer
 3. Follow the installation wizard
@@ -75,6 +138,7 @@ cargo build --release --features cuda-gpu
 ### Automatic GPU Selection
 
 GPU acceleration is automatically used for files >= 50GB when:
+
 1. The `cuda-gpu` feature is enabled
 2. A compatible NVIDIA GPU is available
 3. CUDA runtime is installed
@@ -154,11 +218,11 @@ every qualifying file regardless of size, and `off` when comparing CPU vs GPU
 paths. The chunk override is helpful for tuning PCIe transfer overlap to match
 your GPU memory and storage stack.
 
-## How It Works
+## GDeflate Architecture
 
-### Architecture
+### Architecture Diagram
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                    Ripgrep Search                        │
 └─────────────────────────────────────────────────────────┘
@@ -253,6 +317,7 @@ ldd target/release/rg | grep cuda
 **Symptom**: GPU decompression fails with "out of memory"
 
 **Solution**:
+
 1. Increase GPU memory threshold
 2. Use GPU with more memory
 3. Force CPU decompression for specific files
@@ -265,6 +330,7 @@ RG_NO_GPU=1 rg pattern large_file.gdz
 ### Slower Than CPU
 
 **Possible causes**:
+
 1. File too small (< 50GB) - PCIe transfer overhead dominates
 2. Slow PCIe bus (use PCIe 4.0 or 5.0 if possible)
 3. GPU memory fragmentation
@@ -274,6 +340,7 @@ RG_NO_GPU=1 rg pattern large_file.gdz
 ## Benchmarks
 
 ### Test Environment
+
 - CPU: AMD Ryzen 9 7950X (32 threads)
 - GPU: NVIDIA RTX 4090 (24 GB)
 - Storage: Samsung 990 PRO (PCIe 4.0 NVMe)
@@ -300,6 +367,7 @@ RG_NO_GPU=1 rg pattern large_file.gdz
 ## Future Enhancements
 
 ### Planned Features
+
 - [ ] Multi-GPU support for files > 1TB
 - [ ] Streaming decompression (decompress while searching)
 - [ ] nvCOMP integration for optimal performance
@@ -309,6 +377,7 @@ RG_NO_GPU=1 rg pattern large_file.gdz
 ### nvCOMP Integration
 
 Currently, GPU decompression uses a custom CUDA kernel. Integration with NVIDIA's nvCOMP library will provide:
+
 - 20-30% additional speedup
 - Support for more compression formats
 - Better memory efficiency
@@ -334,6 +403,7 @@ Currently, GPU decompression uses a custom CUDA kernel. Integration with NVIDIA'
 ### Decompression Bomb Protection
 
 GPU decompression includes the same protections as CPU:
+
 - Maximum decompressed size: 1 TB
 - Compression ratio limit: 1000:1
 - Timeout for excessively slow decompression
@@ -347,6 +417,7 @@ GPU decompression includes the same protections as CPU:
 ### Can I use GPU for smaller files?
 
 **Answer**: Yes, but it will likely be slower. Adjust threshold:
+
 ```bash
 export RG_GPU_THRESHOLD=10GB
 ```
@@ -362,6 +433,7 @@ export RG_GPU_THRESHOLD=10GB
 ### Can I disable GPU support?
 
 **Answer**: Yes:
+
 ```bash
 # Temporary (this session)
 RG_NO_GPU=1 rg pattern file.gdz
@@ -373,6 +445,7 @@ cargo build --release  # omit --features cuda-gpu
 ## Contributing
 
 GPU support is under active development. Contributions welcome:
+
 - Performance optimizations
 - Additional GPU backends (ROCm, Metal, Vulkan)
 - nvCOMP integration

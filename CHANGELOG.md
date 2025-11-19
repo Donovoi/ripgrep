@@ -12,6 +12,10 @@ Feature enhancements:
 * Add `--escape-control` to render ASCII/C1 control bytes as `\xHH` (and make
   `--gpu-strings` imply it) so binary scans can't leave the terminal in an odd
   state.
+* Let `--gpu-strings` keep regex semantics while still auto-enabling the CUDA
+  literal prefilter whenever the pattern reduces to a single literal. This
+  removes the implicit `--fixed-strings` requirement and makes the preset safer
+  to use with existing regular expressions.
 
 
 15.1.0
