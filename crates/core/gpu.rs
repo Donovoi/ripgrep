@@ -408,18 +408,18 @@ mod nvtext {
             program: &Self::Program,
             input: &GpuRegexInput<'_>,
         ) -> anyhow::Result<GpuRegexSearchOutcome> {
+            // Heuristic: Only use GPU for files larger than 2MB.
+            // Smaller files are faster on CPU due to transfer overhead.
+            const MIN_GPU_FILE_SIZE: u64 = 2 * 1024 * 1024;
+            if input.file_len < MIN_GPU_FILE_SIZE {
+                return Ok(GpuRegexSearchOutcome::NotAttempted);
+            }
+
             // Read file content
             // Note: We read the file here in Rust to pass the buffer to C++.
             // This allows future optimizations like batching or memory mapping.
             let file = std::fs::File::open(input.path)
                 .context("failed to open file for GPU search")?;
-
-            // If the file is empty, we can skip it.
-            if input.file_len == 0 {
-                return Ok(GpuRegexSearchOutcome::NoMatch(
-                    GpuRegexExecutionStats::default(),
-                ));
-            }
 
             let mmap = unsafe { memmap2::Mmap::map(&file) }
                 .context("failed to mmap file for GPU search")?;
