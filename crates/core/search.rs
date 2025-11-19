@@ -640,7 +640,11 @@ impl<W: WriteColor> SearchWorker<W> {
 
         let file_len = metadata.len();
         if file_len < self.config.gpu_min_size {
-            log::trace!("try_gpu_regex: file too small: {}", file_len);
+            log::debug!(
+                "try_gpu_regex: file too small for GPU: {} < {} (using CPU)",
+                file_len,
+                self.config.gpu_min_size
+            );
             return Ok(None);
         }
 
