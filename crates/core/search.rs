@@ -9,7 +9,16 @@ search worker is where things like preprocessors or decompression happens.
 
 use std::{io, path::Path};
 
+#[cfg(feature = "cuda-gpu")]
+use std::{fmt, sync::Arc};
+
 use {grep::matcher::Matcher, termcolor::WriteColor};
+
+#[cfg(feature = "cuda-gpu")]
+use crate::gpu::{
+    GpuRegexExecutable, GpuRegexExecutionStats, GpuRegexInput,
+    GpuRegexSearchOutcome,
+};
 
 /// The configuration for the search worker.
 ///
@@ -54,6 +63,8 @@ impl Default for Config {
 pub(crate) struct SearchWorkerBuilder {
     config: Config,
     command_builder: grep::cli::CommandReaderBuilder,
+    #[cfg(feature = "cuda-gpu")]
+    gpu_regex: Option<GpuRegexHandle>,
 }
 
 impl Default for SearchWorkerBuilder {
@@ -68,7 +79,12 @@ impl SearchWorkerBuilder {
         let mut command_builder = grep::cli::CommandReaderBuilder::new();
         command_builder.async_stderr(true);
 
-        SearchWorkerBuilder { config: Config::default(), command_builder }
+        SearchWorkerBuilder {
+            config: Config::default(),
+            command_builder,
+            #[cfg(feature = "cuda-gpu")]
+            gpu_regex: None,
+        }
     }
 
     /// Create a new search worker using the given searcher, matcher and
@@ -87,6 +103,8 @@ impl SearchWorkerBuilder {
             decomp_builder.async_stderr(true);
             decomp_builder
         });
+        #[cfg(feature = "cuda-gpu")]
+        let gpu_regex = self.gpu_regex.clone();
         SearchWorker {
             config,
             command_builder,
@@ -94,7 +112,19 @@ impl SearchWorkerBuilder {
             matcher,
             searcher,
             printer,
+            #[cfg(feature = "cuda-gpu")]
+            gpu_regex,
         }
+    }
+
+    #[cfg(feature = "cuda-gpu")]
+    pub(crate) fn gpu_regex_executable(
+        &mut self,
+        exec: Box<dyn GpuRegexExecutable>,
+        stats_enabled: bool,
+    ) -> &mut SearchWorkerBuilder {
+        self.gpu_regex = Some(GpuRegexHandle::new(exec, stats_enabled));
+        self
     }
 
     /// Set the path to a preprocessor command.
@@ -268,6 +298,47 @@ pub(crate) struct SearchWorker<W> {
     matcher: PatternMatcher,
     searcher: grep::searcher::Searcher,
     printer: Printer<W>,
+    #[cfg(feature = "cuda-gpu")]
+    gpu_regex: Option<GpuRegexHandle>,
+}
+
+#[cfg(feature = "cuda-gpu")]
+#[derive(Clone)]
+struct GpuRegexHandle {
+    exec: Arc<dyn GpuRegexExecutable>,
+    stats_enabled: bool,
+}
+
+#[cfg(feature = "cuda-gpu")]
+impl GpuRegexHandle {
+    fn new(exec: Box<dyn GpuRegexExecutable>, stats_enabled: bool) -> Self {
+        Self { exec: Arc::from(exec), stats_enabled }
+    }
+
+    fn engine_name(&self) -> &'static str {
+        self.exec.engine_name()
+    }
+
+    fn stats_enabled(&self) -> bool {
+        self.stats_enabled
+    }
+
+    fn search(
+        &self,
+        input: &GpuRegexInput<'_>,
+    ) -> anyhow::Result<GpuRegexSearchOutcome> {
+        self.exec.search_path(input)
+    }
+}
+
+#[cfg(feature = "cuda-gpu")]
+impl fmt::Debug for GpuRegexHandle {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("GpuRegexHandle")
+            .field("engine", &self.engine_name())
+            .field("stats_enabled", &self.stats_enabled)
+            .finish()
+    }
 }
 
 impl<W: WriteColor> SearchWorker<W> {
@@ -282,6 +353,7 @@ impl<W: WriteColor> SearchWorker<W> {
             self.config.binary_implicit.clone()
         };
         let path = haystack.path();
+        log::debug!("SearchWorker::search: {}", path.display());
         log::trace!("{}: binary detection: {:?}", path.display(), bin);
 
         self.searcher.set_binary_detection(bin);
@@ -372,6 +444,9 @@ impl<W: WriteColor> SearchWorker<W> {
     fn search_path(&mut self, path: &Path) -> io::Result<SearchResult> {
         use self::PatternMatcher::*;
 
+        if let Some(result) = self.try_gpu_regex(path)? {
+            return Ok(result);
+        }
         if let Some(result) = self.try_gpu_prefilter(path)? {
             return Ok(result);
         }
@@ -529,6 +604,102 @@ impl<W: WriteColor> SearchWorker<W> {
     ) -> io::Result<Option<SearchResult>> {
         Ok(None)
     }
+
+    #[cfg(feature = "cuda-gpu")]
+    fn try_gpu_regex(
+        &mut self,
+        path: &Path,
+    ) -> io::Result<Option<SearchResult>> {
+        let Some(handle) = self.gpu_regex.as_ref() else {
+            log::trace!("try_gpu_regex: no handle");
+            return Ok(None);
+        };
+
+        let metadata = match path.metadata() {
+            Ok(meta) => meta,
+            Err(err) => return Err(err),
+        };
+        if !metadata.is_file() {
+            log::trace!("try_gpu_regex: not a file");
+            return Ok(None);
+        }
+
+        let file_len = metadata.len();
+        if file_len < GPU_REGEX_MIN_FILE_BYTES {
+            log::trace!("try_gpu_regex: file too small: {}", file_len);
+            return Ok(None);
+        }
+
+        let input = GpuRegexInput {
+            path,
+            file_len,
+            stats_enabled: handle.stats_enabled(),
+        };
+
+        log::trace!("try_gpu_regex: attempting search on {}", path.display());
+        match handle.search(&input) {
+            Ok(GpuRegexSearchOutcome::NoMatch(exec_stats)) => {
+                log::trace!(
+                    "{}: GPU regex ({}) confirmed no matches",
+                    path.display(),
+                    handle.engine_name()
+                );
+                let stats = gpu_stats_from_execution(
+                    &exec_stats,
+                    handle.stats_enabled(),
+                    false,
+                );
+                Ok(Some(SearchResult { has_match: false, stats }))
+            }
+            Ok(GpuRegexSearchOutcome::MatchFound(_)) => {
+                log::trace!(
+                    "{}: GPU regex ({}) found candidate match",
+                    path.display(),
+                    handle.engine_name()
+                );
+                Ok(None)
+            }
+            Ok(GpuRegexSearchOutcome::NotAttempted) => Ok(None),
+            Err(err) => {
+                log::debug!(
+                    "{}: GPU regex ({}) failed: {err}",
+                    path.display(),
+                    handle.engine_name()
+                );
+                Ok(None)
+            }
+        }
+    }
+
+    #[cfg(not(feature = "cuda-gpu"))]
+    fn try_gpu_regex(
+        &mut self,
+        _path: &Path,
+    ) -> io::Result<Option<SearchResult>> {
+        Ok(None)
+    }
+}
+
+#[cfg(feature = "cuda-gpu")]
+const GPU_REGEX_MIN_FILE_BYTES: u64 = 10 * 1024 * 1024;
+
+#[cfg(feature = "cuda-gpu")]
+fn gpu_stats_from_execution(
+    exec_stats: &GpuRegexExecutionStats,
+    stats_enabled: bool,
+    matched: bool,
+) -> Option<grep::printer::Stats> {
+    if !stats_enabled {
+        return None;
+    }
+    let mut stats = grep::printer::Stats::new();
+    stats.add_elapsed(exec_stats.elapsed);
+    stats.add_searches(1);
+    if matched {
+        stats.add_searches_with_match(1);
+    }
+    stats.add_bytes_searched(exec_stats.bytes_scanned);
+    Some(stats)
 }
 
 /// Search the contents of the given file path using the given matcher,

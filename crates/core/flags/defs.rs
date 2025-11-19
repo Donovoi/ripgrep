@@ -2549,7 +2549,6 @@ is shorthand for:
 .sp
 .RS 4
 .nf
-  --fixed-strings
   --text
   --line-number
   --no-heading
@@ -2558,11 +2557,14 @@ is shorthand for:
 .fi
 .RE
 .sp
-It ensures literal searching, forces binary data to be treated as text, strips
-headings/colors for easier parsing, and always enables the CUDA literal
-prefilter when a compatible GPU is detected. You can still override any of the
-implied options by passing their respective flags afterwards. This flag is only
-available when ripgrep is compiled with the \fBcuda-gpu\fP feature."#
+It forces binary data to be treated as text, strips headings/colors for easier
+parsing, and always enables the CUDA literal prefilter (when compatible).
+Patterns continue to be interpreted as full regular expressions; the GPU
+prefilter automatically activates whenever a pattern reduces to a literal, but
+falls back to CPU-only scanning for more complex regexes. You can still
+override any of the implied options by passing their respective flags
+afterwards. This flag is only available when ripgrep is compiled with the
+\fBcuda-gpu\fP feature."#
     }
 
     fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {
@@ -2570,7 +2572,6 @@ available when ripgrep is compiled with the \fBcuda-gpu\fP feature."#
             return Ok(());
         }
         args.gpu_strings = true;
-        args.fixed_strings = true;
         args.binary = BinaryMode::AsText;
         args.heading = Some(false);
         args.line_number = Some(true);
@@ -2591,7 +2592,7 @@ fn test_gpu_strings_flag() {
 
     let args = parse_low_raw(["--gpu-strings"]).unwrap();
     assert!(args.gpu_strings);
-    assert!(args.fixed_strings);
+    assert!(!args.fixed_strings);
     assert_eq!(BinaryMode::AsText, args.binary);
     assert_eq!(Some(false), args.heading);
     assert_eq!(Some(true), args.line_number);
