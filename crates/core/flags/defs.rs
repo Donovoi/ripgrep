@@ -77,6 +77,8 @@ pub(super) const FLAGS: &[&dyn Flag] = &[
     #[cfg(feature = "cuda-gpu")]
     &GpuPrefilter,
     #[cfg(feature = "cuda-gpu")]
+    &Gpu,
+    #[cfg(feature = "cuda-gpu")]
     &GpuChunkSize,
     #[cfg(feature = "cuda-gpu")]
     &GpuStrings,
@@ -2470,6 +2472,41 @@ fn test_gpu_prefilter_flag() {
 
     let args = parse_low_raw(["--gpu-prefilter", "off"]).unwrap();
     assert_eq!(Some(GpuPrefilterMode::Off), args.gpu_prefilter_mode);
+}
+
+#[cfg(feature = "cuda-gpu")]
+/// --gpu
+#[derive(Debug)]
+struct Gpu;
+
+#[cfg(feature = "cuda-gpu")]
+impl Flag for Gpu {
+    fn is_switch(&self) -> bool {
+        true
+    }
+    fn name_long(&self) -> &'static str {
+        "gpu"
+    }
+    fn name_negated(&self) -> Option<&'static str> {
+        Some("no-gpu")
+    }
+    fn doc_category(&self) -> Category {
+        Category::Search
+    }
+    fn doc_short(&self) -> &'static str {
+        "Enable GPU search (alias for --gpu-prefilter=always)."
+    }
+    fn doc_long(&self) -> &'static str {
+        "Enable GPU search. This is an alias for --gpu-prefilter=always."
+    }
+    fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {
+        if v.unwrap_switch() {
+            args.gpu_prefilter_mode = Some(GpuPrefilterMode::Always);
+        } else {
+            args.gpu_prefilter_mode = Some(GpuPrefilterMode::Off);
+        }
+        Ok(())
+    }
 }
 
 #[cfg(feature = "cuda-gpu")]

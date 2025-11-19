@@ -259,18 +259,36 @@ mod nvtext {
             program: &Self::Program,
             input: &GpuRegexInput<'_>,
         ) -> anyhow::Result<GpuRegexSearchOutcome> {
-            let mut result = RgGpuSearchResult::default();
-
             // Read file content
             // Note: We read the file here in Rust to pass the buffer to C++.
             // This allows future optimizations like batching or memory mapping.
-            let data = std::fs::read(input.path)
-                .context("failed to read file for GPU search")?;
+            let file = std::fs::File::open(input.path)
+                .context("failed to open file for GPU search")?;
+
+            // If the file is empty, we can skip it.
+            if input.file_len == 0 {
+                return Ok(GpuRegexSearchOutcome::NoMatch(
+                    GpuRegexExecutionStats::default(),
+                ));
+            }
+
+            let mmap = unsafe { memmap2::Mmap::map(&file) }
+                .context("failed to mmap file for GPU search")?;
+
+            // Allocate buffer for matches
+            let max_matches = 4096;
+            let mut matches = vec![RgGpuMatch::default(); max_matches];
+
+            let mut result = RgGpuSearchResult {
+                matches: matches.as_mut_ptr(),
+                max_matches,
+                ..Default::default()
+            };
 
             let request = RgGpuSearchInput {
-                data_len: data.len() as u64,
+                data_len: mmap.len() as u64,
                 stats_enabled: input.stats_enabled,
-                data_ptr: data.as_ptr(),
+                data_ptr: mmap.as_ptr(),
             };
             let status = unsafe {
                 (program.bridge.search)(
@@ -404,16 +422,28 @@ mod nvtext {
     }
 
     #[repr(C)]
+    #[derive(Default, Clone, Copy)]
+    struct RgGpuMatch {
+        offset: u64,
+    }
+
+    #[repr(C)]
     #[derive(Default)]
     struct RgGpuSearchResult {
         status: i32,
         stats: RgGpuSearchStats,
+        matches: *mut RgGpuMatch,
+        match_count: usize,
+        max_matches: usize,
     }
 
     impl RgGpuSearchResult {
         fn into_outcome(self) -> GpuRegexSearchOutcome {
             match self.status {
                 STATUS_MATCH_FOUND => {
+                    // We need to copy the matches from the C buffer if we want to use them
+                    // But for now, GpuRegexSearchOutcome only supports stats.
+                    // We should update GpuRegexSearchOutcome to support offsets.
                     GpuRegexSearchOutcome::MatchFound(self.into_stats())
                 }
                 STATUS_NO_MATCH => {
