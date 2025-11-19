@@ -41,19 +41,19 @@ __global__ void search_kernel(const char *haystack, uint64_t haystack_len,
   }
 }
 
-bool launch_gpu_search(const GpuPattern &pattern, const char *file_path,
-                       uint64_t file_len, uint64_t *elapsed_ns) {
+int launch_gpu_search(const GpuPattern &pattern, const char *file_path,
+                      uint64_t file_len, uint64_t *elapsed_ns) {
   // 1. Read file into host memory
   std::ifstream file(file_path, std::ios::binary);
   if (!file) {
     std::cerr << "Failed to open file: " << file_path << std::endl;
-    return false;
+    return -1;
   }
 
   std::vector<char> host_data(file_len);
   if (!file.read(host_data.data(), file_len)) {
     std::cerr << "Failed to read file: " << file_path << std::endl;
-    return false;
+    return -1;
   }
 
   cudaEvent_t start, stop;
@@ -82,7 +82,7 @@ bool launch_gpu_search(const GpuPattern &pattern, const char *file_path,
     if (err != cudaSuccess) {
       std::cerr << "Kernel launch failed: " << cudaGetErrorString(err)
                 << std::endl;
-      return false;
+      return -1;
     }
 
     cudaEventRecord(stop);
@@ -97,13 +97,13 @@ bool launch_gpu_search(const GpuPattern &pattern, const char *file_path,
     cudaEventDestroy(start);
     cudaEventDestroy(stop);
 
-    return result == 1;
+    return result;
 
   } catch (thrust::system_error &e) {
     std::cerr << "Thrust error: " << e.what() << std::endl;
-    return false;
+    return -1;
   } catch (std::bad_alloc &e) {
     std::cerr << "Allocation error: " << e.what() << std::endl;
-    return false;
+    return -1;
   }
 }
