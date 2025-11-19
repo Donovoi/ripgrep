@@ -2,11 +2,10 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
-struct GpuPattern {
-  std::string pattern;
-  bool case_sensitive;
-  bool dotall;
+struct GpuDfa {
+  std::vector<uint32_t> table;
 };
 
 // Returns 1 if match found, 0 if not found, -1 on error.
@@ -18,6 +17,6 @@ struct GpuMatch {
   uint64_t offset;
 };
 
-int launch_gpu_search(const GpuPattern &pattern, const char *data, uint64_t len,
+int launch_gpu_search(const GpuDfa &dfa, const char *data, uint64_t len,
                       uint64_t *elapsed_ns, GpuMatch *matches,
                       int *match_count);

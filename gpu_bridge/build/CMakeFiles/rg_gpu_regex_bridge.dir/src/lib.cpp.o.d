@@ -121,4 +121,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
  /usr/include/c++/13/bits/parse_numbers.h \
- /home/toor/ripgrep/gpu_bridge/src/gpu_search.cuh
+ /home/toor/ripgrep/gpu_bridge/src/gpu_search.cuh \
+ /usr/include/c++/13/vector /usr/include/c++/13/bits/stl_uninitialized.h \
+ /usr/include/c++/13/bits/stl_vector.h \
+ /usr/include/c++/13/bits/stl_bvector.h \
+ /usr/include/c++/13/bits/vector.tcc

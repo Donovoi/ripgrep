@@ -217,14 +217,19 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/c++/12/bits/functional_hash.h \
     /usr/include/c++/12/bits/hash_bytes.h \
     /usr/include/c++/12/bits/basic_string.tcc \
+    /usr/include/c++/12/vector \
+    /usr/include/c++/12/bits/stl_uninitialized.h \
+    /usr/include/c++/12/bits/stl_vector.h \
+    /usr/include/c++/12/bits/stl_bvector.h \
+    /usr/include/c++/12/bits/vector.tcc \
     /usr/include/c++/12/chrono \
     /usr/include/c++/12/bits/chrono.h \
     /usr/include/c++/12/ratio \
     /usr/include/c++/12/limits \
     /usr/include/c++/12/ctime \
     /usr/include/c++/12/bits/parse_numbers.h \
-    /usr/include/c++/12/fstream \
-    /usr/include/c++/12/istream \
+    /usr/include/c++/12/iostream \
+    /usr/include/c++/12/ostream \
     /usr/include/c++/12/ios \
     /usr/include/c++/12/exception \
     /usr/include/c++/12/bits/exception_ptr.h \
@@ -261,14 +266,9 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/x86_64-linux-gnu/c++/12/bits/ctype_inline.h \
     /usr/include/c++/12/bits/locale_facets.tcc \
     /usr/include/c++/12/bits/basic_ios.tcc \
-    /usr/include/c++/12/ostream \
     /usr/include/c++/12/bits/ostream.tcc \
+    /usr/include/c++/12/istream \
     /usr/include/c++/12/bits/istream.tcc \
-    /usr/include/c++/12/bits/codecvt.h \
-    /usr/include/x86_64-linux-gnu/c++/12/bits/basic_file.h \
-    /usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h \
-    /usr/include/c++/12/bits/fstream.tcc \
-    /usr/include/c++/12/iostream \
     /usr/include/thrust/device_vector.h \
     /usr/include/thrust/detail/config.h \
     /usr/include/thrust/version.h \
@@ -367,7 +367,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/thrust/detail/type_traits/has_member_function.h \
     /usr/include/thrust/detail/memory_wrapper.h \
     /usr/include/c++/12/memory \
-    /usr/include/c++/12/bits/stl_uninitialized.h \
     /usr/include/c++/12/bits/stl_tempbuf.h \
     /usr/include/c++/12/bits/stl_raw_storage_iter.h \
     /usr/include/c++/12/bits/align.h \
@@ -609,10 +608,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/thrust/detail/allocator/destroy_range.inl \
     /usr/include/thrust/detail/allocator/fill_construct_range.h \
     /usr/include/thrust/detail/allocator/fill_construct_range.inl \
-    /usr/include/c++/12/vector \
-    /usr/include/c++/12/bits/stl_vector.h \
-    /usr/include/c++/12/bits/stl_bvector.h \
-    /usr/include/c++/12/bits/vector.tcc \
     /usr/include/thrust/detail/vector_base.inl \
     /usr/include/thrust/detail/overlapped_copy.h \
     /usr/include/thrust/equal.h \
@@ -735,4 +730,18 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/thrust/mr/new.h \
     /usr/include/thrust/mr/fancy_pointer_resource.h \
     /usr/include/thrust/system/cpp/pointer.h \
-    /usr/include/thrust/host_vector.h
+    /usr/include/thrust/host_vector.h \
+    /usr/include/thrust/copy.h \
+    /usr/include/thrust/detail/copy_if.h \
+    /usr/include/thrust/detail/copy_if.inl \
+    /usr/include/thrust/system/detail/generic/copy_if.h \
+    /usr/include/thrust/system/detail/generic/copy_if.inl \
+    /usr/include/thrust/system/detail/adl/copy_if.h \
+    /usr/include/thrust/system/detail/sequential/copy_if.h \
+    /usr/include/thrust/system/cpp/detail/copy_if.h \
+    /usr/include/thrust/system/cuda/detail/copy_if.h \
+    /usr/include/cub/device/device_select.cuh \
+    /usr/include/cub/device/dispatch/dispatch_select_if.cuh \
+    /usr/include/cub/agent/agent_select_if.cuh \
+    /usr/include/cub/device/dispatch/dispatch_unique_by_key.cuh \
+    /usr/include/cub/agent/agent_unique_by_key.cuh
