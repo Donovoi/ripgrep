@@ -94,14 +94,21 @@ int32_t rg_gpu_regex_search(
     std::string path(input->path_ptr, input->path_len);
 
     uint64_t elapsed_ns = 0;
-    bool found = launch_gpu_search(
+    int status = launch_gpu_search(
         compiled->pattern,
         path.c_str(),
         input->file_len,
         &elapsed_ns
     );
 
-    result->status = found ? STATUS_MATCH_FOUND : STATUS_NO_MATCH;
+    if (status == 1) {
+        result->status = STATUS_MATCH_FOUND;
+    } else if (status == 0) {
+        result->status = STATUS_NO_MATCH;
+    } else {
+        result->status = STATUS_ERROR;
+    }
+    
     result->stats.elapsed_ns = elapsed_ns;
     result->stats.bytes_scanned = input->file_len;
 
