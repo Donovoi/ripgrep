@@ -261,22 +261,16 @@ mod nvtext {
         ) -> anyhow::Result<GpuRegexSearchOutcome> {
             let mut result = RgGpuSearchResult::default();
 
-            // Convert path to bytes (OS-specific, but usually UTF-8 on Linux)
-            #[cfg(unix)]
-            use std::os::unix::ffi::OsStrExt;
-            #[cfg(unix)]
-            let path_bytes = input.path.as_os_str().as_bytes();
-
-            #[cfg(not(unix))]
-            let path_str = input.path.to_string_lossy();
-            #[cfg(not(unix))]
-            let path_bytes = path_str.as_bytes();
+            // Read file content
+            // Note: We read the file here in Rust to pass the buffer to C++.
+            // This allows future optimizations like batching or memory mapping.
+            let data = std::fs::read(input.path)
+                .context("failed to read file for GPU search")?;
 
             let request = RgGpuSearchInput {
-                file_len: input.file_len,
+                data_len: data.len() as u64,
                 stats_enabled: input.stats_enabled,
-                path_ptr: path_bytes.as_ptr(),
-                path_len: path_bytes.len(),
+                data_ptr: data.as_ptr(),
             };
             let status = unsafe {
                 (program.bridge.search)(
@@ -397,10 +391,9 @@ mod nvtext {
 
     #[repr(C)]
     struct RgGpuSearchInput {
-        file_len: u64,
+        data_len: u64,
         stats_enabled: bool,
-        path_ptr: *const u8,
-        path_len: usize,
+        data_ptr: *const u8,
     }
 
     #[repr(C)]

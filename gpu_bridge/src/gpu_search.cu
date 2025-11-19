@@ -41,21 +41,8 @@ __global__ void search_kernel(const char *haystack, uint64_t haystack_len,
   }
 }
 
-int launch_gpu_search(const GpuPattern &pattern, const char *file_path,
-                      uint64_t file_len, uint64_t *elapsed_ns) {
-  // 1. Read file into host memory
-  std::ifstream file(file_path, std::ios::binary);
-  if (!file) {
-    std::cerr << "Failed to open file: " << file_path << std::endl;
-    return -1;
-  }
-
-  std::vector<char> host_data(file_len);
-  if (!file.read(host_data.data(), file_len)) {
-    std::cerr << "Failed to read file: " << file_path << std::endl;
-    return -1;
-  }
-
+int launch_gpu_search(const GpuPattern &pattern, const char *data, uint64_t len,
+                      uint64_t *elapsed_ns) {
   cudaEvent_t start, stop;
   cudaEventCreate(&start);
   cudaEventCreate(&stop);
@@ -64,17 +51,18 @@ int launch_gpu_search(const GpuPattern &pattern, const char *file_path,
     cudaEventRecord(start);
 
     // 2. Copy to device
-    thrust::device_vector<char> d_haystack = host_data;
+    // Note: We are copying from the provided host pointer 'data'
+    thrust::device_vector<char> d_haystack(data, data + len);
     thrust::device_vector<char> d_needle(pattern.pattern.begin(),
                                          pattern.pattern.end());
     thrust::device_vector<int> d_result(1, 0);
 
     // 3. Execute search
     int blockSize = 256;
-    int numBlocks = (file_len + blockSize - 1) / blockSize;
+    int numBlocks = (len + blockSize - 1) / blockSize;
 
     search_kernel<<<numBlocks, blockSize>>>(
-        thrust::raw_pointer_cast(d_haystack.data()), file_len,
+        thrust::raw_pointer_cast(d_haystack.data()), len,
         thrust::raw_pointer_cast(d_needle.data()), pattern.pattern.length(),
         pattern.dotall, thrust::raw_pointer_cast(d_result.data()));
 

@@ -33,6 +33,8 @@ struct Config {
     binary_explicit: grep::searcher::BinaryDetection,
     #[cfg(feature = "cuda-gpu")]
     gpu_prefilter: Option<GpuPrefilterConfig>,
+    #[cfg(feature = "cuda-gpu")]
+    gpu_min_size: u64,
 }
 
 #[cfg(feature = "cuda-gpu")]
@@ -54,6 +56,8 @@ impl Default for Config {
             binary_explicit: grep::searcher::BinaryDetection::none(),
             #[cfg(feature = "cuda-gpu")]
             gpu_prefilter: None,
+            #[cfg(feature = "cuda-gpu")]
+            gpu_min_size: 2 * 1024 * 1024, // Default 2MB based on latency/throughput tradeoff
         }
     }
 }
@@ -79,8 +83,18 @@ impl SearchWorkerBuilder {
         let mut command_builder = grep::cli::CommandReaderBuilder::new();
         command_builder.async_stderr(true);
 
+        let mut config = Config::default();
+        #[cfg(feature = "cuda-gpu")]
+        {
+            if let Ok(s) = std::env::var("RG_GPU_THRESHOLD") {
+                if let Ok(bytes) = s.parse() {
+                    config.gpu_min_size = bytes;
+                }
+            }
+        }
+
         SearchWorkerBuilder {
-            config: Config::default(),
+            config,
             command_builder,
             #[cfg(feature = "cuda-gpu")]
             gpu_regex: None,
@@ -625,7 +639,7 @@ impl<W: WriteColor> SearchWorker<W> {
         }
 
         let file_len = metadata.len();
-        if file_len < GPU_REGEX_MIN_FILE_BYTES {
+        if file_len < self.config.gpu_min_size {
             log::trace!("try_gpu_regex: file too small: {}", file_len);
             return Ok(None);
         }
@@ -679,9 +693,6 @@ impl<W: WriteColor> SearchWorker<W> {
         Ok(None)
     }
 }
-
-#[cfg(feature = "cuda-gpu")]
-const GPU_REGEX_MIN_FILE_BYTES: u64 = 10 * 1024 * 1024;
 
 #[cfg(feature = "cuda-gpu")]
 fn gpu_stats_from_execution(
