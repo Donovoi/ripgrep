@@ -202,6 +202,7 @@ mod nvtext {
 
     use anyhow::{Context, bail};
     use libloading::Library;
+    use regex_automata::dfa::{Automaton, dense};
 
     const DEFAULT_SYMBOL_COMPILE: &[u8] = b"rg_gpu_regex_compile\0";
     const DEFAULT_SYMBOL_RELEASE: &[u8] = b"rg_gpu_regex_release\0";
@@ -231,17 +232,165 @@ mod nvtext {
             &self,
             request: &GpuRegexCompileRequest<'_>,
         ) -> anyhow::Result<Self::Program> {
+            // Build DFA using regex-automata
+            // We use Unanchored to allow finding matches anywhere in the text.
+            // This adds a loop on the start state for any byte.
+            let dfa =
+                dense::Builder::new()
+                    .configure(dense::Config::new().start_kind(
+                        regex_automata::dfa::StartKind::Unanchored,
+                    ))
+                    .syntax(
+                        regex_automata::util::syntax::Config::new()
+                            .case_insensitive(!request.case_sensitive)
+                            .dot_matches_new_line(request.dotall)
+                            .unicode(request.unicode)
+                            .multi_line(request.multiline),
+                    )
+                    .build(request.pattern)
+                    .context("failed to compile regex to DFA")?;
+
+            // Serialize DFA table
+            // We need a flat table: [state * 256 + byte] -> next_state
+            // And a way to identify match states.
+            // For simplicity, we'll use a u32 array where the high bit indicates match.
+            // Or we can just pass the raw bytes if we can decode it on GPU.
+            // But decoding the dense::DFA format on GPU is complex.
+            // Let's build a simple flat table.
+
+            // Iterate over all states
+            // Note: regex-automata states are IDs.
+            // We need to map them to 0..N
+            // Actually, dfa.next_state(id, byte) returns the next ID.
+
+            // We will just dump the raw transition table if possible, but the ID space might be sparse or special.
+            // Let's just iterate 0..state_count? No, state IDs are not necessarily contiguous 0..N in that way?
+            // Actually dense::DFA uses contiguous IDs.
+
+            // Let's create a simple mapping.
+            // We need to know the start state.
+            let start_state = dfa
+                .start_state_forward(&regex_automata::Input::new(b""))
+                .unwrap();
+
+            // We will use a flat vector of u32s.
+            // Index = (state_id * 256) + byte
+            // Value = next_state_id | (is_match << 31)
+
+            // Wait, state IDs in regex-automata are multiples of stride?
+            // Let's check docs or assume standard behavior.
+            // In dense::DFA, state IDs are byte offsets into the transition table.
+            // So state_id / stride is the logical index.
+
+            // Let's just use the state IDs directly as provided by the DFA.
+            // But we need to know the max ID to allocate the GPU buffer.
+            // dfa.memory_usage() gives bytes.
+
+            // Let's construct a simplified table for the GPU.
+            // We'll map every reachable state to a dense integer 0..N.
+            // But to avoid re-traversing, let's just use the existing structure if we can.
+            // The issue is that `dfa.next_state(state, byte)` is fast.
+
+            // Let's just build a flat table of size (num_states * 256).
+            // We need to iterate all valid state IDs.
+            // regex-automata doesn't easily expose "all state IDs" without walking.
+            // But since it's a dense DFA, we can assume states are somewhat contiguous or we can walk it.
+
+            // Actually, let's just use `to_bytes_little_endian` and pass the whole blob?
+            // Then the GPU kernel would need to understand the format.
+            // The format is: header, then transition table.
+            // The transition table is `state_id + byte`.
+            // This is exactly what we want!
+            // The only issue is endianness (GPU is usually LE, same as x86).
+            // And the specific layout.
+
+            // Let's try to use the raw bytes.
+            let (bytes, _) = dfa.to_bytes_little_endian();
+
+            // We need to pass this buffer to the C++ bridge.
+            // We also need to tell the bridge where the start state is.
+            // And how to detect a match.
+            // In dense::DFA, match states are those where `dfa.is_match_state(id)` is true.
+            // This information is encoded in the state ID or a separate table?
+            // In dense::DFA, it's usually a separate check or encoded in the ID.
+            // Actually, `is_match_state` checks if the state ID is a "special" state.
+
+            // If we use the raw bytes, we need to reimplement `next_state` and `is_match_state` logic on GPU.
+            // That might be brittle if internal format changes.
+
+            // Alternative: Build our own simple table.
+            // Walk the DFA from start state.
+            let mut stack = vec![start_state];
+            let mut visited = std::collections::HashMap::new();
+            let mut ordered_states = Vec::new();
+
+            visited.insert(start_state, 0u32);
+            ordered_states.push(start_state);
+
+            let mut i = 0;
+            while i < ordered_states.len() {
+                let current_id = ordered_states[i];
+                i += 1;
+
+                for b in 0..=255 {
+                    let next_id = dfa.next_state(current_id, b);
+                    if !visited.contains_key(&next_id) {
+                        let new_idx = visited.len() as u32;
+                        visited.insert(next_id, new_idx);
+                        ordered_states.push(next_id);
+                    }
+                }
+            }
+
+            // Now build the flat table
+            // table[current_idx * 256 + b] = next_idx
+            // And a bitset for match states? Or encode in the value?
+            // Let's use u32. High bit = match.
+            let mut flat_table = vec![0u32; ordered_states.len() * 256];
+            for (idx, &original_id) in ordered_states.iter().enumerate() {
+                let is_match = dfa.is_match_state(original_id);
+                for b in 0..=255 {
+                    let next_id = dfa.next_state(original_id, b as u8);
+                    let next_idx = visited[&next_id];
+                    let mut val = next_idx;
+                    // If the *next* state is a match, we might want to know immediately?
+                    // Or we check if *current* state is match?
+                    // Usually we transition, then check if new state is match.
+                    // So we need to know if `next_idx` is a match state.
+                    // But `is_match` is a property of the state.
+                    // So let's store `is_match` in the table entry?
+                    // No, `is_match` is a property of the *target* state.
+                    // So when we look up `table[curr][b]`, we get `next`.
+                    // We can encode `is_match(next)` in the high bit of `next`.
+
+                    if dfa.is_match_state(next_id) {
+                        val |= 0x8000_0000;
+                    }
+                    flat_table[idx * 256 + b] = val;
+                }
+            }
+
             let options = RgGpuCompileOptions {
                 case_sensitive: request.case_sensitive,
                 dotall: request.dotall,
                 multiline: request.multiline,
                 unicode: request.unicode,
             };
+
+            // We need to pass the table to the bridge.
+            // We can pass it as the "pattern" pointer, or add a new field.
+            // Since we are changing the protocol, let's just cast the table pointer.
+            // But `compile` takes `pattern_ptr` and `pattern_len`.
+            // We can pass the table as bytes.
+
+            let table_bytes_len = flat_table.len() * 4;
+            let table_ptr = flat_table.as_ptr() as *const u8;
+
             let mut handle: *mut c_void = std::ptr::null_mut();
             let status = unsafe {
                 (self.bridge.compile)(
-                    request.pattern.as_ptr(),
-                    request.pattern.len(),
+                    table_ptr,
+                    table_bytes_len,
                     &options,
                     &mut handle,
                 )

@@ -417,6 +417,7 @@ dependencies = [
  "libloading",
  "log",
  "memmap2",
+ "regex-automata",
  "serde",
  "serde_derive",
  "serde_json",

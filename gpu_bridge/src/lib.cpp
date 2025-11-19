@@ -45,7 +45,7 @@ const int32_t STATUS_BUFFER_OVERFLOW = 2;
 
 // A simple struct to hold the compiled pattern
 struct GpuRegexPattern {
-    GpuPattern pattern;
+    GpuDfa dfa;
 };
 
 int32_t rg_gpu_regex_compile(
@@ -59,18 +59,20 @@ int32_t rg_gpu_regex_compile(
     }
 
     try {
-        std::string pat(reinterpret_cast<const char*>(pattern_ptr), pattern_len);
-        
-        // For testing purposes, we can reject patterns that start with "fail_compile"
-        if (pat.find("fail_compile") == 0) {
+        // pattern_ptr now points to the DFA table (u32 array)
+        // pattern_len is the size in bytes
+        if (pattern_len % 4 != 0) {
             return STATUS_ERROR;
         }
+        
+        size_t count = pattern_len / 4;
+        const uint32_t* data = reinterpret_cast<const uint32_t*>(pattern_ptr);
+        
+        std::vector<uint32_t> table(data, data + count);
 
         auto* compiled = new GpuRegexPattern{
-            GpuPattern{
-                pat,
-                options->case_sensitive,
-                options->dotall
+            GpuDfa{
+                std::move(table)
             }
         };
         *out_handle = static_cast<void*>(compiled);
@@ -105,7 +107,7 @@ int32_t rg_gpu_regex_search(
     GpuMatch* gpu_matches = reinterpret_cast<GpuMatch*>(result->matches);
     
     int status = launch_gpu_search(
-        compiled->pattern,
+        compiled->dfa,
         input->data_ptr,
         input->data_len,
         &elapsed_ns,
