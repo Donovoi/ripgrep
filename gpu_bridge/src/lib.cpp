@@ -25,15 +25,23 @@ struct RgGpuSearchStats {
     uint64_t bytes_scanned;
 };
 
+struct RgGpuMatch {
+    uint64_t offset;
+};
+
 struct RgGpuSearchResult {
     int32_t status;
     RgGpuSearchStats stats;
+    RgGpuMatch* matches;
+    size_t match_count;
+    size_t max_matches;
 };
 
 // Status codes
 const int32_t STATUS_NO_MATCH = 0;
 const int32_t STATUS_MATCH_FOUND = 1;
 const int32_t STATUS_ERROR = -1;
+const int32_t STATUS_BUFFER_OVERFLOW = 2;
 
 // A simple struct to hold the compiled pattern
 struct GpuRegexPattern {
@@ -90,19 +98,30 @@ int32_t rg_gpu_regex_search(
     auto* compiled = static_cast<GpuRegexPattern*>(handle);
     
     uint64_t elapsed_ns = 0;
+    int match_count = 0;
+    
+    // We need to cast the C-compatible match struct to the C++ one
+    // They have the same layout (uint64_t offset)
+    GpuMatch* gpu_matches = reinterpret_cast<GpuMatch*>(result->matches);
+    
     int status = launch_gpu_search(
         compiled->pattern,
         input->data_ptr,
         input->data_len,
-        &elapsed_ns
+        &elapsed_ns,
+        gpu_matches,
+        &match_count
     );
 
     if (status == 1) {
         result->status = STATUS_MATCH_FOUND;
+        result->match_count = match_count;
     } else if (status == 0) {
         result->status = STATUS_NO_MATCH;
+        result->match_count = 0;
     } else {
         result->status = STATUS_ERROR;
+        result->match_count = 0;
     }
     
     result->stats.elapsed_ns = elapsed_ns;
