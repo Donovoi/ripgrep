@@ -15,10 +15,9 @@ struct RgGpuCompileOptions {
 };
 
 struct RgGpuSearchInput {
-    uint64_t file_len;
+    uint64_t data_len;
     bool stats_enabled;
-    const char* path_ptr;
-    size_t path_len;
+    const char* data_ptr;
 };
 
 struct RgGpuSearchStats {
@@ -90,14 +89,11 @@ int32_t rg_gpu_regex_search(
 
     auto* compiled = static_cast<GpuRegexPattern*>(handle);
     
-    // Construct path string
-    std::string path(input->path_ptr, input->path_len);
-
     uint64_t elapsed_ns = 0;
     int status = launch_gpu_search(
         compiled->pattern,
-        path.c_str(),
-        input->file_len,
+        input->data_ptr,
+        input->data_len,
         &elapsed_ns
     );
 
@@ -110,7 +106,7 @@ int32_t rg_gpu_regex_search(
     }
     
     result->stats.elapsed_ns = elapsed_ns;
-    result->stats.bytes_scanned = input->file_len;
+    result->stats.bytes_scanned = input->data_len;
 
     return 0; // Success
 }
