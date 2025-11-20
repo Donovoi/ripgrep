@@ -269,7 +269,7 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/c++/12/bits/ostream.tcc \
     /usr/include/c++/12/istream \
     /usr/include/c++/12/bits/istream.tcc \
-    /usr/include/thrust/device_vector.h \
+    /usr/include/thrust/copy.h \
     /usr/include/thrust/detail/config.h \
     /usr/include/thrust/version.h \
     /usr/include/thrust/detail/config/config.h \
@@ -287,10 +287,10 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/thrust/detail/config/exec_check_disable.h \
     /usr/include/thrust/detail/config/global_workarounds.h \
     /usr/include/thrust/detail/config/namespace.h \
-    /usr/include/thrust/detail/vector_base.h \
-    /usr/include/thrust/iterator/detail/normal_iterator.h \
-    /usr/include/thrust/iterator/iterator_adaptor.h \
-    /usr/include/thrust/iterator/iterator_facade.h \
+    /usr/include/thrust/detail/execution_policy.h \
+    /usr/include/thrust/detail/copy.h \
+    /usr/include/thrust/detail/copy.inl \
+    /usr/include/thrust/system/detail/generic/select_system.h \
     /usr/include/thrust/detail/type_traits.h \
     /usr/include/cuda/std/type_traits \
     /usr/include/cuda/std/cstddef \
@@ -311,11 +311,10 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/cuda/std/detail/libcxx/include/cstddef \
     /usr/include/cuda/std/detail/libcxx/include/type_traits \
     /usr/include/thrust/detail/type_traits/has_trivial_assign.h \
-    /usr/include/thrust/iterator/detail/iterator_facade_category.h \
-    /usr/include/thrust/iterator/detail/host_system_tag.h \
-    /usr/include/thrust/system/cpp/detail/execution_policy.h \
-    /usr/include/thrust/system/detail/sequential/execution_policy.h \
-    /usr/include/thrust/detail/execution_policy.h \
+    /usr/include/thrust/iterator/detail/minimum_system.h \
+    /usr/include/thrust/detail/type_traits/is_metafunction_defined.h \
+    /usr/include/thrust/detail/type_traits/has_nested_type.h \
+    /usr/include/thrust/detail/type_traits/minimum_type.h \
     /usr/include/thrust/iterator/detail/device_system_tag.h \
     /usr/include/thrust/system/cuda/detail/execution_policy.h \
     /usr/include/thrust/iterator/detail/any_system_tag.h \
@@ -339,32 +338,62 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/c++/12/bits/uses_allocator.h \
     /usr/include/thrust/detail/alignment.h \
     /usr/include/thrust/detail/dependencies_aware_execution_policy.h \
-    /usr/include/thrust/iterator/iterator_categories.h \
-    /usr/include/thrust/iterator/detail/iterator_category_with_system_and_traversal.h \
-    /usr/include/thrust/iterator/detail/iterator_traversal_tags.h \
-    /usr/include/c++/12/iterator \
-    /usr/include/c++/12/bits/stream_iterator.h \
-    /usr/include/thrust/iterator/detail/universal_categories.h \
-    /usr/include/thrust/iterator/detail/is_iterator_category.h \
-    /usr/include/thrust/iterator/detail/iterator_category_to_traversal.h \
-    /usr/include/thrust/iterator/detail/iterator_category_to_system.h \
-    /usr/include/thrust/iterator/detail/distance_from_result.h \
-    /usr/include/thrust/detail/use_default.h \
-    /usr/include/thrust/iterator/detail/iterator_adaptor_base.h \
-    /usr/include/thrust/iterator/iterator_traits.h \
+    /usr/include/thrust/system/detail/generic/select_system.inl \
+    /usr/include/thrust/system/detail/generic/select_system_exists.h \
+    /usr/include/thrust/system/detail/generic/copy.h \
+    /usr/include/thrust/system/detail/generic/tag.h \
+    /usr/include/thrust/system/detail/generic/copy.inl \
+    /usr/include/thrust/functional.h \
+    /usr/include/c++/12/functional \
+    /usr/include/c++/12/bits/std_function.h \
+    /usr/include/thrust/detail/functional/placeholder.h \
+    /usr/include/thrust/detail/functional/actor.h \
+    /usr/include/thrust/tuple.h \
+    /usr/include/thrust/detail/tuple.inl \
+    /usr/include/thrust/detail/swap.h \
+    /usr/include/thrust/pair.h \
+    /usr/include/thrust/detail/pair.inl \
+    /usr/include/thrust/detail/functional/value.h \
+    /usr/include/thrust/detail/functional/composite.h \
+    /usr/include/thrust/detail/functional/operators/assignment_operator.h \
+    /usr/include/thrust/detail/functional/operators/operator_adaptors.h \
+    /usr/include/thrust/detail/functional/argument.h \
     /usr/include/thrust/type_traits/void_t.h \
-    /usr/include/thrust/iterator/detail/iterator_traits.inl \
-    /usr/include/thrust/type_traits/is_contiguous_iterator.h \
+    /usr/include/thrust/detail/raw_reference_cast.h \
     /usr/include/thrust/detail/raw_pointer_cast.h \
     /usr/include/thrust/detail/type_traits/pointer_traits.h \
-    /usr/include/thrust/detail/type_traits/is_metafunction_defined.h \
-    /usr/include/thrust/detail/type_traits/has_nested_type.h \
-    /usr/include/thrust/iterator/reverse_iterator.h \
-    /usr/include/thrust/iterator/detail/reverse_iterator_base.h \
-    /usr/include/thrust/iterator/detail/reverse_iterator.inl \
-    /usr/include/thrust/detail/contiguous_storage.h \
-    /usr/include/thrust/detail/allocator/allocator_traits.h \
-    /usr/include/thrust/detail/type_traits/has_member_function.h \
+    /usr/include/thrust/iterator/iterator_traits.h \
+    /usr/include/c++/12/iterator \
+    /usr/include/c++/12/bits/stream_iterator.h \
+    /usr/include/thrust/iterator/detail/iterator_traversal_tags.h \
+    /usr/include/thrust/iterator/detail/host_system_tag.h \
+    /usr/include/thrust/system/cpp/detail/execution_policy.h \
+    /usr/include/thrust/system/detail/sequential/execution_policy.h \
+    /usr/include/thrust/iterator/detail/iterator_traits.inl \
+    /usr/include/thrust/iterator/iterator_categories.h \
+    /usr/include/thrust/iterator/detail/iterator_category_with_system_and_traversal.h \
+    /usr/include/thrust/iterator/detail/universal_categories.h \
+    /usr/include/thrust/iterator/detail/iterator_category_to_traversal.h \
+    /usr/include/thrust/iterator/detail/iterator_category_to_system.h \
+    /usr/include/thrust/detail/tuple_transform.h \
+    /usr/include/thrust/detail/tuple_meta_transform.h \
+    /usr/include/thrust/type_traits/integer_sequence.h \
+    /usr/include/thrust/iterator/detail/tuple_of_iterator_references.h \
+    /usr/include/thrust/detail/reference_forward_declaration.h \
+    /usr/include/thrust/detail/use_default.h \
+    /usr/include/thrust/detail/type_traits/result_of_adaptable_function.h \
+    /usr/include/thrust/detail/type_traits/function_traits.h \
+    /usr/include/thrust/detail/functional/actor.inl \
+    /usr/include/thrust/type_traits/logical_metafunctions.h \
+    /usr/include/thrust/detail/functional.inl \
+    /usr/include/thrust/detail/functional/operators.h \
+    /usr/include/thrust/detail/functional/operators/arithmetic_operators.h \
+    /usr/include/thrust/detail/functional/operators/relational_operators.h \
+    /usr/include/thrust/detail/functional/operators/logical_operators.h \
+    /usr/include/thrust/detail/functional/operators/bitwise_operators.h \
+    /usr/include/thrust/detail/functional/operators/compound_assignment_operators.h \
+    /usr/include/thrust/detail/internal_functional.h \
+    /usr/include/thrust/detail/static_assert.h \
     /usr/include/thrust/detail/memory_wrapper.h \
     /usr/include/c++/12/memory \
     /usr/include/c++/12/bits/stl_tempbuf.h \
@@ -381,56 +410,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/c++/12/bits/atomic_base.h \
     /usr/include/c++/12/bits/atomic_lockfree_defines.h \
     /usr/include/c++/12/backward/auto_ptr.h \
-    /usr/include/thrust/detail/allocator/allocator_traits.inl \
-    /usr/include/thrust/detail/type_traits/is_call_possible.h \
-    /usr/include/thrust/detail/integer_traits.h \
-    /usr/include/thrust/detail/contiguous_storage.inl \
-    /usr/include/thrust/detail/swap.h \
-    /usr/include/thrust/detail/allocator/copy_construct_range.h \
-    /usr/include/thrust/detail/allocator/copy_construct_range.inl \
-    /usr/include/thrust/detail/copy.h \
-    /usr/include/thrust/detail/copy.inl \
-    /usr/include/thrust/system/detail/generic/select_system.h \
-    /usr/include/thrust/iterator/detail/minimum_system.h \
-    /usr/include/thrust/detail/type_traits/minimum_type.h \
-    /usr/include/thrust/system/detail/generic/select_system.inl \
-    /usr/include/thrust/system/detail/generic/select_system_exists.h \
-    /usr/include/thrust/system/detail/generic/copy.h \
-    /usr/include/thrust/system/detail/generic/tag.h \
-    /usr/include/thrust/system/detail/generic/copy.inl \
-    /usr/include/thrust/functional.h \
-    /usr/include/c++/12/functional \
-    /usr/include/c++/12/bits/std_function.h \
-    /usr/include/thrust/detail/functional/placeholder.h \
-    /usr/include/thrust/detail/functional/actor.h \
-    /usr/include/thrust/tuple.h \
-    /usr/include/thrust/detail/tuple.inl \
-    /usr/include/thrust/pair.h \
-    /usr/include/thrust/detail/pair.inl \
-    /usr/include/thrust/detail/functional/value.h \
-    /usr/include/thrust/detail/functional/composite.h \
-    /usr/include/thrust/detail/functional/operators/assignment_operator.h \
-    /usr/include/thrust/detail/functional/operators/operator_adaptors.h \
-    /usr/include/thrust/detail/functional/argument.h \
-    /usr/include/thrust/detail/raw_reference_cast.h \
-    /usr/include/thrust/detail/tuple_transform.h \
-    /usr/include/thrust/detail/tuple_meta_transform.h \
-    /usr/include/thrust/type_traits/integer_sequence.h \
-    /usr/include/thrust/iterator/detail/tuple_of_iterator_references.h \
-    /usr/include/thrust/detail/reference_forward_declaration.h \
-    /usr/include/thrust/detail/type_traits/result_of_adaptable_function.h \
-    /usr/include/thrust/detail/type_traits/function_traits.h \
-    /usr/include/thrust/detail/functional/actor.inl \
-    /usr/include/thrust/type_traits/logical_metafunctions.h \
-    /usr/include/thrust/detail/functional.inl \
-    /usr/include/thrust/detail/functional/operators.h \
-    /usr/include/thrust/detail/functional/operators/arithmetic_operators.h \
-    /usr/include/thrust/detail/functional/operators/relational_operators.h \
-    /usr/include/thrust/detail/functional/operators/logical_operators.h \
-    /usr/include/thrust/detail/functional/operators/bitwise_operators.h \
-    /usr/include/thrust/detail/functional/operators/compound_assignment_operators.h \
-    /usr/include/thrust/detail/internal_functional.h \
-    /usr/include/thrust/detail/static_assert.h \
     /usr/include/thrust/transform.h \
     /usr/include/thrust/detail/transform.inl \
     /usr/include/thrust/system/detail/generic/transform.h \
@@ -479,6 +458,7 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/thrust/system/cuda/detail/core/triple_chevron_launch.h \
     /usr/include/thrust/system/cuda/detail/core/alignment.h \
     /usr/include/thrust/system/cuda/detail/core/util.h \
+    /usr/include/thrust/type_traits/is_contiguous_iterator.h \
     /usr/include/cub/block/block_load.cuh \
     /usr/include/cub/block/block_exchange.cuh \
     /usr/include/cub/util_ptx.cuh \
@@ -486,6 +466,10 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/cub/iterator/cache_modified_input_iterator.cuh \
     /usr/include/cub/thread/thread_load.cuh \
     /usr/include/cub/thread/thread_store.cuh \
+    /usr/include/thrust/iterator/iterator_facade.h \
+    /usr/include/thrust/iterator/detail/iterator_facade_category.h \
+    /usr/include/thrust/iterator/detail/is_iterator_category.h \
+    /usr/include/thrust/iterator/detail/distance_from_result.h \
     /usr/include/cub/block/block_scan.cuh \
     /usr/include/cub/block/specializations/block_scan_raking.cuh \
     /usr/include/cub/block/block_raking_layout.cuh \
@@ -533,6 +517,45 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/thrust/system/cuda/detail/uninitialized_copy.h \
     /usr/include/thrust/detail/temporary_array.h \
     /usr/include/thrust/iterator/detail/tagged_iterator.h \
+    /usr/include/thrust/iterator/iterator_adaptor.h \
+    /usr/include/thrust/iterator/detail/iterator_adaptor_base.h \
+    /usr/include/thrust/detail/contiguous_storage.h \
+    /usr/include/thrust/iterator/detail/normal_iterator.h \
+    /usr/include/thrust/detail/allocator/allocator_traits.h \
+    /usr/include/thrust/detail/type_traits/has_member_function.h \
+    /usr/include/thrust/detail/allocator/allocator_traits.inl \
+    /usr/include/thrust/detail/type_traits/is_call_possible.h \
+    /usr/include/thrust/detail/integer_traits.h \
+    /usr/include/thrust/detail/contiguous_storage.inl \
+    /usr/include/thrust/detail/allocator/copy_construct_range.h \
+    /usr/include/thrust/detail/allocator/copy_construct_range.inl \
+    /usr/include/thrust/detail/allocator/default_construct_range.h \
+    /usr/include/thrust/detail/allocator/default_construct_range.inl \
+    /usr/include/thrust/uninitialized_fill.h \
+    /usr/include/thrust/detail/uninitialized_fill.inl \
+    /usr/include/thrust/system/detail/generic/uninitialized_fill.h \
+    /usr/include/thrust/system/detail/generic/uninitialized_fill.inl \
+    /usr/include/thrust/fill.h \
+    /usr/include/thrust/detail/fill.inl \
+    /usr/include/thrust/system/detail/generic/fill.h \
+    /usr/include/thrust/generate.h \
+    /usr/include/thrust/detail/generate.inl \
+    /usr/include/thrust/system/detail/generic/generate.h \
+    /usr/include/thrust/system/detail/generic/generate.inl \
+    /usr/include/thrust/system/detail/adl/generate.h \
+    /usr/include/thrust/system/detail/sequential/generate.h \
+    /usr/include/thrust/system/cpp/detail/generate.h \
+    /usr/include/thrust/system/cuda/detail/generate.h \
+    /usr/include/thrust/system/detail/adl/fill.h \
+    /usr/include/thrust/system/detail/sequential/fill.h \
+    /usr/include/thrust/system/cuda/detail/fill.h \
+    /usr/include/thrust/system/detail/adl/uninitialized_fill.h \
+    /usr/include/thrust/system/detail/sequential/uninitialized_fill.h \
+    /usr/include/thrust/system/cuda/detail/uninitialized_fill.h \
+    /usr/include/thrust/detail/allocator/destroy_range.h \
+    /usr/include/thrust/detail/allocator/destroy_range.inl \
+    /usr/include/thrust/detail/allocator/fill_construct_range.h \
+    /usr/include/thrust/detail/allocator/fill_construct_range.inl \
     /usr/include/thrust/detail/allocator/temporary_allocator.h \
     /usr/include/thrust/detail/allocator/tagged_allocator.h \
     /usr/include/thrust/detail/allocator/tagged_allocator.inl \
@@ -581,68 +604,16 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/thrust/system/cuda/detail/terminate.h \
     /usr/include/thrust/detail/allocator/no_throw_allocator.h \
     /usr/include/thrust/detail/temporary_array.inl \
-    /usr/include/thrust/detail/allocator/default_construct_range.h \
-    /usr/include/thrust/detail/allocator/default_construct_range.inl \
-    /usr/include/thrust/uninitialized_fill.h \
-    /usr/include/thrust/detail/uninitialized_fill.inl \
-    /usr/include/thrust/system/detail/generic/uninitialized_fill.h \
-    /usr/include/thrust/system/detail/generic/uninitialized_fill.inl \
-    /usr/include/thrust/fill.h \
-    /usr/include/thrust/detail/fill.inl \
-    /usr/include/thrust/system/detail/generic/fill.h \
-    /usr/include/thrust/generate.h \
-    /usr/include/thrust/detail/generate.inl \
-    /usr/include/thrust/system/detail/generic/generate.h \
-    /usr/include/thrust/system/detail/generic/generate.inl \
-    /usr/include/thrust/system/detail/adl/generate.h \
-    /usr/include/thrust/system/detail/sequential/generate.h \
-    /usr/include/thrust/system/cpp/detail/generate.h \
-    /usr/include/thrust/system/cuda/detail/generate.h \
-    /usr/include/thrust/system/detail/adl/fill.h \
-    /usr/include/thrust/system/detail/sequential/fill.h \
-    /usr/include/thrust/system/cuda/detail/fill.h \
-    /usr/include/thrust/system/detail/adl/uninitialized_fill.h \
-    /usr/include/thrust/system/detail/sequential/uninitialized_fill.h \
-    /usr/include/thrust/system/cuda/detail/uninitialized_fill.h \
-    /usr/include/thrust/detail/allocator/destroy_range.h \
-    /usr/include/thrust/detail/allocator/destroy_range.inl \
-    /usr/include/thrust/detail/allocator/fill_construct_range.h \
-    /usr/include/thrust/detail/allocator/fill_construct_range.inl \
-    /usr/include/thrust/detail/vector_base.inl \
-    /usr/include/thrust/detail/overlapped_copy.h \
-    /usr/include/thrust/equal.h \
-    /usr/include/thrust/detail/equal.inl \
-    /usr/include/thrust/system/detail/generic/equal.h \
-    /usr/include/thrust/system/detail/generic/equal.inl \
-    /usr/include/thrust/mismatch.h \
-    /usr/include/thrust/detail/mismatch.inl \
-    /usr/include/thrust/system/detail/generic/mismatch.h \
-    /usr/include/thrust/system/detail/generic/mismatch.inl \
-    /usr/include/thrust/find.h \
-    /usr/include/thrust/detail/find.inl \
-    /usr/include/thrust/system/detail/generic/find.h \
-    /usr/include/thrust/system/detail/generic/find.inl \
-    /usr/include/thrust/reduce.h \
-    /usr/include/thrust/detail/reduce.inl \
-    /usr/include/thrust/system/detail/generic/reduce.h \
-    /usr/include/thrust/system/detail/generic/reduce.inl \
-    /usr/include/thrust/system/detail/generic/reduce_by_key.h \
-    /usr/include/thrust/system/detail/generic/reduce_by_key.inl \
-    /usr/include/thrust/detail/type_traits/iterator/is_output_iterator.h \
-    /usr/include/thrust/iterator/detail/any_assign.h \
-    /usr/include/thrust/scatter.h \
-    /usr/include/thrust/detail/scatter.inl \
-    /usr/include/thrust/system/detail/generic/scatter.h \
-    /usr/include/thrust/system/detail/generic/scatter.inl \
-    /usr/include/thrust/iterator/permutation_iterator.h \
-    /usr/include/thrust/iterator/detail/permutation_iterator_base.h \
-    /usr/include/thrust/system/detail/adl/scatter.h \
-    /usr/include/thrust/system/detail/sequential/scatter.h \
-    /usr/include/thrust/system/cuda/detail/scatter.h \
+    /usr/include/thrust/detail/copy_if.h \
+    /usr/include/thrust/detail/copy_if.inl \
+    /usr/include/thrust/system/detail/generic/copy_if.h \
+    /usr/include/thrust/system/detail/generic/copy_if.inl \
     /usr/include/thrust/scan.h \
     /usr/include/thrust/detail/scan.inl \
     /usr/include/thrust/system/detail/generic/scan.h \
     /usr/include/thrust/system/detail/generic/scan.inl \
+    /usr/include/thrust/detail/type_traits/iterator/is_output_iterator.h \
+    /usr/include/thrust/iterator/detail/any_assign.h \
     /usr/include/thrust/system/detail/generic/scan_by_key.h \
     /usr/include/thrust/system/detail/generic/scan_by_key.inl \
     /usr/include/thrust/detail/cstdint.h \
@@ -676,6 +647,49 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/thrust/system/cuda/detail/scan_by_key.h \
     /usr/include/thrust/detail/minmax.h \
     /usr/include/thrust/detail/mpl/math.h \
+    /usr/include/thrust/scatter.h \
+    /usr/include/thrust/detail/scatter.inl \
+    /usr/include/thrust/system/detail/generic/scatter.h \
+    /usr/include/thrust/system/detail/generic/scatter.inl \
+    /usr/include/thrust/iterator/permutation_iterator.h \
+    /usr/include/thrust/iterator/detail/permutation_iterator_base.h \
+    /usr/include/thrust/system/detail/adl/scatter.h \
+    /usr/include/thrust/system/detail/sequential/scatter.h \
+    /usr/include/thrust/system/cuda/detail/scatter.h \
+    /usr/include/thrust/system/detail/adl/copy_if.h \
+    /usr/include/thrust/system/detail/sequential/copy_if.h \
+    /usr/include/thrust/system/cpp/detail/copy_if.h \
+    /usr/include/thrust/system/cuda/detail/copy_if.h \
+    /usr/include/cub/device/device_select.cuh \
+    /usr/include/cub/device/dispatch/dispatch_select_if.cuh \
+    /usr/include/cub/agent/agent_select_if.cuh \
+    /usr/include/cub/device/dispatch/dispatch_unique_by_key.cuh \
+    /usr/include/cub/agent/agent_unique_by_key.cuh \
+    /usr/include/thrust/device_vector.h \
+    /usr/include/thrust/detail/vector_base.h \
+    /usr/include/thrust/iterator/reverse_iterator.h \
+    /usr/include/thrust/iterator/detail/reverse_iterator_base.h \
+    /usr/include/thrust/iterator/detail/reverse_iterator.inl \
+    /usr/include/thrust/detail/vector_base.inl \
+    /usr/include/thrust/detail/overlapped_copy.h \
+    /usr/include/thrust/equal.h \
+    /usr/include/thrust/detail/equal.inl \
+    /usr/include/thrust/system/detail/generic/equal.h \
+    /usr/include/thrust/system/detail/generic/equal.inl \
+    /usr/include/thrust/mismatch.h \
+    /usr/include/thrust/detail/mismatch.inl \
+    /usr/include/thrust/system/detail/generic/mismatch.h \
+    /usr/include/thrust/system/detail/generic/mismatch.inl \
+    /usr/include/thrust/find.h \
+    /usr/include/thrust/detail/find.inl \
+    /usr/include/thrust/system/detail/generic/find.h \
+    /usr/include/thrust/system/detail/generic/find.inl \
+    /usr/include/thrust/reduce.h \
+    /usr/include/thrust/detail/reduce.inl \
+    /usr/include/thrust/system/detail/generic/reduce.h \
+    /usr/include/thrust/system/detail/generic/reduce.inl \
+    /usr/include/thrust/system/detail/generic/reduce_by_key.h \
+    /usr/include/thrust/system/detail/generic/reduce_by_key.inl \
     /usr/include/thrust/system/detail/adl/reduce.h \
     /usr/include/thrust/system/detail/sequential/reduce.h \
     /usr/include/thrust/system/cpp/detail/reduce.h \
@@ -730,18 +744,4 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o : /home/toor/ripgrep/gpu_
     /usr/include/thrust/mr/new.h \
     /usr/include/thrust/mr/fancy_pointer_resource.h \
     /usr/include/thrust/system/cpp/pointer.h \
-    /usr/include/thrust/host_vector.h \
-    /usr/include/thrust/copy.h \
-    /usr/include/thrust/detail/copy_if.h \
-    /usr/include/thrust/detail/copy_if.inl \
-    /usr/include/thrust/system/detail/generic/copy_if.h \
-    /usr/include/thrust/system/detail/generic/copy_if.inl \
-    /usr/include/thrust/system/detail/adl/copy_if.h \
-    /usr/include/thrust/system/detail/sequential/copy_if.h \
-    /usr/include/thrust/system/cpp/detail/copy_if.h \
-    /usr/include/thrust/system/cuda/detail/copy_if.h \
-    /usr/include/cub/device/device_select.cuh \
-    /usr/include/cub/device/dispatch/dispatch_select_if.cuh \
-    /usr/include/cub/agent/agent_select_if.cuh \
-    /usr/include/cub/device/dispatch/dispatch_unique_by_key.cuh \
-    /usr/include/cub/agent/agent_unique_by_key.cuh
+    /usr/include/thrust/host_vector.h

@@ -26,7 +26,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o: /home/toor/ripgrep/gpu_b
   /usr/include/c++/12/bits/char_traits.h \
   /usr/include/c++/12/bits/charconv.h \
   /usr/include/c++/12/bits/chrono.h \
-  /usr/include/c++/12/bits/codecvt.h \
   /usr/include/c++/12/bits/concept_check.h \
   /usr/include/c++/12/bits/cpp_type_traits.h \
   /usr/include/c++/12/bits/cxxabi_forced.h \
@@ -34,7 +33,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o: /home/toor/ripgrep/gpu_b
   /usr/include/c++/12/bits/exception.h \
   /usr/include/c++/12/bits/exception_defines.h \
   /usr/include/c++/12/bits/exception_ptr.h \
-  /usr/include/c++/12/bits/fstream.tcc \
   /usr/include/c++/12/bits/functexcept.h \
   /usr/include/c++/12/bits/functional_hash.h \
   /usr/include/c++/12/bits/hash_bytes.h \
@@ -110,7 +108,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o: /home/toor/ripgrep/gpu_b
   /usr/include/c++/12/ext/numeric_traits.h \
   /usr/include/c++/12/ext/string_conversions.h \
   /usr/include/c++/12/ext/type_traits.h \
-  /usr/include/c++/12/fstream \
   /usr/include/c++/12/functional \
   /usr/include/c++/12/initializer_list \
   /usr/include/c++/12/ios \
@@ -156,6 +153,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o: /home/toor/ripgrep/gpu_b
   /usr/include/cub/agent/agent_reduce_by_key.cuh \
   /usr/include/cub/agent/agent_scan.cuh \
   /usr/include/cub/agent/agent_scan_by_key.cuh \
+  /usr/include/cub/agent/agent_select_if.cuh \
+  /usr/include/cub/agent/agent_unique_by_key.cuh \
   /usr/include/cub/agent/single_pass_scan_operators.cuh \
   /usr/include/cub/block/block_discontinuity.cuh \
   /usr/include/cub/block/block_exchange.cuh \
@@ -177,10 +176,13 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o: /home/toor/ripgrep/gpu_b
   /usr/include/cub/detail/uninitialized_copy.cuh \
   /usr/include/cub/device/device_reduce.cuh \
   /usr/include/cub/device/device_scan.cuh \
+  /usr/include/cub/device/device_select.cuh \
   /usr/include/cub/device/dispatch/dispatch_reduce.cuh \
   /usr/include/cub/device/dispatch/dispatch_reduce_by_key.cuh \
   /usr/include/cub/device/dispatch/dispatch_scan.cuh \
   /usr/include/cub/device/dispatch/dispatch_scan_by_key.cuh \
+  /usr/include/cub/device/dispatch/dispatch_select_if.cuh \
+  /usr/include/cub/device/dispatch/dispatch_unique_by_key.cuh \
   /usr/include/cub/grid/grid_even_share.cuh \
   /usr/include/cub/grid/grid_mapping.cuh \
   /usr/include/cub/grid/grid_queue.cuh \
@@ -282,6 +284,7 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o: /home/toor/ripgrep/gpu_b
   /usr/include/texture_indirect_functions.h \
   /usr/include/texture_types.h \
   /usr/include/thrust/advance.h \
+  /usr/include/thrust/copy.h \
   /usr/include/thrust/detail/advance.inl \
   /usr/include/thrust/detail/alignment.h \
   /usr/include/thrust/detail/allocator/allocator_traits.h \
@@ -320,6 +323,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o: /home/toor/ripgrep/gpu_b
   /usr/include/thrust/detail/contiguous_storage.inl \
   /usr/include/thrust/detail/copy.h \
   /usr/include/thrust/detail/copy.inl \
+  /usr/include/thrust/detail/copy_if.h \
+  /usr/include/thrust/detail/copy_if.inl \
   /usr/include/thrust/detail/cpp11_required.h \
   /usr/include/thrust/detail/cstdint.h \
   /usr/include/thrust/detail/dependencies_aware_execution_policy.h \
@@ -465,6 +470,7 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o: /home/toor/ripgrep/gpu_b
   /usr/include/thrust/swap.h \
   /usr/include/thrust/system/cpp/detail/assign_value.h \
   /usr/include/thrust/system/cpp/detail/copy.h \
+  /usr/include/thrust/system/cpp/detail/copy_if.h \
   /usr/include/thrust/system/cpp/detail/execution_policy.h \
   /usr/include/thrust/system/cpp/detail/find.h \
   /usr/include/thrust/system/cpp/detail/for_each.h \
@@ -484,6 +490,7 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o: /home/toor/ripgrep/gpu_b
   /usr/include/thrust/system/cuda/detail/assign_value.h \
   /usr/include/thrust/system/cuda/detail/cdp_dispatch.h \
   /usr/include/thrust/system/cuda/detail/copy.h \
+  /usr/include/thrust/system/cuda/detail/copy_if.h \
   /usr/include/thrust/system/cuda/detail/core/agent_launcher.h \
   /usr/include/thrust/system/cuda/detail/core/alignment.h \
   /usr/include/thrust/system/cuda/detail/core/triple_chevron_launch.h \
@@ -527,6 +534,7 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o: /home/toor/ripgrep/gpu_b
   /usr/include/thrust/system/cuda/pointer.h \
   /usr/include/thrust/system/detail/adl/assign_value.h \
   /usr/include/thrust/system/detail/adl/copy.h \
+  /usr/include/thrust/system/detail/adl/copy_if.h \
   /usr/include/thrust/system/detail/adl/equal.h \
   /usr/include/thrust/system/detail/adl/fill.h \
   /usr/include/thrust/system/detail/adl/find.h \
@@ -555,6 +563,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o: /home/toor/ripgrep/gpu_b
   /usr/include/thrust/system/detail/generic/advance.inl \
   /usr/include/thrust/system/detail/generic/copy.h \
   /usr/include/thrust/system/detail/generic/copy.inl \
+  /usr/include/thrust/system/detail/generic/copy_if.h \
+  /usr/include/thrust/system/detail/generic/copy_if.inl \
   /usr/include/thrust/system/detail/generic/distance.h \
   /usr/include/thrust/system/detail/generic/distance.inl \
   /usr/include/thrust/system/detail/generic/equal.h \
@@ -596,6 +606,7 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o: /home/toor/ripgrep/gpu_b
   /usr/include/thrust/system/detail/sequential/assign_value.h \
   /usr/include/thrust/system/detail/sequential/copy.h \
   /usr/include/thrust/system/detail/sequential/copy.inl \
+  /usr/include/thrust/system/detail/sequential/copy_if.h \
   /usr/include/thrust/system/detail/sequential/equal.h \
   /usr/include/thrust/system/detail/sequential/execution_policy.h \
   /usr/include/thrust/system/detail/sequential/fill.h \
@@ -715,10 +726,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o: /home/toor/ripgrep/gpu_b
   /usr/include/x86_64-linux-gnu/bits/wordsize.h \
   /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
   /usr/include/x86_64-linux-gnu/c++/12/bits/atomic_word.h \
-  /usr/include/x86_64-linux-gnu/c++/12/bits/basic_file.h \
   /usr/include/x86_64-linux-gnu/c++/12/bits/c++allocator.h \
   /usr/include/x86_64-linux-gnu/c++/12/bits/c++config.h \
-  /usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h \
   /usr/include/x86_64-linux-gnu/c++/12/bits/c++locale.h \
   /usr/include/x86_64-linux-gnu/c++/12/bits/cpu_defines.h \
   /usr/include/x86_64-linux-gnu/c++/12/bits/ctype_base.h \
@@ -777,14 +786,18 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
   /usr/include/c++/13/bits/requires_hosted.h \
   /usr/include/c++/13/bits/std_abs.h \
   /usr/include/c++/13/bits/stl_algobase.h \
+  /usr/include/c++/13/bits/stl_bvector.h \
   /usr/include/c++/13/bits/stl_construct.h \
   /usr/include/c++/13/bits/stl_function.h \
   /usr/include/c++/13/bits/stl_iterator.h \
   /usr/include/c++/13/bits/stl_iterator_base_funcs.h \
   /usr/include/c++/13/bits/stl_iterator_base_types.h \
   /usr/include/c++/13/bits/stl_pair.h \
+  /usr/include/c++/13/bits/stl_uninitialized.h \
+  /usr/include/c++/13/bits/stl_vector.h \
   /usr/include/c++/13/bits/stringfwd.h \
   /usr/include/c++/13/bits/utility.h \
+  /usr/include/c++/13/bits/vector.tcc \
   /usr/include/c++/13/cctype \
   /usr/include/c++/13/cerrno \
   /usr/include/c++/13/chrono \
@@ -808,6 +821,7 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
   /usr/include/c++/13/ratio \
   /usr/include/c++/13/string \
   /usr/include/c++/13/type_traits \
+  /usr/include/c++/13/vector \
   /usr/include/ctype.h \
   /usr/include/endian.h \
   /usr/include/errno.h \
@@ -903,11 +917,11 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/x86_64-linux-gnu/c++/13/bits/c++allocator.h:
 
+/usr/include/c++/13/vector:
+
 /usr/include/c++/13/ratio:
 
 /usr/include/c++/13/initializer_list:
-
-/usr/include/c++/13/ext/numeric_traits.h:
 
 /usr/include/c++/13/debug/debug.h:
 
@@ -921,6 +935,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/c++/13/clocale:
 
+/usr/include/c++/13/bits/vector.tcc:
+
 /usr/include/c++/13/cerrno:
 
 /usr/include/c++/13/bits/stringfwd.h:
@@ -930,6 +946,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 /usr/include/c++/13/bits/stl_function.h:
 
 /usr/include/c++/13/bits/stl_construct.h:
+
+/usr/include/c++/13/bits/stl_bvector.h:
 
 /usr/include/c++/13/bits/stl_algobase.h:
 
@@ -944,8 +962,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 /usr/include/c++/13/bits/parse_numbers.h:
 
 /usr/include/c++/13/bits/ostream_insert.h:
-
-/usr/include/c++/13/bits/new_allocator.h:
 
 /usr/include/c++/13/bits/memoryfwd.h:
 
@@ -992,8 +1008,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 /usr/include/x86_64-linux-gnu/c++/12/bits/cpu_defines.h:
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/c++config.h:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/basic_file.h:
 
 /usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
@@ -1133,13 +1147,11 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/thrust/system/detail/sequential/equal.h:
 
+/usr/include/thrust/system/detail/sequential/copy_if.h:
+
 /usr/include/thrust/system/detail/sequential/copy.inl:
 
 /usr/include/thrust/system/detail/sequential/assign_value.h:
-
-/usr/include/c++/13/backward/binders.h:
-
-/usr/include/thrust/system/detail/generic/uninitialized_fill.h:
 
 /usr/include/thrust/system/detail/generic/transform.h:
 
@@ -1193,6 +1205,10 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/thrust/system/detail/generic/distance.inl:
 
+/usr/include/thrust/system/detail/generic/copy_if.inl:
+
+/usr/include/thrust/system/detail/generic/copy_if.h:
+
 /usr/include/thrust/system/detail/generic/copy.inl:
 
 /usr/include/thrust/system/detail/generic/copy.h:
@@ -1225,7 +1241,15 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/thrust/system/detail/adl/temporary_buffer.h:
 
-/usr/include/sm_20_atomic_functions.hpp:
+/usr/include/thrust/system/detail/adl/scan_by_key.h:
+
+/usr/include/thrust/system/detail/adl/scan.h:
+
+/usr/include/thrust/system/detail/adl/replace.h:
+
+/usr/include/thrust/system/detail/adl/reduce_by_key.h:
+
+/usr/include/thrust/system/detail/adl/mismatch.h:
 
 /usr/include/nv/detail/__preprocessor:
 
@@ -1236,6 +1260,20 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 /usr/include/locale.h:
 
 /usr/include/thrust/system/cuda/detail/copy.h:
+
+/usr/include/library_types.h:
+
+/usr/include/c++/13/bits/exception_defines.h:
+
+/usr/include/thrust/system/detail/generic/fill.h:
+
+/usr/include/thrust/system/cpp/detail/reduce.h:
+
+/usr/include/device_atomic_functions.hpp:
+
+/usr/include/c++/13/bits/alloc_traits.h:
+
+/usr/include/thrust/memory.h:
 
 /usr/include/cuda_runtime_api.h:
 
@@ -1285,12 +1323,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/cub/util_cpp_dialect.cuh:
 
-/usr/include/thrust/system/detail/sequential/scan_by_key.h:
-
-/usr/include/thrust/iterator/detail/minimum_system.h:
-
-/usr/include/thrust/system/cpp/detail/malloc_and_free.h:
-
 /usr/include/thrust/system/detail/generic/memory.inl:
 
 /usr/include/cub/util_compiler.cuh:
@@ -1308,6 +1340,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 /usr/include/cuda/std/utility:
 
 /usr/include/thrust/detail/pointer.inl:
+
+/usr/include/sm_20_atomic_functions.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/time.h:
 
@@ -1341,11 +1375,19 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/cub/grid/grid_mapping.cuh:
 
+/usr/include/c++/13/backward/binders.h:
+
+/usr/include/thrust/system/detail/generic/uninitialized_fill.h:
+
+/usr/include/cub/agent/agent_unique_by_key.cuh:
+
 /usr/include/thrust/detail/mismatch.inl:
 
 /usr/include/c++/12/bits/exception_ptr.h:
 
 /usr/include/cub/device/dispatch/dispatch_scan.cuh:
+
+/usr/include/c++/13/bits/stl_vector.h:
 
 /usr/include/thrust/detail/type_traits/has_trivial_assign.h:
 
@@ -1366,8 +1408,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 /usr/include/thrust/system/cuda/detail/core/triple_chevron_launch.h:
 
 /usr/include/cub/block/specializations/block_scan_warp_scans.cuh:
-
-/usr/include/c++/12/fstream:
 
 /usr/include/cub/block/block_store.cuh:
 
@@ -1415,6 +1455,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/crt/sm_80_rt.hpp:
 
+/usr/include/crt/sm_80_rt.h:
+
 /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h:
 
 /usr/include/sm_32_intrinsics.h:
@@ -1455,6 +1497,10 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/cuda/std/version:
 
+/usr/include/c++/13/ext/numeric_traits.h:
+
+/usr/include/cub/device/dispatch/dispatch_select_if.cuh:
+
 /usr/include/thrust/system/detail/sequential/scan.h:
 
 /usr/include/c++/12/bits/allocator.h:
@@ -1477,18 +1523,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/thrust/detail/functional/operators/arithmetic_operators.h:
 
-/usr/include/asm-generic/errno-base.h:
-
-/usr/include/crt/sm_90_rt.hpp:
-
-/usr/include/thrust/system/detail/generic/equal.inl:
-
-/usr/include/thrust/detail/integer_math.h:
-
-/usr/include/c++/12/system_error:
-
-/usr/include/thrust/detail/contiguous_storage.inl:
-
 /usr/include/cub/device/dispatch/dispatch_scan_by_key.cuh:
 
 /usr/include/thrust/detail/copy.h:
@@ -1503,11 +1537,31 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/thrust/system/cuda/detail/core/util.h:
 
+/usr/include/cub/agent/agent_select_if.cuh:
+
+/usr/include/thrust/detail/allocator/allocator_traits.h:
+
 /usr/include/c++/12/bits/range_access.h:
+
+/usr/include/c++/12/system_error:
+
+/usr/include/thrust/detail/contiguous_storage.inl:
 
 /usr/include/c++/12/bits/ostream_insert.h:
 
 /usr/include/c++/12/bits/locale_facets.tcc:
+
+/usr/include/thrust/system/cuda/detail/copy_if.h:
+
+/usr/include/thrust/system/cuda/error.h:
+
+/usr/include/c++/12/bits/functional_hash.h:
+
+/usr/include/thrust/type_traits/remove_cvref.h:
+
+/usr/include/c++/12/tuple:
+
+/usr/include/c++/12/bits/stringfwd.h:
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/atomic_word.h:
 
@@ -1535,11 +1589,11 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/c++/12/bits/localefwd.h:
 
-/usr/include/thrust/type_traits/remove_cvref.h:
+/usr/include/thrust/detail/preprocessor.h:
 
-/usr/include/c++/12/tuple:
+/usr/include/cub/util_debug.cuh:
 
-/usr/include/c++/12/bits/functional_hash.h:
+/usr/include/thrust/system/cpp/detail/swap_ranges.h:
 
 /usr/include/thrust/detail/allocator/destroy_range.inl:
 
@@ -1550,12 +1604,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 /usr/include/thrust/system/cuda/detail/error.inl:
 
 /usr/include/c++/12/bits/locale_facets.h:
-
-/usr/include/thrust/detail/preprocessor.h:
-
-/usr/include/cub/util_debug.cuh:
-
-/usr/include/thrust/system/cpp/detail/swap_ranges.h:
 
 /usr/include/c++/12/bits/locale_classes.h:
 
@@ -1569,41 +1617,11 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/thrust/detail/functional/operators/operator_adaptors.h:
 
-/usr/include/library_types.h:
-
-/usr/include/c++/13/bits/exception_defines.h:
-
-/usr/include/thrust/system/detail/generic/fill.h:
-
-/usr/include/thrust/system/cpp/detail/reduce.h:
-
-/usr/include/device_atomic_functions.hpp:
-
-/usr/include/c++/13/bits/alloc_traits.h:
-
-/usr/include/thrust/memory.h:
-
-/usr/include/c++/12/bits/fstream.tcc:
-
-/usr/include/thrust/mr/host_memory_resource.h:
-
-/usr/include/c++/12/bits/stl_uninitialized.h:
-
 /usr/include/c++/12/ext/concurrence.h:
 
 /usr/include/c++/12/iosfwd:
 
 /usr/include/c++/12/bits/exception.h:
-
-/usr/include/cub/agent/agent_reduce_by_key.cuh:
-
-/usr/include/thrust/system/detail/generic/for_each.h:
-
-/usr/include/crt/host_config.h:
-
-/usr/include/c++/12/backward/binders.h:
-
-/usr/include/c++/12/bits/chrono.h:
 
 /usr/include/thrust/detail/for_each.inl:
 
@@ -1615,35 +1633,27 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/thrust/detail/transform.inl:
 
-/usr/include/crt/sm_80_rt.h:
+/usr/include/c++/12/backward/binders.h:
 
-/usr/include/c++/12/bits/codecvt.h:
+/usr/include/cub/agent/agent_reduce_by_key.cuh:
 
-/usr/include/c++/13/bit:
+/usr/include/thrust/system/detail/generic/for_each.h:
 
-/usr/include/c++/12/bits/cpp_type_traits.h:
+/usr/include/crt/host_config.h:
 
-/usr/include/thrust/version.h:
-
-/usr/include/thrust/iterator/detail/iterator_adaptor_base.h:
-
-/usr/include/thrust/system/cuda/detail/dispatch.h:
-
-/usr/include/thrust/system/detail/adl/scan.h:
-
-/usr/include/c++/12/bits/alloc_traits.h:
+/usr/include/c++/12/bits/chrono.h:
 
 /usr/include/cub/thread/thread_load.cuh:
 
 /usr/include/c++/12/atomic:
 
+/usr/include/thrust/detail/copy_if.inl:
+
 /usr/include/thrust/system/cuda/detail/internal/copy_device_to_device.h:
 
+/usr/include/c++/12/bits/alloc_traits.h:
+
 /usr/include/c++/12/cfloat:
-
-/usr/include/thrust/system/cuda/error.h:
-
-/usr/include/c++/12/bits/stringfwd.h:
 
 /usr/include/device_types.h:
 
@@ -1701,6 +1711,12 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/cub/detail/detect_cuda_runtime.cuh:
 
+/usr/include/crt/sm_90_rt.hpp:
+
+/usr/include/thrust/system/detail/generic/equal.inl:
+
+/usr/include/thrust/detail/integer_math.h:
+
 /usr/include/thrust/system/detail/generic/mismatch.inl:
 
 /home/toor/ripgrep/gpu_bridge/src/gpu_search.cu:
@@ -1708,12 +1724,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 /usr/include/thrust/detail/functional/value.h:
 
 /home/toor/ripgrep/gpu_bridge/src/gpu_search.cuh:
-
-/usr/include/thrust/system/cuda/detail/scan.h:
-
-/usr/include/cub/agent/agent_scan_by_key.cuh:
-
-/usr/include/thrust/detail/functional/operators/relational_operators.h:
 
 /usr/include/thrust/iterator/permutation_iterator.h:
 
@@ -1733,6 +1743,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/thrust/detail/advance.inl:
 
+/usr/include/asm-generic/errno-base.h:
+
 /usr/include/c++/12/bits/ptr_traits.h:
 
 /usr/include/thrust/system/detail/adl/fill.h:
@@ -1743,21 +1755,21 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/thrust/system/detail/adl/iter_swap.h:
 
-/usr/include/c++/12/bits/stl_vector.h:
+/usr/include/c++/13/bit:
 
-/usr/include/cub/util_type.cuh:
+/usr/include/c++/12/bits/cpp_type_traits.h:
 
-/usr/include/c++/12/bits/refwrap.h:
+/usr/include/thrust/version.h:
 
-/usr/include/c++/12/cerrno:
+/usr/include/thrust/iterator/detail/iterator_adaptor_base.h:
 
-/usr/include/c++/12/cstddef:
+/usr/include/thrust/system/cuda/detail/dispatch.h:
 
-/usr/include/cub/block/specializations/block_reduce_raking_commutative_only.cuh:
+/usr/include/cub/agent/agent_scan_by_key.cuh:
 
-/usr/include/thrust/detail/temporary_buffer.h:
+/usr/include/thrust/detail/functional/operators/relational_operators.h:
 
-/usr/include/c++/12/stdlib.h:
+/usr/include/thrust/system/cuda/detail/scan.h:
 
 /usr/include/c++/12/bits/basic_string.tcc:
 
@@ -1774,6 +1786,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 /usr/include/c++/12/bits/charconv.h:
 
 /usr/include/thrust/device_ptr.h:
+
+/usr/include/c++/12/bits/stl_vector.h:
 
 /usr/include/thrust/mr/fancy_pointer_resource.h:
 
@@ -1847,6 +1861,24 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/thrust/iterator/reverse_iterator.h:
 
+/usr/include/c++/12/bits/stl_uninitialized.h:
+
+/usr/include/cub/util_type.cuh:
+
+/usr/include/c++/12/bits/refwrap.h:
+
+/usr/include/c++/13/bits/stl_uninitialized.h:
+
+/usr/include/cub/block/specializations/block_reduce_raking_commutative_only.cuh:
+
+/usr/include/thrust/detail/temporary_buffer.h:
+
+/usr/include/c++/12/stdlib.h:
+
+/usr/include/c++/12/cerrno:
+
+/usr/include/c++/12/cstddef:
+
 /usr/include/x86_64-linux-gnu/bits/local_lim.h:
 
 /usr/include/cub/warp/specializations/warp_reduce_shfl.cuh:
@@ -1865,8 +1897,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/c++/12/bits/unique_ptr.h:
 
-/usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h:
-
 /usr/include/thrust/system/detail/adl/find.h:
 
 /usr/include/c++/12/vector:
@@ -1884,8 +1914,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 /usr/include/c++/12/chrono:
 
 /usr/include/thrust/detail/static_assert.h:
-
-/usr/include/thrust/system/detail/adl/replace.h:
 
 /usr/include/c++/12/cassert:
 
@@ -1913,10 +1941,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/thrust/advance.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
-
-/usr/include/cub/util_namespace.cuh:
-
 /usr/include/x86_64-linux-gnu/bits/floatn.h:
 
 /usr/include/c++/12/bits/char_traits.h:
@@ -1934,6 +1958,14 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 /usr/include/channel_descriptor.h:
 
 /usr/include/c++/12/compare:
+
+/usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
+
+/usr/include/cub/util_namespace.cuh:
+
+/usr/include/cub/device/dispatch/dispatch_unique_by_key.cuh:
+
+/usr/include/thrust/iterator/iterator_traits.h:
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/ctype_base.h:
 
@@ -1995,12 +2027,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/c++/12/ext/type_traits.h:
 
-/usr/include/thrust/detail/swap.inl:
-
-/usr/include/sm_20_intrinsics.h:
-
-/usr/include/thrust/detail/allocator/temporary_allocator.h:
-
 /usr/include/c++/12/ext/numeric_traits.h:
 
 /usr/include/cuda_fp16.h:
@@ -2058,6 +2084,18 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 /usr/include/thrust/system/cuda/detail/equal.h:
 
 /usr/include/c++/12/ostream:
+
+/usr/include/thrust/detail/swap.inl:
+
+/usr/include/thrust/detail/allocator/temporary_allocator.h:
+
+/usr/include/sm_20_intrinsics.h:
+
+/usr/include/thrust/system/detail/sequential/scan_by_key.h:
+
+/usr/include/thrust/iterator/detail/minimum_system.h:
+
+/usr/include/thrust/system/cpp/detail/malloc_and_free.h:
 
 /usr/include/sm_20_intrinsics.hpp:
 
@@ -2133,7 +2171,9 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/thrust/system/cuda/detail/make_unsigned_special.h:
 
-/usr/include/thrust/detail/allocator/allocator_traits.h:
+/usr/include/c++/13/bits/new_allocator.h:
+
+/usr/include/thrust/copy.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/wint_t.h:
 
@@ -2146,6 +2186,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 /usr/include/thrust/system/cuda/detail/mismatch.h:
 
 /usr/include/thrust/detail/allocator/default_construct_range.h:
+
+/usr/include/thrust/system/cpp/detail/copy_if.h:
 
 /usr/include/thrust/detail/allocator/default_construct_range.inl:
 
@@ -2194,6 +2236,10 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 /usr/include/thrust/detail/contiguous_storage.h:
 
 /usr/include/thrust/iterator/detail/is_iterator_category.h:
+
+/usr/include/thrust/detail/copy_if.h:
+
+/usr/include/thrust/mr/host_memory_resource.h:
 
 /usr/include/c++/13/bits/stl_iterator_base_types.h:
 
@@ -2373,8 +2419,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/thrust/iterator/iterator_categories.h:
 
-/usr/include/thrust/iterator/iterator_traits.h:
-
 /usr/include/thrust/mr/device_memory_resource.h:
 
 /usr/include/thrust/mr/memory_resource.h:
@@ -2499,16 +2543,14 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o: /home/toor/ripgrep/gpu_bridge/
 
 /usr/include/thrust/system/cuda/memory_resource.h:
 
-/usr/include/c++/12/bits/stl_relops.h:
+/usr/include/thrust/system/detail/adl/copy_if.h:
 
 /usr/include/thrust/system/detail/adl/scatter.h:
 
+/usr/include/c++/12/bits/stl_relops.h:
+
 /usr/include/thrust/system/detail/adl/for_each.h:
 
+/usr/include/cub/device/device_select.cuh:
+
 /usr/include/thrust/system/detail/adl/generate.h:
-
-/usr/include/thrust/system/detail/adl/mismatch.h:
-
-/usr/include/thrust/system/detail/adl/reduce_by_key.h:
-
-/usr/include/thrust/system/detail/adl/scan_by_key.h:

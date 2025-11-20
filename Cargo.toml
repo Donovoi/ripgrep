@@ -77,6 +77,9 @@ serde = "1.0.77"
 serde_derive = "1.0.77"
 walkdir = "2"
 
+[build-dependencies]
+cmake = "0.1"
+
 [features]
 pcre2 = ["grep/pcre2"]
 gdeflate = ["dep:gdeflate", "grep/gdeflate"]

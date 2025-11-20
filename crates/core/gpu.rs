@@ -198,26 +198,36 @@ mod nvtext {
         compile_with_engine,
     };
 
-    use std::{env, ffi::c_void, ptr::NonNull, time::Duration};
+    use std::{ffi::c_void, ptr::NonNull, time::Duration};
 
     use anyhow::{Context, bail};
-    use libloading::Library;
     use regex_automata::dfa::{Automaton, dense};
 
-    const DEFAULT_SYMBOL_COMPILE: &[u8] = b"rg_gpu_regex_compile\0";
-    const DEFAULT_SYMBOL_RELEASE: &[u8] = b"rg_gpu_regex_release\0";
-    const DEFAULT_SYMBOL_SEARCH: &[u8] = b"rg_gpu_regex_search\0";
+    unsafe extern "C" {
+        fn rg_gpu_regex_compile(
+            pattern_ptr: *const u8,
+            pattern_len: usize,
+            options: *const RgGpuCompileOptions,
+            out_handle: *mut *mut c_void,
+        ) -> i32;
+
+        fn rg_gpu_regex_release(handle: *mut c_void);
+
+        fn rg_gpu_regex_search(
+            handle: *mut c_void,
+            input: *const RgGpuSearchInput,
+            result: *mut RgGpuSearchResult,
+        ) -> i32;
+    }
 
     #[derive(Debug, Clone)]
     pub(super) struct NvtextRegexEngine {
-        bridge: Arc<NvtextLibrary>,
         stats_enabled: bool,
     }
 
     impl NvtextRegexEngine {
         pub(super) fn new(stats_enabled: bool) -> anyhow::Result<Self> {
-            let bridge = NvtextLibrary::load()?;
-            Ok(Self { bridge, stats_enabled })
+            Ok(Self { stats_enabled })
         }
     }
 
@@ -305,7 +315,7 @@ mod nvtext {
             // And the specific layout.
 
             // Let's try to use the raw bytes.
-            let (bytes, _) = dfa.to_bytes_little_endian();
+            let (_bytes, _) = dfa.to_bytes_little_endian();
 
             // We need to pass this buffer to the C++ bridge.
             // We also need to tell the bridge where the start state is.
@@ -348,7 +358,7 @@ mod nvtext {
             // Let's use u32. High bit = match.
             let mut flat_table = vec![0u32; ordered_states.len() * 256];
             for (idx, &original_id) in ordered_states.iter().enumerate() {
-                let is_match = dfa.is_match_state(original_id);
+                let _is_match = dfa.is_match_state(original_id);
                 for b in 0..=255 {
                     let next_id = dfa.next_state(original_id, b as u8);
                     let next_idx = visited[&next_id];
@@ -388,7 +398,7 @@ mod nvtext {
 
             let mut handle: *mut c_void = std::ptr::null_mut();
             let status = unsafe {
-                (self.bridge.compile)(
+                rg_gpu_regex_compile(
                     table_ptr,
                     table_bytes_len,
                     &options,
@@ -400,7 +410,7 @@ mod nvtext {
             }
             let handle = NonNull::new(handle)
                 .context("nvtext bridge returned null regex handle")?;
-            Ok(NvtextProgram { bridge: Arc::clone(&self.bridge), handle })
+            Ok(NvtextProgram { handle })
         }
 
         fn search_path(
@@ -411,18 +421,39 @@ mod nvtext {
             // Heuristic: Only use GPU for files larger than 2MB.
             // Smaller files are faster on CPU due to transfer overhead.
             const MIN_GPU_FILE_SIZE: u64 = 2 * 1024 * 1024;
-            if input.file_len < MIN_GPU_FILE_SIZE {
+            // If file_len is 0, it might be a block device, so we proceed.
+            if input.file_len > 0 && input.file_len < MIN_GPU_FILE_SIZE {
                 return Ok(GpuRegexSearchOutcome::NotAttempted);
             }
 
             // Read file content
             // Note: We read the file here in Rust to pass the buffer to C++.
             // This allows future optimizations like batching or memory mapping.
-            let file = std::fs::File::open(input.path)
+            let mut file = std::fs::File::open(input.path)
                 .context("failed to open file for GPU search")?;
 
-            let mmap = unsafe { memmap2::Mmap::map(&file) }
-                .context("failed to mmap file for GPU search")?;
+            // If file_len is 0, try to determine size via seek (for block devices)
+            let mut len = input.file_len;
+            if len == 0 {
+                use std::io::Seek;
+                len = file
+                    .seek(std::io::SeekFrom::End(0))
+                    .context("failed to seek to end of block device")?;
+                // We don't need to seek back for mmap usually, but let's be safe
+                // file.seek(std::io::SeekFrom::Start(0))?;
+            }
+
+            if len == 0 {
+                return Ok(GpuRegexSearchOutcome::NoMatch(
+                    GpuRegexExecutionStats::default(),
+                ));
+            }
+
+            // For block devices, we must use the determined length for mmap
+            let mmap = unsafe {
+                memmap2::MmapOptions::new().len(len as usize).map(&file)
+            }
+            .context("failed to mmap file for GPU search")?;
 
             // Allocate buffer for matches
             let max_matches = 4096;
@@ -435,12 +466,12 @@ mod nvtext {
             };
 
             let request = RgGpuSearchInput {
-                data_len: mmap.len() as u64,
+                data_len: len,
                 stats_enabled: input.stats_enabled,
                 data_ptr: mmap.as_ptr(),
             };
             let status = unsafe {
-                (program.bridge.search)(
+                rg_gpu_regex_search(
                     program.handle.as_ptr(),
                     &request,
                     &mut result,
@@ -466,76 +497,7 @@ mod nvtext {
         }
     }
 
-    #[derive(Debug)]
-    pub(super) struct NvtextLibrary {
-        _lib: Library,
-        compile: CompileFn,
-        release: ReleaseFn,
-        search: SearchFn,
-    }
-
-    type CompileFn = unsafe extern "C" fn(
-        pattern_ptr: *const u8,
-        pattern_len: usize,
-        options: *const RgGpuCompileOptions,
-        out_handle: *mut *mut c_void,
-    ) -> i32;
-    type ReleaseFn = unsafe extern "C" fn(handle: *mut c_void);
-    type SearchFn = unsafe extern "C" fn(
-        handle: *mut c_void,
-        input: *const RgGpuSearchInput,
-        result: *mut RgGpuSearchResult,
-    ) -> i32;
-
-    impl NvtextLibrary {
-        fn load() -> anyhow::Result<Arc<Self>> {
-            let mut errors = Vec::new();
-            if let Ok(explicit) = env::var("RG_NVTEXT_BRIDGE_PATH") {
-                match Self::open(&explicit) {
-                    Ok(lib) => return Ok(Arc::new(lib)),
-                    Err(err) => errors.push(format!("{}: {err}", explicit)),
-                }
-            }
-            for candidate in default_library_candidates() {
-                match Self::open(candidate) {
-                    Ok(lib) => return Ok(Arc::new(lib)),
-                    Err(err) => errors.push(format!("{}: {err}", candidate)),
-                }
-            }
-            bail!(
-                "failed to load nvtext GPU bridge. attempted: {}",
-                errors.join(", ")
-            );
-        }
-
-        fn open(path: &str) -> anyhow::Result<Self> {
-            unsafe {
-                let lib = Library::new(path)?;
-                let compile = *lib.get::<CompileFn>(DEFAULT_SYMBOL_COMPILE)?;
-                let release = *lib.get::<ReleaseFn>(DEFAULT_SYMBOL_RELEASE)?;
-                let search = *lib.get::<SearchFn>(DEFAULT_SYMBOL_SEARCH)?;
-                Ok(Self { _lib: lib, compile, release, search })
-            }
-        }
-    }
-
-    fn default_library_candidates() -> &'static [&'static str] {
-        #[cfg(target_os = "windows")]
-        {
-            &["rg_gpu_regex_bridge.dll"]
-        }
-        #[cfg(target_os = "macos")]
-        {
-            &["librg_gpu_regex_bridge.dylib", "libnvtext_rg_bridge.dylib"]
-        }
-        #[cfg(all(not(target_os = "windows"), not(target_os = "macos")))]
-        {
-            &["librg_gpu_regex_bridge.so", "libnvtext_rg_bridge.so"]
-        }
-    }
-
     pub(super) struct NvtextProgram {
-        bridge: Arc<NvtextLibrary>,
         handle: NonNull<c_void>,
     }
 
@@ -544,7 +506,7 @@ mod nvtext {
 
     impl Drop for NvtextProgram {
         fn drop(&mut self) {
-            unsafe { (self.bridge.release)(self.handle.as_ptr()) };
+            unsafe { rg_gpu_regex_release(self.handle.as_ptr()) };
         }
     }
 
