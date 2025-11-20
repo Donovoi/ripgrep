@@ -85,7 +85,7 @@ impl SearchWorkerBuilder {
         let mut command_builder = grep::cli::CommandReaderBuilder::new();
         command_builder.async_stderr(true);
 
-        let config = Config::default();
+        let mut config = Config::default();
         #[cfg(feature = "cuda-gpu")]
         {
             if let Ok(s) = std::env::var("RG_GPU_THRESHOLD") {

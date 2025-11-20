@@ -330,7 +330,6 @@ mod nvtext {
 
             // Alternative: Build our own simple table.
             // Walk the DFA from start state.
-            let mut stack = vec![start_state];
             let mut visited = std::collections::HashMap::new();
             let mut ordered_states = Vec::new();
 
