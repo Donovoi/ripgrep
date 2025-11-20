@@ -48,10 +48,17 @@ __global__ void dfa_search_kernel(const uint32_t *table, const char *haystack,
       // Only report if the match ends within our assigned chunk.
       // AND if it is within the valid region of the stream chunk.
       if (idx >= chunk_start && idx >= valid_start_idx) {
+        // SAFETY: Use atomic increment with early bounds check to prevent buffer overflow.
+        // The buffer is allocated with extra space (MATCH_BUFFER_SIZE) to handle
+        // in-flight atomic increments that may temporarily exceed max_matches.
         int old = atomicAdd(match_count, 1);
+        // Only write to buffer if we got a valid slot
+        // Note: Some matches may be lost if we exceed max_matches, but no buffer overflow
         if (old < max_matches) {
           matches[old].offset = global_offset + idx;
         }
+        // If we've exceeded the limit, subsequent threads will also see old >= max_matches
+        // and won't write, preventing overflow
       }
       state = entry & 0x7FFFFFFF;
     } else {
@@ -75,8 +82,8 @@ int launch_gpu_search(const GpuDfa &dfa, const char *data, uint64_t len,
     // Copy DFA table to GPU
     thrust::device_vector<uint32_t> d_table = dfa.table;
 
-    // Output buffers
-    thrust::device_vector<GpuMatch> d_matches(MAX_MATCHES);
+    // Output buffers - allocate extra space to handle race condition window
+    thrust::device_vector<GpuMatch> d_matches(MATCH_BUFFER_SIZE);
     thrust::device_vector<int> d_match_count(1, 0);
 
     // Allocate GPU buffer for streaming
