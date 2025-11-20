@@ -54,6 +54,7 @@ int32_t rg_gpu_regex_compile(
     const RgGpuCompileOptions* options,
     void** out_handle
 ) {
+    // Validate input parameters
     if (!pattern_ptr || !options || !out_handle) {
         return STATUS_ERROR;
     }
@@ -61,14 +62,38 @@ int32_t rg_gpu_regex_compile(
     try {
         // pattern_ptr now points to the DFA table (u32 array)
         // pattern_len is the size in bytes
-        if (pattern_len % 4 != 0) {
+        
+        // Check alignment - pattern_ptr must be 4-byte aligned for uint32_t access
+        if (reinterpret_cast<uintptr_t>(pattern_ptr) % alignof(uint32_t) != 0) {
             return STATUS_ERROR;
         }
         
-        size_t count = pattern_len / 4;
+        // Check size is multiple of uint32_t
+        if (pattern_len % sizeof(uint32_t) != 0) {
+            return STATUS_ERROR;
+        }
+        
+        // Calculate number of entries
+        size_t count = pattern_len / sizeof(uint32_t);
+        
+        // Validate reasonable DFA table size (max 10 million entries = ~40MB)
+        // This prevents excessive memory allocation from malformed input
+        const size_t MAX_DFA_TABLE_SIZE = 10 * 1024 * 1024;
+        if (count == 0 || count > MAX_DFA_TABLE_SIZE) {
+            return STATUS_ERROR;
+        }
+        
         const uint32_t* data = reinterpret_cast<const uint32_t*>(pattern_ptr);
         
-        std::vector<uint32_t> table(data, data + count);
+        // Copy data into vector with bounds checking
+        std::vector<uint32_t> table;
+        table.reserve(count);
+        try {
+            table.assign(data, data + count);
+        } catch (const std::bad_alloc&) {
+            // Out of memory
+            return STATUS_ERROR;
+        }
 
         auto* compiled = new GpuRegexPattern{
             GpuDfa{
@@ -77,6 +102,8 @@ int32_t rg_gpu_regex_compile(
         };
         *out_handle = static_cast<void*>(compiled);
         return 0; // Success
+    } catch (const std::exception&) {
+        return STATUS_ERROR;
     } catch (...) {
         return STATUS_ERROR;
     }
@@ -133,3 +160,22 @@ int32_t rg_gpu_regex_search(
 }
 
 } // extern "C"
+
+// Stub implementation of launch_gpu_search when CUDA is not available
+#ifndef CUDA_GPU_SUPPORT
+int launch_gpu_search(const GpuDfa &dfa, const char *data, uint64_t len,
+                      uint64_t *elapsed_ns, GpuMatch *matches,
+                      int *match_count) {
+    // Return error to indicate GPU search is not available
+    // This will cause a fallback to CPU search
+    (void)dfa;
+    (void)data;
+    (void)len;
+    (void)matches;
+    (void)match_count;
+    if (elapsed_ns) {
+        *elapsed_ns = 0;
+    }
+    return -1; // Error
+}
+#endif
