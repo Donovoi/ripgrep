@@ -129,6 +129,12 @@ const MAX_LITERAL_CHUNK: usize = 512 * 1024 * 1024; // 512 MiB
 pub fn is_gpu_available() -> bool {
     #[cfg(feature = "cuda-gpu")]
     {
+        // SAFETY: Calling gpu_is_available() is safe because:
+        // 1. It only queries CUDA runtime state via cudaGetDeviceCount()
+        // 2. No memory is modified or aliased
+        // 3. Returns simple boolean value
+        // 4. CUDA runtime is thread-safe per CUDA Programming Guide §3.2.1
+        // 5. Function handles all CUDA errors internally (returns false on error)
         unsafe { gpu_is_available() }
     }
     #[cfg(not(feature = "cuda-gpu"))]
@@ -155,6 +161,11 @@ pub fn is_gpu_available() -> bool {
 pub fn get_gpu_devices() -> Vec<GpuInfo> {
     #[cfg(feature = "cuda-gpu")]
     {
+        // SAFETY: Calling gpu_get_devices() is safe because:
+        // 1. Returns Vec<GpuInfo> which is properly allocated Rust memory
+        // 2. Internal FFI calls handle CUDA errors gracefully
+        // 3. No pointers are exposed to caller, all data is copied into Rust types
+        // 4. Thread-safe as CUDA device queries don't modify state
         unsafe { gpu_get_devices() }
     }
     #[cfg(not(feature = "cuda-gpu"))]
@@ -313,6 +324,13 @@ pub fn decompress_with_gpu(
             return Err(Error::InvalidParam);
         }
 
+        // SAFETY: Calling gpu_decompress_internal() is safe because:
+        // 1. input slice is valid for reads (Rust borrow checker guarantees)
+        // 2. output_size is validated above (< GPU_MAX_SIZE)
+        // 3. Function allocates output Vec internally with proper Rust memory
+        // 4. GPU availability already checked above
+        // 5. All GPU memory transfers and operations are handled internally
+        // 6. Returns Result allowing graceful error handling
         unsafe { gpu_decompress_internal(input, output_size) }
     }
     #[cfg(not(feature = "cuda-gpu"))]

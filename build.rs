@@ -16,11 +16,18 @@ fn build_gpu_bridge() {
 
     println!("cargo:rustc-link-search=native={}/lib", dst.display());
     println!("cargo:rustc-link-lib=static=rg_gpu_regex_bridge");
-
-    // Link against CUDA runtime
-    println!("cargo:rustc-link-search=native=/usr/local/cuda/lib64");
-    println!("cargo:rustc-link-lib=cudart");
     println!("cargo:rustc-link-lib=stdc++");
+
+    // Only link against CUDA runtime if it was found by CMake
+    // Check for a marker file created by CMake
+    let cuda_marker = dst.join("cuda_found");
+    if cuda_marker.exists() {
+        println!("cargo:warning=CUDA found, linking against CUDA runtime");
+        println!("cargo:rustc-link-search=native=/usr/local/cuda/lib64");
+        println!("cargo:rustc-link-lib=cudart");
+    } else {
+        println!("cargo:warning=CUDA not found, using stub implementation");
+    }
 }
 
 /// Embed a Windows manifest and set some linker options.
