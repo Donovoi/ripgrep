@@ -92,7 +92,7 @@ pub const MAX_COMPRESSION_LEVEL: u32 = 12;
 pub const COMPRESS_SINGLE_THREAD: u32 = 0x200;
 
 /// Error type for GDeflate operations
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Error {
     /// Generic error
     Generic,
@@ -100,7 +100,80 @@ pub enum Error {
     InvalidParam,
     /// Output buffer too small
     BufferTooSmall,
+    /// GPU-specific errors
+    #[cfg(feature = "cuda-gpu")]
+    Gpu(GpuError),
 }
+
+/// GPU-specific error types
+#[cfg(feature = "cuda-gpu")]
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum GpuError {
+    /// No compatible GPU hardware detected
+    NotAvailable {
+        reason: String,
+    },
+    /// GPU detected but CUDA runtime failed to initialize
+    RuntimeError {
+        code: i32,
+        message: String,
+    },
+    /// File too small to benefit from GPU acceleration
+    BelowThreshold {
+        file_size: u64,
+        threshold: u64,
+    },
+    /// GPU out of memory
+    OutOfMemory {
+        requested: usize,
+        available: usize,
+    },
+    /// Pattern/regex not compatible with GPU engine
+    UnsupportedPattern {
+        reason: String,
+    },
+    /// GPU operation failed
+    OperationFailed {
+        operation: String,
+        reason: String,
+    },
+}
+
+#[cfg(feature = "cuda-gpu")]
+impl std::fmt::Display for GpuError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            GpuError::NotAvailable { reason } => {
+                write!(f, "GPU not available: {}", reason)?;
+                write!(f, "\nHint: Install CUDA Toolkit or use CPU-only build")
+            }
+            GpuError::RuntimeError { code, message } => {
+                write!(f, "CUDA error {}: {}", code, message)?;
+                write!(f, "\nHint: Check nvidia-smi and driver version")
+            }
+            GpuError::BelowThreshold { file_size, threshold } => {
+                write!(f, "File too small for GPU: {} < {} bytes", file_size, threshold)?;
+                write!(f, "\nHint: GPU only helps for files >{}GB", threshold / (1024*1024*1024))
+            }
+            GpuError::OutOfMemory { requested, available } => {
+                write!(f, "GPU out of memory: need {}MB, have {}MB", 
+                       requested / (1024*1024), available / (1024*1024))?;
+                write!(f, "\nHint: Use smaller --gpu-chunk-size or process on CPU")
+            }
+            GpuError::UnsupportedPattern { reason } => {
+                write!(f, "Pattern not GPU-compatible: {}", reason)?;
+                write!(f, "\nHint: GPU supports literal strings and simple patterns only")
+            }
+            GpuError::OperationFailed { operation, reason } => {
+                write!(f, "GPU {} failed: {}", operation, reason)?;
+                write!(f, "\nHint: Check GPU status or fall back to CPU")
+            }
+        }
+    }
+}
+
+#[cfg(feature = "cuda-gpu")]
+impl std::error::Error for GpuError {}
 
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -108,6 +181,8 @@ impl std::fmt::Display for Error {
             Error::Generic => write!(f, "GDeflate operation failed"),
             Error::InvalidParam => write!(f, "Invalid parameter"),
             Error::BufferTooSmall => write!(f, "Output buffer too small"),
+            #[cfg(feature = "cuda-gpu")]
+            Error::Gpu(e) => write!(f, "{}", e),
         }
     }
 }

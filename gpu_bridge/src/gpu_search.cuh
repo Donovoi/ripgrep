@@ -12,6 +12,8 @@ struct GpuDfa {
 // Updates elapsed_ns with kernel execution time.
 // Maximum number of matches to return per search
 const int MAX_MATCHES = 4096;
+// Buffer size includes extra space to handle race conditions safely
+const int MATCH_BUFFER_SIZE = MAX_MATCHES + 256;
 
 struct GpuMatch {
   uint64_t offset;
