@@ -1,6 +1,26 @@
 fn main() {
     set_git_revision_hash();
     set_windows_exe_options();
+    build_gpu_bridge();
+}
+
+fn build_gpu_bridge() {
+    println!("cargo:warning=Checking for CUDA_GPU feature...");
+    if std::env::var("CARGO_FEATURE_CUDA_GPU").is_err() {
+        println!("cargo:warning=CUDA_GPU feature NOT found.");
+        return;
+    }
+    println!("cargo:warning=CUDA_GPU feature found. Building bridge...");
+
+    let dst = cmake::Config::new("gpu_bridge").build();
+
+    println!("cargo:rustc-link-search=native={}/lib", dst.display());
+    println!("cargo:rustc-link-lib=static=rg_gpu_regex_bridge");
+
+    // Link against CUDA runtime
+    println!("cargo:rustc-link-search=native=/usr/local/cuda/lib64");
+    println!("cargo:rustc-link-lib=cudart");
+    println!("cargo:rustc-link-lib=stdc++");
 }
 
 /// Embed a Windows manifest and set some linker options.

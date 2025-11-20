@@ -10,6 +10,8 @@ search worker is where things like preprocessors or decompression happens.
 use std::{io, path::Path};
 
 #[cfg(feature = "cuda-gpu")]
+use std::os::unix::fs::FileTypeExt;
+#[cfg(feature = "cuda-gpu")]
 use std::{fmt, sync::Arc};
 
 use {grep::matcher::Matcher, termcolor::WriteColor};
@@ -633,13 +635,16 @@ impl<W: WriteColor> SearchWorker<W> {
             Ok(meta) => meta,
             Err(err) => return Err(err),
         };
-        if !metadata.is_file() {
-            log::trace!("try_gpu_regex: not a file");
+
+        let is_block = metadata.file_type().is_block_device();
+        if !metadata.is_file() && !is_block {
+            log::trace!("try_gpu_regex: not a file or block device");
             return Ok(None);
         }
 
         let file_len = metadata.len();
-        if file_len < self.config.gpu_min_size {
+        // Block devices often report 0 length. We assume they are large enough.
+        if !is_block && file_len < self.config.gpu_min_size {
             log::debug!(
                 "try_gpu_regex: file too small for GPU: {} < {} (using CPU)",
                 file_len,

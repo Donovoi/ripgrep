@@ -24,22 +24,18 @@ Ripgrep can now offload regex searching to the GPU for files larger than **10 MB
 
 ### Setup
 
-1. **Build the Bridge**:
-   The GPU logic is isolated in a shared library to avoid runtime dependencies for non-GPU users.
+1. **Build ripgrep with GPU support**:
+   The GPU bridge is statically linked when the `cuda-gpu` feature is enabled.
 
    ```bash
-   cd gpu_bridge
-   mkdir build && cd build
-   cmake ..
-   make
+   cargo build --release --features cuda-gpu
    ```
 
 2. **Run ripgrep**:
-   You must tell ripgrep where to find the bridge library using `RG_NVTEXT_BRIDGE_PATH`.
+   No extra environment variables are needed.
 
    ```bash
-   export RG_NVTEXT_BRIDGE_PATH=/path/to/ripgrep/gpu_bridge/build/librg_gpu_regex_bridge.so
-   rg --features cuda-gpu "pattern" large_file.txt
+   ./target/release/rg --gpu "pattern" large_file.txt
    ```
 
 ### Regex Architecture

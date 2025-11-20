@@ -27,7 +27,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o
  /usr/include/c++/12/bits/char_traits.h
  /usr/include/c++/12/bits/charconv.h
  /usr/include/c++/12/bits/chrono.h
- /usr/include/c++/12/bits/codecvt.h
  /usr/include/c++/12/bits/concept_check.h
  /usr/include/c++/12/bits/cpp_type_traits.h
  /usr/include/c++/12/bits/cxxabi_forced.h
@@ -35,7 +34,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o
  /usr/include/c++/12/bits/exception.h
  /usr/include/c++/12/bits/exception_defines.h
  /usr/include/c++/12/bits/exception_ptr.h
- /usr/include/c++/12/bits/fstream.tcc
  /usr/include/c++/12/bits/functexcept.h
  /usr/include/c++/12/bits/functional_hash.h
  /usr/include/c++/12/bits/hash_bytes.h
@@ -111,7 +109,6 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o
  /usr/include/c++/12/ext/numeric_traits.h
  /usr/include/c++/12/ext/string_conversions.h
  /usr/include/c++/12/ext/type_traits.h
- /usr/include/c++/12/fstream
  /usr/include/c++/12/functional
  /usr/include/c++/12/initializer_list
  /usr/include/c++/12/ios
@@ -157,6 +154,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o
  /usr/include/cub/agent/agent_reduce_by_key.cuh
  /usr/include/cub/agent/agent_scan.cuh
  /usr/include/cub/agent/agent_scan_by_key.cuh
+ /usr/include/cub/agent/agent_select_if.cuh
+ /usr/include/cub/agent/agent_unique_by_key.cuh
  /usr/include/cub/agent/single_pass_scan_operators.cuh
  /usr/include/cub/block/block_discontinuity.cuh
  /usr/include/cub/block/block_exchange.cuh
@@ -178,10 +177,13 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o
  /usr/include/cub/detail/uninitialized_copy.cuh
  /usr/include/cub/device/device_reduce.cuh
  /usr/include/cub/device/device_scan.cuh
+ /usr/include/cub/device/device_select.cuh
  /usr/include/cub/device/dispatch/dispatch_reduce.cuh
  /usr/include/cub/device/dispatch/dispatch_reduce_by_key.cuh
  /usr/include/cub/device/dispatch/dispatch_scan.cuh
  /usr/include/cub/device/dispatch/dispatch_scan_by_key.cuh
+ /usr/include/cub/device/dispatch/dispatch_select_if.cuh
+ /usr/include/cub/device/dispatch/dispatch_unique_by_key.cuh
  /usr/include/cub/grid/grid_even_share.cuh
  /usr/include/cub/grid/grid_mapping.cuh
  /usr/include/cub/grid/grid_queue.cuh
@@ -283,6 +285,7 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o
  /usr/include/texture_indirect_functions.h
  /usr/include/texture_types.h
  /usr/include/thrust/advance.h
+ /usr/include/thrust/copy.h
  /usr/include/thrust/detail/advance.inl
  /usr/include/thrust/detail/alignment.h
  /usr/include/thrust/detail/allocator/allocator_traits.h
@@ -321,6 +324,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o
  /usr/include/thrust/detail/contiguous_storage.inl
  /usr/include/thrust/detail/copy.h
  /usr/include/thrust/detail/copy.inl
+ /usr/include/thrust/detail/copy_if.h
+ /usr/include/thrust/detail/copy_if.inl
  /usr/include/thrust/detail/cpp11_required.h
  /usr/include/thrust/detail/cstdint.h
  /usr/include/thrust/detail/dependencies_aware_execution_policy.h
@@ -466,6 +471,7 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o
  /usr/include/thrust/swap.h
  /usr/include/thrust/system/cpp/detail/assign_value.h
  /usr/include/thrust/system/cpp/detail/copy.h
+ /usr/include/thrust/system/cpp/detail/copy_if.h
  /usr/include/thrust/system/cpp/detail/execution_policy.h
  /usr/include/thrust/system/cpp/detail/find.h
  /usr/include/thrust/system/cpp/detail/for_each.h
@@ -485,6 +491,7 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o
  /usr/include/thrust/system/cuda/detail/assign_value.h
  /usr/include/thrust/system/cuda/detail/cdp_dispatch.h
  /usr/include/thrust/system/cuda/detail/copy.h
+ /usr/include/thrust/system/cuda/detail/copy_if.h
  /usr/include/thrust/system/cuda/detail/core/agent_launcher.h
  /usr/include/thrust/system/cuda/detail/core/alignment.h
  /usr/include/thrust/system/cuda/detail/core/triple_chevron_launch.h
@@ -528,6 +535,7 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o
  /usr/include/thrust/system/cuda/pointer.h
  /usr/include/thrust/system/detail/adl/assign_value.h
  /usr/include/thrust/system/detail/adl/copy.h
+ /usr/include/thrust/system/detail/adl/copy_if.h
  /usr/include/thrust/system/detail/adl/equal.h
  /usr/include/thrust/system/detail/adl/fill.h
  /usr/include/thrust/system/detail/adl/find.h
@@ -556,6 +564,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o
  /usr/include/thrust/system/detail/generic/advance.inl
  /usr/include/thrust/system/detail/generic/copy.h
  /usr/include/thrust/system/detail/generic/copy.inl
+ /usr/include/thrust/system/detail/generic/copy_if.h
+ /usr/include/thrust/system/detail/generic/copy_if.inl
  /usr/include/thrust/system/detail/generic/distance.h
  /usr/include/thrust/system/detail/generic/distance.inl
  /usr/include/thrust/system/detail/generic/equal.h
@@ -597,6 +607,7 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o
  /usr/include/thrust/system/detail/sequential/assign_value.h
  /usr/include/thrust/system/detail/sequential/copy.h
  /usr/include/thrust/system/detail/sequential/copy.inl
+ /usr/include/thrust/system/detail/sequential/copy_if.h
  /usr/include/thrust/system/detail/sequential/equal.h
  /usr/include/thrust/system/detail/sequential/execution_policy.h
  /usr/include/thrust/system/detail/sequential/fill.h
@@ -716,10 +727,8 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/gpu_search.cu.o
  /usr/include/x86_64-linux-gnu/bits/wordsize.h
  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h
  /usr/include/x86_64-linux-gnu/c++/12/bits/atomic_word.h
- /usr/include/x86_64-linux-gnu/c++/12/bits/basic_file.h
  /usr/include/x86_64-linux-gnu/c++/12/bits/c++allocator.h
  /usr/include/x86_64-linux-gnu/c++/12/bits/c++config.h
- /usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h
  /usr/include/x86_64-linux-gnu/c++/12/bits/c++locale.h
  /usr/include/x86_64-linux-gnu/c++/12/bits/cpu_defines.h
  /usr/include/x86_64-linux-gnu/c++/12/bits/ctype_base.h
@@ -779,14 +788,18 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o
  /usr/include/c++/13/bits/requires_hosted.h
  /usr/include/c++/13/bits/std_abs.h
  /usr/include/c++/13/bits/stl_algobase.h
+ /usr/include/c++/13/bits/stl_bvector.h
  /usr/include/c++/13/bits/stl_construct.h
  /usr/include/c++/13/bits/stl_function.h
  /usr/include/c++/13/bits/stl_iterator.h
  /usr/include/c++/13/bits/stl_iterator_base_funcs.h
  /usr/include/c++/13/bits/stl_iterator_base_types.h
  /usr/include/c++/13/bits/stl_pair.h
+ /usr/include/c++/13/bits/stl_uninitialized.h
+ /usr/include/c++/13/bits/stl_vector.h
  /usr/include/c++/13/bits/stringfwd.h
  /usr/include/c++/13/bits/utility.h
+ /usr/include/c++/13/bits/vector.tcc
  /usr/include/c++/13/cctype
  /usr/include/c++/13/cerrno
  /usr/include/c++/13/chrono
@@ -810,6 +823,7 @@ CMakeFiles/rg_gpu_regex_bridge.dir/src/lib.cpp.o
  /usr/include/c++/13/ratio
  /usr/include/c++/13/string
  /usr/include/c++/13/type_traits
+ /usr/include/c++/13/vector
  /usr/include/ctype.h
  /usr/include/endian.h
  /usr/include/errno.h
