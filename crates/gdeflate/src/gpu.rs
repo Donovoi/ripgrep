@@ -317,11 +317,16 @@ pub fn decompress_with_gpu(
     #[cfg(feature = "cuda-gpu")]
     {
         if !is_gpu_available() {
-            return Err(Error::Generic);
+            return Err(Error::Gpu(crate::GpuError::NotAvailable {
+                reason: "No NVIDIA GPU detected or CUDA not installed".to_string()
+            }));
         }
 
         if output_size > GPU_MAX_SIZE {
-            return Err(Error::InvalidParam);
+            return Err(Error::Gpu(crate::GpuError::OperationFailed {
+                operation: "decompression".to_string(),
+                reason: format!("File size {} exceeds maximum GPU size {}", output_size, GPU_MAX_SIZE)
+            }));
         }
 
         // SAFETY: Calling gpu_decompress_internal() is safe because:
