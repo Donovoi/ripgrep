@@ -36,6 +36,10 @@ name = "rg"
 name = "integration"
 path = "tests/tests.rs"
 
+[[test]]
+name = "gpu_tests"
+path = "tests/gpu_tests.rs"
+
 [workspace]
 members = [
   "crates/globset",
