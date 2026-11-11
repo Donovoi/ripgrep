@@ -70,3 +70,7 @@ nvcomp-local-repo-wsl-ubuntu-5.0.0_5.0.0-1_amd64.deb.1
 .cache/clangd/index/zlib_compress.c.18D0211955402C0A.idx
 .cache/clangd/index/zlib_constants.h.61E2057BD5559AAE.idx
 .cache/clangd/index/zlib_decompress.c.7F65AB01142A0B1B.idx
+
+# Keep local and sensitive material outside version control.
+/report*.sqlite
+/report*.sqlite-*
