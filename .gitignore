@@ -20,3 +20,7 @@ ripgrep*_source.tar.bz2
 # Cargo timings
 cargo-timing-*.html
 cargo-timing.html
+
+# Keep local and sensitive material outside version control.
+/report*.sqlite
+/report*.sqlite-*
